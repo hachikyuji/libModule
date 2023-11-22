@@ -1,10 +1,6 @@
 <?php
 
-use App\Http\Controllers\PatronAuthenticationController;
-use App\Livewire\AdminDashboard;
-use App\Livewire\HomePage;
-use App\Livewire\StudentDashboard;
-use App\Livewire\Users;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,17 +15,30 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('db_connect');
+    return view('welcome');
 });
 
 
 
-Route::get('/login', HomePage::class);
-Route::post('/login', [PatronAuthenticationController::class, 'login'])->name('login');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/HomeStudent', StudentDashboard::class);
-Route::get('/dashboard/patron', StudentDashboard::class)->name('student.dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-Route::get('/HomeAdmin', AdminDashboard::class);
-Route::get('/dashboard/admin', AdminDashboard::class)->name('admin.dashboard');
+Route::get('/patron_dashboard', function () {
+    return view('patron_dashboard');
+})->middleware(['auth', 'verified'])->name('patron_dashboard');
 
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
+require __DIR__.'/auth.php';
