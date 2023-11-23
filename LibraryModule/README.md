@@ -26,3 +26,5 @@ How to register if you don't have an account:
     1. Go to route/auth.php
     2. Move the /register routes to the 'guest' middleware from the 'auth' middleware.
     3. Go to localhost/register
+
+Make sure to return it back to auth after creating an account to not interrupt the current program logic.
