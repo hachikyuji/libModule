@@ -82,21 +82,20 @@
         <form method="POST" action="{{ route('register') }}" class="w-full max-w-md">
             @csrf
 
-            <!-- Name -->
             <div class="mb-4">
                 <x-input-label for="name" :value="__('Name')" style="color: #000; font-size: 16px; margin-bottom: 8px;" />
                 <x-text-input id="name" class="w-full p-2.5 text-sm rounded-lg" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
 
-            <!-- Email Address -->
+            
             <div class="mb-4">
                 <x-input-label for="email" :value="__('Email')" style="color: #000; font-size: 16px; margin-bottom: 8px;" />
                 <x-text-input id="email" class="w-full p-2.5 text-sm rounded-lg" type="email" name="email" :value="old('email')" required autocomplete="username" />
                 <x-input-error :messages="$errors->get('email')" class="mt-2" />
             </div>
 
-            <!-- Password -->
+           
             <div class="mb-4">
                 <x-input-label for="password" :value="__('Password')" style="color: #000; font-size: 16px; margin-bottom: 8px;" />
                 <x-text-input id="password" class="w-full p-2.5 text-sm rounded-lg"
@@ -112,6 +111,14 @@
                     type="password"
                     name="password_confirmation" required autocomplete="new-password" />
                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+            </div>
+
+            <div class="mb-4">
+                <x-input-label for="account_type" :value="__('Account Type')" style="color: #000; font-size: 16px; margin-bottom: 8px;" />
+                <select id="account_type" class="w-full p-2.5 text-sm rounded-lg" name="account_type" required>
+                    <option value="admin">Admin</option>
+                    <option value="patron">Patron</option>
+                </select>
             </div>
 
             <!-- Register Button -->
