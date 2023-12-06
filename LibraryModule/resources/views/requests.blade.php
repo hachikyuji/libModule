@@ -12,7 +12,7 @@
       </svg>
    </button>
 
-   <aside id="default-sidebar" class="fixed top-20 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 overflow-y-auto bg-white dark:bg-blue-900">
+   <aside id="default-sidebar" class="fixed top-20 left-0 z-40 w-64 h-screen overflow-y-auto bg-white dark:bg-blue-900">
       <div class="h-full px-3 py-4 overflow-y-auto bg-white dark:bg-blue-900">
          <ul class="space-y-2 font-medium">
 
@@ -78,60 +78,78 @@
       </div>
    </aside>
 
+
    <div class="sm:ml-64 flex items-center justify-center">
-   <div class="flex flex-col items-center justify-center h-full pt-10">
-        <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1 pt-10">
-            Recent History
-        </h1>
+    <div class="flex flex-col items-center justify-center h-full pt-10">
+            <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1 pt-10">
+                Requests Approval
+            </h1>
 
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-full lg:w-full xl:w-full">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3">
-                        Email
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Book Title
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Borrowed Date
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Returned Date
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Fines
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($accountHistory as $history)
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                            {{ $history->email }}
-                        </td>
-                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                            {{ $history->books_borrowed }}
-                        </td>
-                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                            {{ $history->borrowed_date }}
-                        </td>
-                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                            {{ $history->returned_date }}   
-                        </td>
-                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
-                            {{ $history->fines }}
-                        </td>
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-full lg:w-full xl:w-full">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Email
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Book
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Book Status
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            User Fine
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Request Type
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            
+                        </th>
                     </tr>
-                </tr>   
-            @endforeach
-            </tbody>
-        </table>
-      </div>
-   </div>
+                </thead>
+                <tbody>
+    @foreach ($pendingRequests as $request)
+        @if ($request->request_status === 'Pending')
+            <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
+                <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                    {{ $request->email }}
+                </td>
+                <td class="px-4 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                    {{ $request->book_request }}
+                </td>
+                <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                    <!-- Pending -->
+                </td>
+                <td class="px-12 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                    @foreach($accountHistory->where('books_borrowed', $request->book_request) as $history)
+                        @if($history->email == $request->email)
+                            {{ $history->fines }}
+                        @endif
+                    @endforeach
+                </td>
+                <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                    {{ $request->request_type }}
+                </td>
+                <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
+                    <form action="{{ route('approve-request', ['email' => $request->email]) }}" method="post" class="inline">
+                        @csrf
+                        <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Approve</button>
+                    </form>
+                    |
+                    <form action="{{ route('deny-request', ['email' => $request->email]) }}" method="post" class="inline">
+                        @csrf
+                        <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Deny</button>
+                    </form>
+                </td>
+            </tr> 
+        @endif
+    @endforeach 
+</tbody>
 
+            </table>
+        </div>
+    </div>
    </div>
-
 </x-app-layout>

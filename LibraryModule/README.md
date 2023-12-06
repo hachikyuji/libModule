@@ -21,5 +21,3 @@ COLLATE='utf8mb4_unicode_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=6
 ;
-
-To get the new tables (account_history, pending_requests) run: "php artisan migrate" into your file's terminal.
