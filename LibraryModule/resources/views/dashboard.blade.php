@@ -12,7 +12,7 @@
       </svg>
    </button>
 
-   <aside id="default-sidebar" class="fixed top-20 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 overflow-y-auto bg-white dark:bg-blue-900">
+   <aside id="default-sidebar" class="fixed top-20 left-0 z-40 w-64 h-screen overflow-y-auto bg-white dark:bg-blue-900">
       <div class="h-full px-3 py-4 overflow-y-auto bg-white dark:bg-blue-900">
          <ul class="space-y-2 font-medium">
 
@@ -79,31 +79,67 @@
    </aside>
 
    <div class="sm:ml-64 overflow-y-auto">
+
+        <div>
+            <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-5 ml-4">
+                Popular
+            </h1>
+        </div>
+        <!--
         <div class="grid gap-4">
             <div class="max-w-screen-md mx-auto">
                 <div class="main-image-container h-96 overflow-hidden">
-                  <img id="largeImage" class="w-full h-full object-cover rounded-lg" src="{{ asset('images/carousel/elden_ring.jpg') }}" alt="">
+                  <img id="largeImage" class="w-48 h-full object-cover rounded-lg" src="{{ asset('images/carousel/elden_ring.jpg') }}" alt="">
+                </div>
+            </div> -->
+            <div class="grid grid-cols-5 gap-1 mb-4">
+                <div>
+                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/elden_ring.jpg') }}" alt="" onclick="changeImage(this.src)">
+                </div>
+                <div>
+                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/dmc5.jpg') }}" alt="" onclick="changeImage(this.src)">
+                </div>
+                <div>
+                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/fnv.jpg') }}" alt="" onclick="changeImage(this.src)">
+                </div>
+                <div>
+                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/mhw.jpg') }}" alt="" onclick="changeImage(this.src)">
+                </div>
+                <div>
+                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/tw3.jpg') }}" alt="" onclick="changeImage(this.src)">
                 </div>
             </div>
-            <div class="grid grid-cols-5 gap-4">
-                <div class="max-w-screen-md mx-auto">
-                    <img class="w-full h-48 object-cover rounded-lg" src="{{ asset('images/carousel/elden_ring.jpg') }}" alt="" onclick="changeImage(this.src)">
+
+            <div>
+                <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-5 ml-4 pt-10">
+                    Recent History
+                </h1>
+            </div>
+        <!--
+        <div class="grid gap-4">
+            <div class="max-w-screen-md mx-auto">
+                <div class="main-image-container h-96 overflow-hidden">
+                  <img id="largeImage" class="w-48 h-full object-cover rounded-lg" src="{{ asset('images/carousel/elden_ring.jpg') }}" alt="">
                 </div>
-                <div class="max-w-screen-md mx-auto">
-                    <img class="w-full h-48 object-cover rounded-lg" src="{{ asset('images/carousel/dmc5.jpg') }}" alt="" onclick="changeImage(this.src)">
+            </div> -->
+            <div class="grid grid-cols-5 gap-1 mb-4">
+                <div>
+                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/elden_ring.jpg') }}" alt="" onclick="changeImage(this.src)">
                 </div>
-                <div class="max-w-screen-md mx-auto">
-                    <img class="w-full h-48 object-cover rounded-lg" src="{{ asset('images/carousel/fnv.jpg') }}" alt="" onclick="changeImage(this.src)">
+                <div>
+                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/dmc5.jpg') }}" alt="" onclick="changeImage(this.src)">
                 </div>
-                <div class="max-w-screen-md mx-auto">
-                    <img class="w-full h-48 object-cover rounded-lg" src="{{ asset('images/carousel/mhw.jpg') }}" alt="" onclick="changeImage(this.src)">
+                <div>
+                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/fnv.jpg') }}" alt="" onclick="changeImage(this.src)">
                 </div>
-                <div class="max-w-screen-md mx-auto">
-                    <img class="w-full h-48 object-cover rounded-lg" src="{{ asset('images/carousel/tw3.jpg') }}" alt="" onclick="changeImage(this.src)">
+                <div>
+                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/mhw.jpg') }}" alt="" onclick="changeImage(this.src)">
+                </div>
+                <div>
+                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/tw3.jpg') }}" alt="" onclick="changeImage(this.src)">
                 </div>
             </div>
-        </div>
-    </div>
+    
 
     <script>
         function changeImage(newSrc) {
@@ -113,6 +149,28 @@
             // Change the source of the large image
             largeImage.src = newSrc;
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+        // Get the header and content container elements
+        var header = document.getElementById('page-header');
+        var contentContainer = document.getElementById('content-container');
+
+        // Set up a scroll event listener
+        window.addEventListener('scroll', function () {
+            // Check if the user has scrolled down, add a class to fix the header
+            if (window.scrollY > 0) {
+                header.classList.add('fixed', 'top-0', 'left-0', 'right-0', 'bg-white', 'dark:bg-blue-900', 'z-50', 'shadow-md');
+                contentContainer.style.marginTop = header.offsetHeight + 'px';
+            } else {
+                // Remove the fixed header class
+                header.classList.remove('fixed', 'top-0', 'left-0', 'right-0', 'bg-white', 'dark:bg-blue-900', 'z-50', 'shadow-md');
+                contentContainer.style.marginTop = '0';
+            }
+        });
+
+        // Trigger a scroll event to initialize the header state
+        window.dispatchEvent(new Event('scroll'));
+    });
     </script>
   
-   </x-app-layout>
+</x-app-layout>

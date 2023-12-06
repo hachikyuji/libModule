@@ -78,10 +78,13 @@
       </div>
    </aside>
 
-<!-- ... (your existing code) ... -->
+   <div class="sm:ml-64 flex items-center justify-center">
+   <div class="flex flex-col items-center justify-center h-full pt-10">
+        <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1 pt-10">
+            Recent History
+        </h1>
 
-<div class="sm:ml-64 flex items-center justify-center">
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-3/4 lg:w-3/4 xl:w-3/4">
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-full lg:w-full xl:w-full">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
                 <tr>
@@ -103,334 +106,32 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach($accountHistory as $history)
                 <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <th scope="row" class="px-6 py-4 font-medium text-white-900 whitespace-nowrap dark:text-white">
-
-                    </th>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                    <td class="px-6 py-4">
-
-                    </td>
-                </tr>
-
+                    <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
+                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                            {{ $history->email }}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                            {{ $history->books_borrowed }}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                            {{ $history->borrowed_date }}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                            {{ $history->returned_date }}   
+                        </td>
+                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
+                            {{ $history->fines }}
+                        </td>
+                    </tr>
+                </tr>   
+            @endforeach
             </tbody>
         </table>
     </div>
 </div>
 
+    </div>
 
 </x-app-layout>
