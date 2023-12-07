@@ -1,4 +1,4 @@
-   <x-app-layout>
+<x-app-layout>
       <x-slot name="header">
          <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                {{ __('Dashboard') }}
@@ -78,99 +78,95 @@
       </div>
    </aside>
 
-   <div class="sm:ml-64 overflow-y-auto">
-
-        <div>
-            <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-5 ml-4">
-                Popular
+   <div class="sm:ml-64 flex items-center justify-center">
+    <div class="flex flex-col items-center justify-center h-full pt-10">
+            <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1 pt-10">
+                Book Acquisition
             </h1>
-        </div>
-        <!--
-        <div class="grid gap-4">
-            <div class="max-w-screen-md mx-auto">
-                <div class="main-image-container h-96 overflow-hidden">
-                  <img id="largeImage" class="w-48 h-full object-cover rounded-lg" src="{{ asset('images/carousel/elden_ring.jpg') }}" alt="">
-                </div>
-            </div> -->
-            <div class="grid grid-cols-5 gap-1 mb-4">
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/elden_ring.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/dmc5.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/fnv.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/mhw.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/tw3.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
+
+      <form method="POST" action="{{ route('book_acquisition') }}" class="w-full max-w-md">
+            @csrf
+            <div class="mb-4">
+                <label for="call_number" class="block text-sm font-medium text-blue-500">Call Number</label>
+                <input id="call_number" type="text" name="call_number" value="{{ old('call_number') }}" required autofocus autocomplete="call_number" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                @error('call_number')
+                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                @enderror
             </div>
 
-            <div>
-                <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-5 ml-4 pt-10">
-                    Recent History
-                </h1>
+            <div class="mb-4">
+                <label for="author" class="block text-sm font-medium text-blue-500">Author</label>
+                <input id="author" type="text" name="author" value="{{ old('author') }}" required autofocus autocomplete="author" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                @error('author')
+                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                @enderror
             </div>
-        <!--
-        <div class="grid gap-4">
-            <div class="max-w-screen-md mx-auto">
-                <div class="main-image-container h-96 overflow-hidden">
-                  <img id="largeImage" class="w-48 h-full object-cover rounded-lg" src="{{ asset('images/carousel/elden_ring.jpg') }}" alt="">
-                </div>
-            </div> -->
-            <div class="grid grid-cols-5 gap-1 mb-4">
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/elden_ring.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/dmc5.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/fnv.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/mhw.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/tw3.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
+
+            <div class="mb-4">
+                <label for="title" class="block text-sm font-medium text-blue-500">Title</label>
+                <input id="title" type="text" name="title" value="{{ old('title') }}" required autofocus autocomplete="title" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                @error('title')
+                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                @enderror
             </div>
-    
 
-    <script>
-        function changeImage(newSrc) {
-            // Get the large image element
-            var largeImage = document.getElementById('largeImage');
+            <div class="mb-4">
+                <label for="publish_location" class="block text-sm font-medium text-blue-500">Publish Location</label>
+                <input id="publish_location" type="text" name="publish_location" value="{{ old('publish_location') }}" required autofocus autocomplete="publish_location" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                @error('publish_location')
+                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
 
-            // Change the source of the large image
-            largeImage.src = newSrc;
-        }
+            <div class="mb-4">
+                <label for="publish_date" class="block text-sm font-medium text-blue-500">Publavailable_copiesish Date</label>
+                <input id="publish_date" type="date" name="publish_date" value="{{ old('publish_date') }}" required autofocus autocomplete="publish_date"  class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                @error('publish_date')
+                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
 
-        document.addEventListener("DOMContentLoaded", function () {
-        // Get the header and content container elements
-        var header = document.getElementById('page-header');
-        var contentContainer = document.getElementById('content-container');
+            <div class="mb-4">
+                <label for="available_copies" class="block text-sm font-medium text-blue-500">Available Copies</label>
+                <input id="available_copies" type="number" name="available_copies" value="{{ old('available_copies') }}" required autofocus autocomplete="available_copies"  class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                @error('available_copies')
+                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
 
-        // Set up a scroll event listener
-        window.addEventListener('scroll', function () {
-            // Check if the user has scrolled down, add a class to fix the header
-            if (window.scrollY > 0) {
-                header.classList.add('fixed', 'top-0', 'left-0', 'right-0', 'bg-white', 'dark:bg-blue-900', 'z-50', 'shadow-md');
-                contentContainer.style.marginTop = header.offsetHeight + 'px';
-            } else {
-                // Remove the fixed header class
-                header.classList.remove('fixed', 'top-0', 'left-0', 'right-0', 'bg-white', 'dark:bg-blue-900', 'z-50', 'shadow-md');
-                contentContainer.style.marginTop = '0';
-            }
-        });
+            <div class="mb-4">
+                <label for="total_copies" class="block text-sm font-medium text-blue-500">Total Copies</label>
+                <input id="total_copies" type="number" name="total_copies" value="{{ old('total_copies') }}" required autofocus autocomplete="total_copies"  class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                @error('total_copies')
+                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
 
-        // Trigger a scroll event to initialize the header state
-        window.dispatchEvent(new Event('scroll'));
-    });
-    </script>
-  
+            <div class="mb-4">
+                <label for="sublocation" class="block text-sm font-medium text-blue-500">Sublocation</label>
+                <input id="sublocation" type="text" name="sublocation" value="{{ old('sublocation') }}" required autofocus autocomplete="sublocation" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                @error('sublocation')
+                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-4">
+                <label for="book_description" class="block text-sm font-medium text-blue-500">Book Description</label>
+                <input id="book_description" type="text" name="book_description" value="{{ old('book_description') }}" required autofocus autocomplete="book_description" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                @error('book_description')
+                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="flex items-center justify-center">
+                <button class="bg-yellow-500 text-white py-2 px-4 rounded">
+                    {{ __('Create') }}
+                </button>
+            </div>
+
+
+      </form>
+
+   </div>
+
 </x-app-layout>

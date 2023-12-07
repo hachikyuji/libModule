@@ -21,6 +21,8 @@ class RouteServiceProvider extends ServiceProvider
 
     public const PATRONHOME = '/patron_dashboard';
 
+    public const MANAGEMENT = '/book_management';
+
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */
