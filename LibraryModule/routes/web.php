@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\BookAcquisitionController;
 use App\Http\Controllers\BookDeletionController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -76,7 +77,18 @@ Route::get('/book_termination', function () {
 })->middleware(['auth', 'verified'])->name('book_termination');
 Route::post('/book_termination', [BookDeletionController::class, 'destroy']);
 
+// Search
 
+/*
+Route::get('/search', [SearchController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('search');
+*/
+
+// Route to handle the search logic and display results
+Route::get('/search', [SearchController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('search');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
