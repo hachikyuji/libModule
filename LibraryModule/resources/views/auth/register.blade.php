@@ -83,7 +83,7 @@
             @csrf
 
             <div class="mb-4">
-                <x-input-label for="name" :value="__('Name')" style="color: #0000FF; font-size: 16px; margin-bottom: 8px;" />
+                <x-input-label for="name" :value="__('Name (ex. Jose P. Rizal)')" style="color: #0000FF; font-size: 16px; margin-bottom: 8px;" />
                 <x-text-input id="name" class="w-full p-2.5 text-sm rounded-lg focus:outline-none focus:ring focus:border-white-300" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
@@ -123,9 +123,10 @@
 
             <!-- Register Button -->
             <div class="flex items-center justify-center">
-                <x-primary-button>
+                <button class="bg-yellow-500 text-white py-2 px-4 rounded">
                     {{ __('Register') }}
-                </x-primary-button>
+                </button>
+            </div>
             </div>
         </form>
     </div>

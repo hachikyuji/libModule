@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\AccountHistory;
 use App\Http\Controllers\AccHistoryController;
+use App\Http\Controllers\BookController;
 use App\Http\Controllers\handleRequests;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QueueController;
@@ -37,9 +38,9 @@ Route::get('/patron_dashboard', function () {
 })->middleware(['auth', 'verified'])->name('patron_dashboard');
 
 // Admin Dashboard Homepage
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [BookController::class, 'showBooksWithHighestCount'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 // Account History
 Route::get('/history', [AccHistoryController::class, 'getUserAccountHistory'])
@@ -78,18 +79,23 @@ Route::get('/book_termination', function () {
 Route::post('/book_termination', [BookDeletionController::class, 'destroy']);
 
 // Search
-
-/*
-Route::get('/search', [SearchController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('search');
-*/
-
-// Route to handle the search logic and display results
 Route::get('/search', [SearchController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('search');
 
+Route::get('/search/{id}', [BookController::class, 'show'])
+    ->middleware(['auth', 'verified'])
+    ->name('book.show');
+
+ Route::post('/search/checkin/{title}', [BookController::class, 'checkIn'])
+    ->middleware(['auth', 'verified'])
+    ->name('request.checkIn');
+
+Route::post('/search/checkout/{title}', [BookController::class, 'checkOut'])
+    ->middleware(['auth', 'verified'])
+    ->name('request.checkOut');
+
+// Profile Controller
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

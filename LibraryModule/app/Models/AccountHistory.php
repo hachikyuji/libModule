@@ -9,6 +9,13 @@ class AccountHistory extends Model
 {
     use HasFactory;
 
+    protected $fillable =[
+        'email',
+        'books_borrowed',
+        'borrowed_date',
+        'returned_date',
+        'fines'
+    ];
     protected $table = 'account_history';
 
     public $timestamps = true;

@@ -22,6 +22,7 @@ class Books extends Model
         'total_copies',
         'sublocation',
         'book_description',
+        'count',
     ];
 
     public function toSearchableArray()

@@ -79,98 +79,57 @@
    </aside>
 
    <div class="sm:ml-64 overflow-y-auto">
-
-        <div>
-            <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-5 ml-4">
-                Popular
+        <div class="flex flex-col items-center justify-center h-full pt-10">
+            <h1 class="text-3xl font-bold text-blue-800 dark:text-blue-600 mb-3 ml-1 pt-10">
+                Welcome to the PLM Library!
             </h1>
         </div>
-        <!--
-        <div class="grid gap-4">
-            <div class="max-w-screen-md mx-auto">
-                <div class="main-image-container h-96 overflow-hidden">
-                  <img id="largeImage" class="w-48 h-full object-cover rounded-lg" src="{{ asset('images/carousel/elden_ring.jpg') }}" alt="">
-                </div>
-            </div> -->
-            <div class="grid grid-cols-5 gap-1 mb-4">
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/elden_ring.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/dmc5.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/fnv.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/mhw.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/tw3.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-            </div>
 
-            <div>
-                <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-5 ml-4 pt-10">
-                    Recent History
-                </h1>
-            </div>
-        <!--
-        <div class="grid gap-4">
-            <div class="max-w-screen-md mx-auto">
-                <div class="main-image-container h-96 overflow-hidden">
-                  <img id="largeImage" class="w-48 h-full object-cover rounded-lg" src="{{ asset('images/carousel/elden_ring.jpg') }}" alt="">
-                </div>
-            </div> -->
-            <div class="grid grid-cols-5 gap-1 mb-4">
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/elden_ring.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/dmc5.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/fnv.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/mhw.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-                <div>
-                    <img class="w-48 h-full object-cover rounded-lg p-0 m-2" src="{{ asset('images/carousel/tw3.jpg') }}" alt="" onclick="changeImage(this.src)">
-                </div>
-            </div>
-    
-
-    <script>
-        function changeImage(newSrc) {
-            // Get the large image element
-            var largeImage = document.getElementById('largeImage');
-
-            // Change the source of the large image
-            largeImage.src = newSrc;
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-        // Get the header and content container elements
-        var header = document.getElementById('page-header');
-        var contentContainer = document.getElementById('content-container');
-
-        // Set up a scroll event listener
-        window.addEventListener('scroll', function () {
-            // Check if the user has scrolled down, add a class to fix the header
-            if (window.scrollY > 0) {
-                header.classList.add('fixed', 'top-0', 'left-0', 'right-0', 'bg-white', 'dark:bg-blue-900', 'z-50', 'shadow-md');
-                contentContainer.style.marginTop = header.offsetHeight + 'px';
-            } else {
-                // Remove the fixed header class
-                header.classList.remove('fixed', 'top-0', 'left-0', 'right-0', 'bg-white', 'dark:bg-blue-900', 'z-50', 'shadow-md');
-                contentContainer.style.marginTop = '0';
-            }
-        });
-
-        // Trigger a scroll event to initialize the header state
-        window.dispatchEvent(new Event('scroll'));
-    });
-    </script>
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-4/5 lg:w-3/4 xl:w-2/3 mx-auto">
+            <h2 class="text-lg font-semibold text-blue-900 dark:text-blue-600 mb-3 ml-1 pt-3">Most Popular</h2>
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead
+                    class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Title
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Author
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Publish Date
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Sublocation
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($booksWithHighestCount as $book)
+                        <tr
+                            class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
+                            <td
+                                class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $book->title }}
+                            </td>
+                            <td
+                                class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $book->author }}
+                            </td>
+                            <td
+                                class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $book->publish_date }}
+                            </td>
+                            <td
+                                class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $book->sublocation }}
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
   
 </x-app-layout>
