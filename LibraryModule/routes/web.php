@@ -70,22 +70,22 @@ Route::get('/patron_history', [PatronHistoryControl::class, 'getUserAccountHisto
 
 // Admin Dashboard Homepage
 Route::get('/dashboard', [BookController::class, 'showBooksWithHighestCount'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('dashboard');
 
 // Account History
 Route::get('/history', [AccHistoryController::class, 'getUserAccountHistory'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('history'); 
 
 // Queue
 Route::get('/queue', [QueueController::class, 'getUserQueue'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('queue');
 
 // Requests Approval
 Route::get('/requests', [handleRequests::class, 'getRequests']) 
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('requests');
 
 Route::post('/requests/{email}/approve', [handleRequests::class, 'approveRequest'])
@@ -97,33 +97,33 @@ Route::post('/requests/{email}/deny', [handleRequests::class, 'denyRequest'])
 // Book Management
 Route::get('/book_management', function () {
         return view('book_management');
-    })->middleware(['auth', 'verified'])->name('book_management');
+    })->middleware(['auth', 'verified', 'admin'])->name('book_management');
 
 Route::get('/book_acquisition', [BookAcquisitionController::class, 'create'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('book_acquisition');
 Route::post('book_acquisition', [BookAcquisitionController::class, 'store']);
 
 Route::get('/book_termination', function () {
     return view('book_termination');
-})->middleware(['auth', 'verified'])->name('book_termination');
+})->middleware(['auth', 'verified', 'admin'])->name('book_termination');
 Route::post('/book_termination', [BookDeletionController::class, 'destroy']);
 
 // Search
 Route::get('/search', [SearchController::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('search');
 
 Route::get('/search/{id}', [BookController::class, 'show'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('book.show');
 
  Route::post('/search/checkin/{title}', [BookController::class, 'checkIn'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('request.checkIn');
 
 Route::post('/search/checkout/{title}/{sublocation}}', [BookController::class, 'checkOut'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('request.checkOut');
 
 // Profile Controller
