@@ -39,30 +39,6 @@
                </a>
             </li>
             <li>
-               <a href="{{ route('requests') }}" class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group">
-               <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" fill="white">
-                  <path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>
-                  <span class="flex-1 ms-3 whitespace-nowrap text-white">Requests Approval</span>
-                  <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-white bg-blue-500 rounded-full dark:bg-red-600 dark:text-white-300">!</span>
-               </a>
-            </li>
-            <li>
-            @if (Route::has('register'))
-               <a href="{{ route('register') }}" class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group">
-               <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512" fill="white">
-                  <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/></svg>
-                  <span class="flex-1 ms-3 whitespace-nowrap text-white">Create Account</span>
-               </a>
-               @endif
-            </li>
-            <li>
-               <a href="{{ route('book_management') }}"  class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group">
-               <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" fill="white">
-                  <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
-                  <span class="flex-1 ms-3 whitespace-nowrap text-white">Book Management</span>
-               </a>
-            </li>
-            <li>
                <form method="POST" action="{{ route('logout') }}">
                @csrf
                <button type="submit" class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group">
@@ -79,59 +55,86 @@
    </aside>
 
    <div class="sm:ml-64 flex items-center justify-center">
-      
         <div class="flex flex-col items-center justify-center h-full pt-10">
-        <a href="{{ url()->previous() }}"
-                class="text-blue-600 dark:text-blue-600 hover:text-blue-800 dark:hover:text-blue-600 mb-3 ml-1 pt-10">
-                &lt; PLM Library Search
-            </a>
-            <h1 class="text-3xl font-bold text-blue-800 dark:text-blue-600 mb-3 ml-1">
-                 PLM Library
-             </h1>
+            <h1 class="text-3xl font-bold text-blue-800 dark:text-blue-600 mb-3 ml-1 pt-10">
+                PLM Library
+            </h1>
 
-             <div class="max-w-2xl p-4 bg-yellow-300 dark:bg-yellow-500 rounded-md shadow-md text-white">
-               <h2 class="text-2xl font-bold text-blue-700">{{ $books->title }}</h2>
-               <p class="text-lg text-white">By: {{ $books->author }}</p>
-               <div class="mt-4">
-                  <p class="text-lg font-bold text-blue-700">Description:</p>
-                  <p>{{ $books->book_description }}</p>
-               </div>
-               
-               <p class="text-lg text-white">Call Number: {{ $books->call_number }}</p>
-               <p class="text-lg text-white">Available Copies: {{ $books->available_copies }} out of {{ $books->total_copies }}</p>
-               <p class="text-lg text-white">Location: {{ $books->sublocation }}</p>
+<form action="{{ route('search', request()->query()) }}">
+        <div class="flex my-2">
+            <input type="text" name="q" placeholder="Search" class="py-2 px-2 text-md border border-blue-200 rounded-l focus:outline-none" value="{{$search_param}}" />
+            <button type="submit" class="w-10 flex items-center justify-center border-t border-r border-b border-blue-200 rounded-r text-blue-100 bg-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </button>
+        </div>
+    </form>
 
-               <div class="mt-4">
-                  <p class="text-lg font-bold text-blue-700">Publication Info:</p>
-                  <p>Published: {{ $books->publish_date }} </p>
-                  <p>{{ $books->publish_location }}</p>
-               </div>
-
-               <div class="flex flex-col items-center"">
-                  <form method="POST" action="{{ route('request.checkIn', ['title' => $books->title]) }}">
-                     @csrf
-                     <button type="submit" class="mt-4 p-2 bg-green-500 text-white rounded-md justify-center">
-                        Check In
-                     </button>
-                  </form>
-
-
-                  <form method="POST" action="{{ route('request.checkOut', ['title' => $books->title, 'sublocation' => $books->sublocation]) }}">
-                  @csrf
-                  <button type="submit" class="mt-2 p-2 bg-red-500 text-white rounded-md justify-center">
-                     Check Out
-                  </button>
-               </form>
-
-                     @if(session('success'))
-                     <div class="alert alert-success">
-                        {{ session('success') }}
-                     </div>
-                     @endif
-               </div>
+    <div class="flex flex-col mb-4">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <div class="shadow overflow-hidden border-b border-blue-800 sm:rounded-lg">
+                    <table class="min-w-full divide-y divide-blue-600">
+                        <thead class="bg-blue-200">
+                            <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">
+                                Call Number
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">
+                                Title
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">
+                                Author
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">
+                                Publish Date
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">
+                                Publish Location
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">
+                                Sublocation
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">
+                                Available Copies
+                            </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-blue-200">
+                            @foreach($books as $books)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-blue-900">{{ $books->call_number }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <a href="{{ route('pbook.show', ['id' => $books->id]) }}" class="text-sm text-blue-500">{{ $books->title }}</a>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{ $books->author }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{ $books->publish_date }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{ $books->publish_location }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{ $books->sublocation }}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{ $books->available_copies }}</div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
+   </div>
     
 
 </x-app-layout>

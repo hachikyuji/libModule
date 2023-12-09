@@ -11,6 +11,10 @@ use App\Models\AccountHistory;
 use App\Http\Controllers\AccHistoryController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\handleRequests;
+use App\Http\Controllers\PatronBookControll;
+use App\Http\Controllers\PatronHistoryControl;
+use App\Http\Controllers\PatronQueueControl;
+use App\Http\Controllers\PatronSearchControl;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QueueController;
 use App\Http\Controllers\requestsDecision;
@@ -36,6 +40,33 @@ Route::get('/', function () {
 Route::get('/patron_dashboard', function () {
     return view('patron_dashboard');
 })->middleware(['auth', 'verified'])->name('patron_dashboard');
+
+// Patron Search
+Route::get('/patron_search', [PatronSearchControl::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('patron_search');
+
+Route::get('/patron_search/{id}', [PatronBookControll::class, 'show'])
+    ->middleware(['auth', 'verified'])
+    ->name('pbook.show');
+
+ Route::post('/patron_search/checkin/{title}', [PatronBookControll::class, 'checkIn'])
+    ->middleware(['auth', 'verified'])
+    ->name('request.checkIn');
+
+Route::post('/patron_search/checkout/{title}/{sublocation}}', [PatronBookControll::class, 'checkOut'])
+    ->middleware(['auth', 'verified'])
+    ->name('request.checkOut');
+
+// Patron Queue
+Route::get('/patron_queue', [PatronQueueControl::class, 'getUserQueue'])
+    ->middleware(['auth', 'verified'])
+    ->name('patron_queue');
+
+// Patron History
+Route::get('/patron_history', [PatronHistoryControl::class, 'getUserAccountHistory'])
+    ->middleware(['auth', 'verified'])
+    ->name('patron_history'); 
 
 // Admin Dashboard Homepage
 Route::get('/dashboard', [BookController::class, 'showBooksWithHighestCount'])
@@ -91,7 +122,7 @@ Route::get('/search/{id}', [BookController::class, 'show'])
     ->middleware(['auth', 'verified'])
     ->name('request.checkIn');
 
-Route::post('/search/checkout/{title}', [BookController::class, 'checkOut'])
+Route::post('/search/checkout/{title}/{sublocation}}', [BookController::class, 'checkOut'])
     ->middleware(['auth', 'verified'])
     ->name('request.checkOut');
 

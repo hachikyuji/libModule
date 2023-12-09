@@ -10,14 +10,14 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-class BookController extends Controller
+class PatronBookControll extends Controller
 {
     private $books;
 
     public function show($id)
     {
         $this->books = Books::findOrFail($id);
-        return view('view', ['books' => $this->books]);
+        return view('patron_view', ['books' => $this->books]);
     }
 
     public function showBooksWithHighestCount()

@@ -80,63 +80,63 @@
 
 
    <div class="sm:ml-64 flex items-center justify-center">
-    <div class="flex flex-col items-center justify-center h-full pt-10">
-            <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1 pt-10">
-                Current Requests
-            </h1>
+      <div class="flex flex-col items-center justify-center h-full pt-10">
+               <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1 pt-10">
+                  Current Requests
+               </h1>
 
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-full lg:w-full xl:w-full">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">
-                            Email
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Book
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Book Status
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            User Fine
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Request Type
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Request Status
-                        </th>
-                    </tr>
-                </thead>
-                    <tbody>
-                    @foreach($queueRequest as $queue)
-                    <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
-                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                {{ $queue->email }}
-                            </td>
-                            <td class="px-4 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                              {{ $queue->book_request }}
-                            </td>
-                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                <!-- Pending -->
-                            </td>
-                            <td class="px-12 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                               @foreach($accountHistory->where('books_borrowed', $queue->book_request) as $history)
-                                    {{ $history->fines }}
-                              @endforeach
-                            </td>
-                            <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                {{ $queue->request_type }}
-                            </td>
-                            <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
-                                {{ $queue->request_status }}
-                            </td>
-                    </tr>   
-                        @endforeach
-                    </tbody>
-            </table>
-        </div>
-    </div>
+         <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-full lg:w-full xl:w-full">
+               <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                  <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
+                     <tr>
+                           <th scope="col" class="px-6 py-3">
+                              Email
+                           </th>
+                           <th scope="col" class="px-6 py-3">
+                              Book
+                           </th>
+                           <th scope="col" class="px-6 py-3">
+                              Book Status
+                           </th>
+                           <th scope="col" class="px-6 py-3">
+                              User Fine
+                           </th>
+                           <th scope="col" class="px-6 py-3">
+                              Request Type
+                           </th>
+                           <th scope="col" class="px-6 py-3">
+                              Request Status
+                           </th>
+                     </tr>
+                  </thead>
+                     <tbody>
+                     @foreach($queueRequest as $queue)
+                     <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
+                              <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                 {{ $queue->email }}
+                              </td>
+                              <td class="px-4 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                 {{ $queue->book_request }}
+                              </td>
+                              <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                 <!-- Pending -->
+                              </td>
+                              <td class="px-12 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                 @foreach($accountHistory->where('books_borrowed', $queue->book_request) as $history)
+                                       {{ $history->fines }}
+                                 @endforeach
+                              </td>
+                              <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                 {{ $queue->request_type }}
+                              </td>
+                              <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
+                                 {{ $queue->request_status }}
+                              </td>
+                     </tr>   
+                           @endforeach
+                     </tbody>
+               </table>
+         </div>
+      </div>
    </div>
 </x-app-layout>

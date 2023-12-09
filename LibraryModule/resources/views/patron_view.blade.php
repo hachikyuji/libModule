@@ -1,11 +1,11 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot> 
+      <x-slot name="header">
+         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+               {{ __('Dashboard') }}
+         </h2>
+      </x-slot> 
 
-<button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+      <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
    <span class="sr-only">Open sidebar</span>
    <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
    <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
@@ -52,5 +52,59 @@
       </ul>
    </div>
 </aside>
+
+   <div class="sm:ml-64 flex items-center justify-center">
+      
+      <div class="flex flex-col items-center justify-center h-full pt-10">
+      <a href="{{ url()->previous() }}"
+              class="text-blue-600 dark:text-blue-600 hover:text-blue-800 dark:hover:text-blue-600 mb-3 ml-1 pt-10">
+              &lt; PLM Library Search
+          </a>
+          <h1 class="text-3xl font-bold text-blue-800 dark:text-blue-600 mb-3 ml-1">
+               PLM Library
+           </h1>
+
+           <div class="max-w-2xl p-4 bg-yellow-300 dark:bg-yellow-500 rounded-md shadow-md text-white">
+             <h2 class="text-2xl font-bold text-blue-700">{{ $books->title }}</h2>
+             <p class="text-lg text-white">By: {{ $books->author }}</p>
+             <div class="mt-4">
+                <p class="text-lg font-bold text-blue-700">Description:</p>
+                <p>{{ $books->book_description }}</p>
+             </div>
+             
+             <p class="text-lg text-white">Call Number: {{ $books->call_number }}</p>
+             <p class="text-lg text-white">Available Copies: {{ $books->available_copies }} out of {{ $books->total_copies }}</p>
+             <p class="text-lg text-white">Location: {{ $books->sublocation }}</p>
+
+             <div class="mt-4">
+                <p class="text-lg font-bold text-blue-700">Publication Info:</p>
+                <p>Published: {{ $books->publish_date }} </p>
+                <p>{{ $books->publish_location }}</p>
+             </div>
+
+             <div class="flex flex-col items-center"">
+                <form method="POST" action="{{ route('request.checkIn', ['title' => $books->title]) }}">
+                   @csrf
+                   <button type="submit" class="mt-4 p-2 bg-green-500 text-white rounded-md justify-center">
+                      Check In
+                   </button>
+                </form>
+
+
+                <form method="POST" action="{{ route('request.checkOut', ['title' => $books->title, 'sublocation' => $books->sublocation]) }}">
+                @csrf
+                <button type="submit" class="mt-2 p-2 bg-red-500 text-white rounded-md justify-center">
+                   Check Out
+                </button>
+             </form>
+
+                   @if(session('success'))
+                   <div class="alert alert-success">
+                      {{ session('success') }}
+                   </div>
+                   @endif
+             </div>
+      </div>
+  </div>
 
 </x-app-layout>

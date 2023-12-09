@@ -25,14 +25,5 @@ class Books extends Model
         'count',
     ];
 
-    public function toSearchableArray()
-    {
-        return [
-            'call_number' => $this->call_number,
-            'title' => $this->title,
-            'author' => $this->author,
-        ];
-    }
-
     
 }

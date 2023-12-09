@@ -77,7 +77,8 @@
          </ul>
       </div>
    </aside>
-   <div class="sm:ml-64 flex items-center justify-center">
+
+<div class="sm:ml-64 flex items-center justify-center">
    <div class="flex flex-col items-center justify-center h-full pt-10">
         <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1 pt-10">
             Recent History
@@ -92,6 +93,9 @@
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Book Title
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Sublocation
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Borrowed Date
@@ -115,6 +119,9 @@
                             {{ $history->books_borrowed }}
                         </td>
                         <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                            {{ $history->sublocation }}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                             {{ $history->borrowed_date }}
                         </td>
                         <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
@@ -131,6 +138,6 @@
       </div>
    </div>
 
-   </div>
+</div>
 
 </x-app-layout>

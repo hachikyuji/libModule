@@ -14,7 +14,8 @@ class AccountHistory extends Model
         'books_borrowed',
         'borrowed_date',
         'returned_date',
-        'fines'
+        'fines',
+        'sublocation',
     ];
     protected $table = 'account_history';
 
