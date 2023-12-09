@@ -22,10 +22,8 @@ class BookController extends Controller
 
     public function showBooksWithHighestCount()
     {
-        // Retrieve books with the highest count
         $booksWithHighestCount = Books::orderBy('count', 'desc')->take(5)->get();
     
-        // Retrieve the most popular sublocation for the current user
         $userEmail = Auth::user()->email;
     
         $mostPopularSublocation = AccountHistory::where('email', $userEmail)
@@ -34,7 +32,6 @@ class BookController extends Controller
             ->orderByDesc('count')
             ->first();
     
-        // Retrieve the most popular books for the most popular sublocation
         $mostPopularBooks = collect();
     
         if ($mostPopularSublocation) {
@@ -44,7 +41,6 @@ class BookController extends Controller
                 ->get();
         }
     
-        // Pass the data to the view
         return view('dashboard', compact('booksWithHighestCount', 'mostPopularBooks'));
     }
 

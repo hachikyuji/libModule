@@ -37,9 +37,9 @@ Route::get('/', function () {
 });
 
 // Patron Dashboard Hompage
-Route::get('/patron_dashboard', function () {
-    return view('patron_dashboard');
-})->middleware(['auth', 'verified'])->name('patron_dashboard');
+Route::get('/patron_dashboard', [PatronBookControll::class, 'showBooksWithHighestCount'])
+    ->middleware(['auth', 'verified'])
+    ->name('patron_dashboard');
 
 // Patron Search
 Route::get('/patron_search', [PatronSearchControl::class, 'index'])
@@ -126,19 +126,6 @@ Route::post('/search/checkout/{title}/{sublocation}}', [BookController::class, '
     ->middleware(['auth', 'verified', 'admin'])
     ->name('request.checkOut');
 
-// Profile Controller
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
 
 // Temporary Routes
 
@@ -157,5 +144,18 @@ Route::get('/history', function () {
     return view('history');
 })->middleware(['auth', 'verified'])->name('history');
 */
+
+// Profile Controller
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
 require __DIR__.'/auth.php';
