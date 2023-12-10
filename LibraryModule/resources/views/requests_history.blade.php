@@ -86,8 +86,13 @@
    </aside>
 
    <div class="sm:ml-64 flex items-center justify-center">
+
         <div class="flex flex-col items-center justify-center h-full pt-10">
-            <h1 class="text-3xl font-bold text-blue-800 dark:text-blue-600 mb-3 ml-1 pt-10">
+        <a href="{{ route('admin_requests') }}"
+                    class="text-blue-600 dark:text-blue-600 hover:text-blue-800 dark:hover:text-blue-600 mb-3 ml-1 pt-10">
+                    &lt; Requests Approval
+                </a>
+            <h1 class="text-3xl font-bold text-blue-800 dark:text-blue-600 mb-3 ml-1">
                 Request History
             </h1>
 

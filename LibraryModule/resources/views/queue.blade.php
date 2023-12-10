@@ -114,39 +114,45 @@
                            <th scope="col" class="px-6 py-3">
                               Request Status
                            </th>
+                           <th scope="col" class="px-6 py-3">
+                              
+                           </th>
                      </tr>
                   </thead>
                      <tbody>
-                     @foreach($queueRequest as $queue)
-                     <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
+                        @foreach($queueRequest as $queue)
+                           <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
                               <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 {{ $queue->email }}
+                                    {{ $queue->email }}
                               </td>
                               <td class="px-4 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 {{ $queue->book_request }}
+                                    {{ $queue->book_request }}
                               </td>
                               <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                              @foreach ($pendingRequests as $request)
-                              @php
-                                 $book = \App\Models\Books::where('title', $request->book_request)->first();
-                                 $status = $book ? ($book->available_copies > 0 ? 'Available' : 'Unavailable') : 'Not Found';
-                              @endphp
-                              {{ $status }}
-                              @endforeach
+                                    @php
+                                       $book = \App\Models\Books::where('title', $queue->book_request)->first();
+                                       $status = $book ? ($book->available_copies > 0 ? 'Available' : 'Unavailable') : 'Not Found';
+                                    @endphp
+                                    {{ $status }}
                               </td>
                               <td class="px-12 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 @foreach($accountHistory->where('books_borrowed', $queue->book_request) as $history)
+                                    @foreach($accountHistory->where('books_borrowed', $queue->book_request) as $history)
                                        {{ $history->fines }}
-                                 @endforeach
+                                    @endforeach
                               </td>
                               <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 {{ $queue->request_type }}
+                                    {{ $queue->request_type }}
                               </td>
                               <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
-                                 {{ $queue->request_status }}
+                                    {{ $queue->request_status }}
                               </td>
-                     </tr>   
-                           @endforeach
+                              <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                              @if($book)
+                                 <a href="{{ route('book.show', ['id' => $book->id]) }}">View</a>
+                              @endif
+                              </td>
+                           </tr>
+                     @endforeach
                      </tbody>
                </table>
          </div>

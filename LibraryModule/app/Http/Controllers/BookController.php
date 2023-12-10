@@ -47,9 +47,29 @@ class BookController extends Controller
     public function checkIn($title, $sublocation)
     {
         $userEmail = Auth::user()->email;
-    
+        
         $now = Carbon::now('Asia/Manila');
     
+        // Retrieve the corresponding check-out record for the specific book
+        $checkOutRecord = AccountHistory::where('email', $userEmail)
+            ->where('books_borrowed', $title)
+            ->where('sublocation', $sublocation)
+            ->whereNotNull('borrowed_date') // Only consider records with borrowed_date
+            ->orderBy('borrowed_date', 'desc') // Assuming you want the latest check-out record
+            ->first();
+    
+        if ($checkOutRecord) {
+            $borrowedDate = Carbon::parse($checkOutRecord->borrowed_date);
+            $daysPassed = $borrowedDate->diffInDays($now);
+    
+            // If more than 3 days have passed, calculate fines
+            if ($daysPassed > 3) {
+                $fineAmount = ($daysPassed - 3) * 50; // 50 is the fine amount per day
+                $checkOutRecord->update(['fines' => $fineAmount]);
+            }
+        }
+    
+        // Proceed with check-in logic
         pendingRequests::create([
             'email' => $userEmail,
             'book_request' => $title,
@@ -62,7 +82,7 @@ class BookController extends Controller
             'email' => $userEmail,
             'books_borrowed' => $title,
             'returned_date' => $now,
-            'fines' => 0,
+            'fines' => 0, // Initialize fines to 0 for check-in
             'sublocation' => $sublocation,
         ]);
     
