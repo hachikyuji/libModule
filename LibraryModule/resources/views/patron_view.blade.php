@@ -64,7 +64,7 @@
    <div class="sm:ml-64 flex items-center justify-center">
       
       <div class="flex flex-col items-center justify-center h-full pt-10">
-      <a href="{{ url()->previous() }}"
+      <a href="{{ route('patron_search') }}"
               class="text-blue-600 dark:text-blue-600 hover:text-blue-800 dark:hover:text-blue-600 mb-3 ml-1 pt-10">
               &lt; PLM Library Search
           </a>
@@ -91,7 +91,7 @@
              </div>
 
              <div class="flex flex-col items-center"">
-                <form method="POST" action="{{ route('request.checkIn', ['title' => $books->title]) }}">
+             <form method="POST" action="{{ route('request.checkIn', ['title' => $books->title, 'sublocation' => $books->sublocation]) }}">
                    @csrf
                    <button type="submit" class="mt-4 p-2 bg-green-500 text-white rounded-md justify-center">
                       Check In

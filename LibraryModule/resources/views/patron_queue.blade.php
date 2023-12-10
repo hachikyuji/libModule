@@ -101,7 +101,13 @@
                                  {{ $queue->book_request }}
                               </td>
                               <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 <!-- Pending -->
+                              @foreach ($pendingRequests as $request)
+                              @php
+                                 $book = \App\Models\Books::where('title', $request->book_request)->first();
+                                 $status = $book ? ($book->available_copies > 0 ? 'Available' : 'Unavailable') : 'Not Found';
+                              @endphp
+                              {{ $status }}
+                              @endforeach
                               </td>
                               <td class="px-12 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                                  @foreach($accountHistory->where('books_borrowed', $queue->book_request) as $history)

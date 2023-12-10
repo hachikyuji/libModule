@@ -44,51 +44,55 @@ class BookController extends Controller
         return view('dashboard', compact('booksWithHighestCount', 'mostPopularBooks'));
     }
 
-    public function checkIn($title)
+    public function checkIn($title, $sublocation)
     {
         $userEmail = Auth::user()->email;
-        
+    
+        $now = Carbon::now('Asia/Manila');
+    
         pendingRequests::create([
             'email' => $userEmail,
             'book_request' => $title,
-            'request_date' => Carbon::now(),
+            'request_date' => $now,
             'request_type' => 'Check In', 
             'request_status' => 'Pending',
         ]);
-
+    
         AccountHistory::create([
             'email' => $userEmail,
             'books_borrowed' => $title,
-            'returned_date' => Carbon::now(),
-            'fines' => 0,
-        ]);
-
-        return redirect()->back()->with('success', 'Check-in request submitted successfully!');
-    }
-
-    public function checkOut($title, $sublocation)
-    {
-        $userEmail = Auth::user()->email;
-        
-        pendingRequests::create([
-            'email' => $userEmail,
-            'book_request' => $title,
-            'request_date' => Carbon::now(),
-            'request_type' => 'Check Out', 
-            'request_status' => 'Pending',
-        ]);
-
-        AccountHistory::create([
-            'email' => $userEmail,
-            'books_borrowed' => $title,
-            'borrowed_date' => Carbon::now(),
+            'returned_date' => $now,
             'fines' => 0,
             'sublocation' => $sublocation,
         ]);
-
-        Books::where('title', $title)->update(['count' => \App\Models\Books::raw('count + 1')]);
-
-
+    
+        return redirect()->back()->with('success', 'Check-in request submitted successfully!');
+    }
+    
+    public function checkOut($title, $sublocation)
+    {
+        $userEmail = Auth::user()->email;
+    
+        $now = Carbon::now('Asia/Manila');
+    
+        pendingRequests::create([
+            'email' => $userEmail,
+            'book_request' => $title,
+            'request_date' => $now,
+            'request_type' => 'Check Out', 
+            'request_status' => 'Pending',
+        ]);
+    
+        AccountHistory::create([
+            'email' => $userEmail,
+            'books_borrowed' => $title,
+            'borrowed_date' => $now,
+            'fines' => 0,
+            'sublocation' => $sublocation,
+        ]);
+    
+        Books::where('title', $title)->update(['count' => Books::raw('count + 1')]);
+    
         return redirect()->back()->with('success', 'Check-out request submitted successfully!');
     }
 

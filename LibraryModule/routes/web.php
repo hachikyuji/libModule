@@ -17,6 +17,7 @@ use App\Http\Controllers\PatronQueueControl;
 use App\Http\Controllers\PatronSearchControl;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QueueController;
+use App\Http\Controllers\RequestHistory;
 use App\Http\Controllers\requestsDecision;
 use App\Models\pendingRequests;
 
@@ -50,7 +51,7 @@ Route::get('/patron_search/{id}', [PatronBookControll::class, 'show'])
     ->middleware(['auth', 'verified'])
     ->name('pbook.show');
 
- Route::post('/patron_search/checkin/{title}', [PatronBookControll::class, 'checkIn'])
+ Route::post('/patron_search/checkin/{title}/{sublocation}', [PatronBookControll::class, 'checkIn'])
     ->middleware(['auth', 'verified'])
     ->name('request.checkIn');
 
@@ -88,6 +89,14 @@ Route::get('/requests', [handleRequests::class, 'getRequests'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('requests');
 
+Route::get('/admin_requests', function () {
+        return view('admin_requests');
+    })->middleware(['auth', 'verified', 'admin'])->name('admin_requests');
+
+ Route::get('/requests_history', [RequestHistory::class, 'index']) 
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('requests_history');
+
 Route::post('/requests/{email}/approve', [handleRequests::class, 'approveRequest'])
     ->name('approve-request');
 
@@ -118,12 +127,12 @@ Route::get('/search/{id}', [BookController::class, 'show'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('book.show');
 
- Route::post('/search/checkin/{title}', [BookController::class, 'checkIn'])
-    ->middleware(['auth', 'verified', 'admin'])
+ Route::post('/search/checkin/{title}/{sublocation}', [BookController::class, 'checkIn'])
+    ->middleware(['auth', 'verified'])
     ->name('request.checkIn');
 
-Route::post('/search/checkout/{title}/{sublocation}}', [BookController::class, 'checkOut'])
-    ->middleware(['auth', 'verified', 'admin'])
+Route::post('/search/checkout/{title}/{sublocation}', [BookController::class, 'checkOut'])
+    ->middleware(['auth', 'verified'])
     ->name('request.checkOut');
 
 

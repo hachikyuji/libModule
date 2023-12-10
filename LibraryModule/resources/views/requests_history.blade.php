@@ -15,7 +15,7 @@
    <aside id="default-sidebar" class="fixed top-20 left-0 z-40 w-64 h-screen overflow-y-auto bg-white dark:bg-blue-900">
       <div class="h-full px-3 py-4 overflow-y-auto bg-white dark:bg-blue-900">
          <ul class="space-y-2 font-medium">
-         <li>
+            <li>
                <a href="{{ route('dashboard') }}" class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group">
                <svg xmlns="http://www.w3.org/2000/svg" height="16" width="18" viewBox="0 0 576 512" fill="white">
                     <path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"/>
@@ -86,26 +86,78 @@
    </aside>
 
    <div class="sm:ml-64 flex items-center justify-center">
-    <div class="flex flex-col items-center justify-center h-full pt-10">
-            <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1 pt-10">
-                Book Termination
+        <div class="flex flex-col items-center justify-center h-full pt-10">
+            <h1 class="text-3xl font-bold text-blue-800 dark:text-blue-600 mb-3 ml-1 pt-10">
+                Request History
             </h1>
 
-            <form method="POST" action="{{ route('book_termination') }}" class="w-full max-w-md">
-            @csrf
-            <div class="mb-4">
-                <label for="call_number" class="block text-sm font-medium text-blue-500">Call Number</label>
-                <input id="call_number" type="text" name="call_number" value="{{ old('call_number') }}" required autofocus autocomplete="call_number" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                @error('call_number')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
+    <form action="{{ route('requests_history', request()->query()) }}">
+        <div class="flex my-2">
+            <input type="text" name="q" placeholder="Search" class="py-2 px-2 text-md border border-blue-200 rounded-l focus:outline-none" value="{{$search_param}}" />
+            <button type="submit" class="w-10 flex items-center justify-center border-t border-r border-b border-blue-200 rounded-r text-blue-100 bg-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </button>
+        </div>
+    </form>
 
-            <div class="flex items-center justify-center">
-                <button class="bg-yellow-500 text-white py-2 px-4 rounded">
-                    {{ __('Delete') }}
-                </button>
+    <div class="flex flex-col mb-4">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <div class="shadow overflow-hidden border-b border-blue-800 sm:rounded-lg">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
+                        <tr>
+                            <th scope="col" class="px-6 py-3">
+                                Email
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Book
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Book Status
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                User Fine
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                Request Type
+                            </th>
+                            <th scope="col" class="px-6 py-3">
+                                ID
+                            </th>
+                        </tr>
+                </thead>
+                        <tbody class="bg-white divide-y divide-blue-200">
+                        @foreach($request as $request)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-blue-900"> {{$request ->email}}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{$request ->book_request}}</a>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{$request ->request_date}}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{$request ->request_type}}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{$request ->request_status}}</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{$request ->id}}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                        @endforeach
+                    </table>
+                </div>
             </div>
+        </div>
+    </div>
 
    </div>
 

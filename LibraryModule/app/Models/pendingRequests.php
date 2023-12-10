@@ -9,10 +9,10 @@ class pendingRequests extends Model
 {
     use HasFactory;
     protected $table = 'pending_requests';
-    protected $primaryKey = 'email';
+    protected $primaryKey = 'id';
     public $incrementing = false;
 
-    protected $fillable = ['email', 'book_request', 'request_date', 'request_type', 'request_status'];
+    protected $fillable = ['email', 'book_request', 'request_date', 'request_type', 'request_status', 'id'];
 
 
 
