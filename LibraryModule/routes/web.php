@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\AccountHistory;
 use App\Http\Controllers\AccHistoryController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\FinesManagementControl;
 use App\Http\Controllers\handleRequests;
 use App\Http\Controllers\PatronBookControll;
 use App\Http\Controllers\PatronHistoryControl;
@@ -97,7 +99,7 @@ Route::get('/admin_requests', function () {
     ->middleware(['auth', 'verified', 'admin'])
     ->name('requests_history');
 
-Route::post('/requests/{email}/approve', [handleRequests::class, 'approveRequest'])
+Route::post('/requests/{email}/{title}/{sublocation}/approve', [handleRequests::class, 'approveRequest'])
     ->name('approve-request');
 
 Route::post('/requests/{email}/deny', [handleRequests::class, 'denyRequest'])
@@ -118,6 +120,14 @@ Route::get('/book_termination', function () {
 })->middleware(['auth', 'verified', 'admin'])->name('book_termination');
 Route::post('/book_termination', [BookDeletionController::class, 'destroy']);
 
+Route::get('/fines_management', [FinesManagementControl::class, 'index']) 
+->middleware(['auth', 'verified', 'admin'])
+->name('fines_management');
+
+Route::post('/set_fines', [FinesManagementControl::class, 'setFines']) 
+->middleware(['auth', 'verified', 'admin'])
+->name('set_fines');
+
 // Search
 Route::get('/search', [SearchController::class, 'index'])
     ->middleware(['auth', 'verified', 'admin'])
@@ -137,7 +147,6 @@ Route::post('/search/checkout/{title}/{sublocation}', [BookController::class, 'c
 
 
 // Temporary Routes
-
 
 /*
 Route::get('register', [RegisteredUserController::class, 'create'])

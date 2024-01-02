@@ -91,6 +91,8 @@
          <a href="{{ route('requests') }}">Current Requests</a>
          <span class="mx-4">|</span>
          <a href="{{ route('requests_history') }}">Requests History</a>
+         <span class="mx-4">|</span>
+         <a href="{{ route('fines_management') }}">Fines Management</a>
       </div>
 
    </div>

@@ -3,21 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\AccountHistory;
-use App\Models\Books;
 use App\Models\PendingRequests;
+use App\Models\Books;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-class PatronBookControll extends Controller
+class BookController extends Controller
 {
     private $books;
 
     public function show($id)
     {
         $this->books = Books::findOrFail($id);
-        return view('patron_view', ['books' => $this->books]);
+        return view('view', ['books' => $this->books]);
     }
 
     public function showBooksWithHighestCount()
@@ -41,59 +41,123 @@ class PatronBookControll extends Controller
                 ->get();
         }
     
-        return view('patron_dashboard', compact('booksWithHighestCount', 'mostPopularBooks'));
+        return view('dashboard', compact('booksWithHighestCount', 'mostPopularBooks'));
     }
 
     public function checkIn($title, $sublocation)
     {
         $userEmail = Auth::user()->email;
     
+        // Check if there is a pending check-out request for the specific book and user
+        $pendingCheckOutRequest = PendingRequests::where('email', $userEmail)
+            ->where('book_request', $title)
+            ->where('request_type', 'Check Out')
+            ->where('request_status', 'Approved')
+            ->first();
+    
+        if (!$pendingCheckOutRequest) {
+            // No pending check-out request found, show error or redirect as needed
+            return redirect()->back()->with('error', 'No pending check-out request found for this book.');
+        }
+    
         $now = Carbon::now('Asia/Manila');
     
-        pendingRequests::create([
-            'email' => $userEmail,
-            'book_request' => $title,
-            'request_date' => $now,
-            'request_type' => 'Check In', 
-            'request_status' => 'Pending',
-        ]);
+        // Retrieve the corresponding check-out record for the specific book
+        $checkOutRecord = AccountHistory::where('email', $userEmail)
+            ->where('books_borrowed', $title)
+            ->where('sublocation', $sublocation)
+            ->whereNotNull('borrowed_date') // Only consider records with borrowed_date
+            ->orderBy('borrowed_date', 'desc') // Assuming you want the latest check-out record
+            ->first();
     
+        if (!$checkOutRecord) {
+            // No check-out record found, show error or redirect as needed
+            return redirect()->back()->with('error', 'No check-out record found for this book.');
+        }
+    
+        // Check if the book has already been checked in
+        if ($checkOutRecord->returned_date !== null) {
+            // Book has already been checked in, show error or redirect as needed
+            return redirect()->back()->with('error', 'This book has already been checked in.');
+        }
+    
+        // If more than 3 days have passed, calculate fines
+        $borrowedDate = Carbon::parse($checkOutRecord->borrowed_date);
+        $daysPassed = $borrowedDate->diffInDays($now);
+    
+        if ($daysPassed > 3) {
+            $fineAmount = ($daysPassed - 3) * 50; // 50 is the fine amount per day
+            $checkOutRecord->update(['fines' => $fineAmount]);
+        }
+    
+        PendingRequests::where('id', $pendingCheckOutRequest->id)->delete(); // Remove the pending check-out request
+    
+        /*
         AccountHistory::create([
             'email' => $userEmail,
             'books_borrowed' => $title,
             'returned_date' => $now,
-            'fines' => 0,
+            'fines' => 0, // Initialize fines to 0 for check-in
             'sublocation' => $sublocation,
         ]);
-    
-        return redirect()->back()->with('success', 'Check-in request submitted successfully!');
-    }
-    
-    public function checkOut($title, $sublocation)
-    {
-        $userEmail = Auth::user()->email;
-    
-        $now = Carbon::now('Asia/Manila');
+        */
     
         pendingRequests::create([
             'email' => $userEmail,
             'book_request' => $title,
             'request_date' => $now,
-            'request_type' => 'Check Out', 
+            'request_type' => 'Check In',
             'request_status' => 'Pending',
+            'expiration_time' => $now->copy()->addHours(1), // Set expiration time for checking in
         ]);
     
-        AccountHistory::create([
+        // Check if the request has expired
+        $expirationTime = Carbon::parse($pendingCheckOutRequest->expiration_time);
+        if ($now->greaterThan($expirationTime)) {
+            // The request has expired, show error or redirect as needed
+            return redirect()->back()->with('error', 'This check-out request has expired.');
+        }
+    
+        return redirect()->back()->with('success', 'Check-in request submitted successfully!');
+    }
+    
+    
+    
+    public function checkOut($title, $sublocation)
+    {
+        $userEmail = Auth::user()->email;
+        $now = Carbon::now('Asia/Manila');
+    
+        // Check if available_copies is greater than 0
+        $book = Books::where('title', $title)->first();
+
+        if ($book && $book->available_copies > 0) {
+            $book->decrement('available_copies');
+    
+        }
+    
+        if (!$book || $book->available_copies <= 0) {
+            return redirect()->back()->with('error', 'This book is not available for check-out.');
+        }
+    
+        $expirationTime = $now->copy()->addHours(1);
+    
+        // Create the check-out request with the expiration time
+        PendingRequests::create([
             'email' => $userEmail,
-            'books_borrowed' => $title,
-            'borrowed_date' => $now,
-            'fines' => 0,
-            'sublocation' => $sublocation,
+            'book_request' => $title,
+            'request_date' => $now,
+            'request_type' => 'Check Out',
+            'request_status' => 'Pending',
+            'expiration_time' => $expirationTime,
         ]);
     
-        Books::where('title', $title)->update(['count' => Books::raw('count + 1')]);
+    
+        // Update available_copies in the Books table
+        Books::where('title', $title)->update(['count' => DB::raw('count + 1')]);
     
         return redirect()->back()->with('success', 'Check-out request submitted successfully!');
     }
+    
 
 }

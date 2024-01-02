@@ -115,7 +115,10 @@
                               Request Status
                            </th>
                            <th scope="col" class="px-6 py-3">
-                              
+                              Expiration Status
+                           </th>
+                           <th scope="col" class="px-6 py-3">
+                              Link
                            </th>
                      </tr>
                   </thead>
@@ -136,9 +139,17 @@
                                     {{ $status }}
                               </td>
                               <td class="px-12 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                    @foreach($accountHistory->where('books_borrowed', $queue->book_request) as $history)
-                                       {{ $history->fines }}
-                                    @endforeach
+                              @php
+                                 $finesDisplayed = false;
+                              @endphp
+                              @foreach($accountHistory->where('books_borrowed', $queue->book_request) as $history)
+                                 @if(!$finesDisplayed && $history->email == $queue->email)
+                                    {{ $history->fines }}
+                                    @php
+                                          $finesDisplayed = true;
+                                    @endphp
+                                 @endif
+                              @endforeach
                               </td>
                               <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                                     {{ $queue->request_type }}
@@ -146,7 +157,22 @@
                               <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
                                     {{ $queue->request_status }}
                               </td>
-                              <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                              <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
+                              @php
+                                 $expirationTime = Carbon\Carbon::parse($queue->expiration_time);
+                                 $currentTime = now();
+
+                                 // Check if the request is expired
+                                 $isExpired = $expirationTime->isPast();
+                              @endphp
+
+                              @if($isExpired)
+                                 <span class="text-red-500">Expired</span>
+                              @else
+                                 <span class="text-green-500">Not Expired</span>
+                              @endif
+                              </td>
+                              <td class="px-6 py-4 font-medium text-blue-500 whitespace-nowrap dark:text-blue">
                               @if($book)
                                  <a href="{{ route('book.show', ['id' => $book->id]) }}">View</a>
                               @endif

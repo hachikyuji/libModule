@@ -93,12 +93,12 @@
                     &lt; Requests Approval
                 </a>
             <h1 class="text-3xl font-bold text-blue-800 dark:text-blue-600 mb-3 ml-1">
-                Request History
+                Fines Management
             </h1>
 
-    <form action="{{ route('requests_history', request()->query()) }}">
+    <form action="{{ route('fines_management', request()->query()) }}">
         <div class="flex my-2">
-            <input type="text" name="q" placeholder="Search" class="py-2 px-2 text-md border border-blue-200 rounded-l focus:outline-none" value="{{$search_param}}" />
+            <input type="text" name="q" placeholder="Search History" class="py-2 px-2 text-md border border-blue-200 rounded-l focus:outline-none" value="{{$search_param}}" />
             <button type="submit" class="w-10 flex items-center justify-center border-t border-r border-b border-blue-200 rounded-r text-blue-100 bg-blue-500">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -118,19 +118,19 @@
                                 Email
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Book
+                                Book Borrowed
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Transaction Date
+                                Borrowed Date
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Request Type
+                                Returned Date
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Request Status
+                                Fines
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                ID
+                                Set Fines
                             </th>
                         </tr>
                 </thead>
@@ -141,19 +141,29 @@
                                     <div class="text-sm font-medium text-blue-900"> {{$request ->email}}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{$request ->book_request}}</a>
+                                    <div class="text-sm text-blue-900">{{$request ->books_borrowed}}</a>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{$request ->request_date}}</div>
+                                    <div class="text-sm text-blue-900">{{$request ->borrowed_date}}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{$request ->request_type}}</div>
+                                    <div class="text-sm text-blue-900">{{$request ->returned_date}}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{$request ->request_status}}</div>
+                                    <div class="text-sm font-medium text-blue-900">{{$request ->fines}}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{$request ->id}}</div>
+                                </td>
+                                <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                    <form action="{{ route('set_fines') }}" method="post" class="inline">
+                                    @csrf
+                                        <input type="hidden" name="email" value="{{ $request->email }}">
+                                        
+                                        <!-- Add an input field for fines -->
+                                        <input type="text" name="fines" placeholder="Enter fines" class="border rounded px-3 py-1">
+
+                                        <!-- Add a submit button -->
+                                        <button type="submit" class="ml-2 bg-blue-500 text-white px-3 py-1 rounded">Set Fines</button>
+                                    </form>
                                 </td>
                             </tr>
                         </tbody>

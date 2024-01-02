@@ -117,9 +117,8 @@
                     @foreach ($booksWithHighestCount as $book)
                         <tr
                             class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
-                            <td
-                                class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                {{ $book->title }}
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                <a href="{{ route('book.show', ['id' => $book->id]) }}" class="text-sm text-blue-500">{{ $book->title }}</a>
                             </td>
                             <td
                                 class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
@@ -164,7 +163,7 @@
                             class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
                             <td
                                 class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                {{ $subbook->title }}
+                                <a href="{{ route('book.show', ['id' => $subbook->id]) }}" class="text-sm text-blue-500">{{ $subbook->title }}</a>
                             </td>
                             <td
                                 class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">

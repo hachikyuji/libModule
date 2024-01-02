@@ -116,51 +116,74 @@
                             Request Type
                         </th>
                         <th scope="col" class="px-6 py-3">
+                            Expiration Time
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                             
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-    @foreach ($pendingRequests as $request)
-        @if ($request->request_status === 'Pending')
-            <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
-                <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                    {{ $request->email }}
-                </td>
-                <td class="px-4 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                    {{ $request->book_request }}
-                </td>
-                <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                @foreach ($pendingRequests as $request)
+    @if ($request->request_status === 'Pending')
+        @php
+            $userEmail = $request->email;
+            $bookTitle = $request->book_request;
+
+            // Check if fines for this user and book combination have already been displayed
+            $finesDisplayed = false;
+        @endphp
+
+        <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
+            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                {{ $userEmail }}
+            </td>
+            <td class="px-4 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                {{ $bookTitle }}
+            </td>
+            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                 @php
-                    $book = \App\Models\Books::where('title', $request->book_request)->first();
+                    $book = \App\Models\Books::where('title', $bookTitle)->first();
                     $status = $book ? ($book->available_copies > 0 ? 'Available' : 'Unavailable') : 'Not Found';
+                    $sublocation = $book ? $book->sublocation : null;
                 @endphp
                 {{ $status }}
-                </td>
-                <td class="px-12 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                    @foreach($accountHistory->where('books_borrowed', $request->book_request) as $history)
-                        @if($history->email == $request->email)
-                            {{ $history->fines }},
-                        @endif
-                    @endforeach
-                </td>
-                <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                    {{ $request->request_type }}
-                </td>
-                <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
-                    <form action="{{ route('approve-request', ['email' => $request->email]) }}" method="post" class="inline">
-                        @csrf
-                        <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Approve</button>
-                    </form>
-                    |
-                    <form action="{{ route('deny-request', ['email' => $request->email]) }}" method="post" class="inline">
-                        @csrf
-                        <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Deny</button>
-                    </form>
-                </td>
-            </tr> 
-        @endif
-    @endforeach 
+            </td>
+            <td class="px-12 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+            @foreach($accountHistory->where('books_borrowed', $bookTitle) as $history)
+                @php
+                    $finesDisplayed = false; // Reset the flag for each iteration
+                @endphp
+                @if($history->email == $userEmail && !$finesDisplayed)
+                    {{ $history->fines }}
+                    @php
+                        // Set the flag to true to indicate that fines have been displayed
+                        $finesDisplayed = true;
+                    @endphp
+                @endif
+            @endforeach
+            </td>
+            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                {{ $request->request_type }}
+            </td>
+            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                {{ $request->expiration_time }}
+            </td>
+            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
+                <form action="{{ route('approve-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation]) }}" method="post" class="inline">
+                    @csrf
+                    <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Approve</button>
+                </form>
+                |
+                <form action="{{ route('deny-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation]) }}" method="post" class="inline">
+                    @csrf
+                    <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Deny</button>
+                </form>
+            </td>
+        </tr> 
+    @endif
+@endforeach
+
 </tbody>
 
             </table>

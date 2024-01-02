@@ -46,7 +46,7 @@
                </a>
             </li>
             <li>
-               <a href="{{ route('requests') }}" class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group">
+               <a href="{{ route('admin_requests') }}" class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group">
                <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" fill="white">
                   <path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>
                   <span class="flex-1 ms-3 whitespace-nowrap text-white">Requests Approval</span>
@@ -133,6 +133,12 @@
                      @if(session('success'))
                      <div class="alert alert-success">
                         {{ session('success') }}
+                     </div>
+                     @endif
+
+                     @if(session('error'))
+                     <div class="alert alert-danger">
+                        {{ session('error') }}
                      </div>
                      @endif
                </div>
