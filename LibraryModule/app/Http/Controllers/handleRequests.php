@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\AccountHistory;
+use App\Mail\ExpiredRequestNotification;
 use Carbon\Carbon;
 use App\Models\Books;
 use Illuminate\Http\Request;
-use App\Models\pendingRequests;
+use App\Models\PendingRequests;
+use Illuminate\Support\Facades\Mail;
 
 class handleRequests extends Controller
 {
@@ -17,6 +19,14 @@ class handleRequests extends Controller
         $expiredRequests = PendingRequests::where('expiration_time', '<=', $now)
                                           ->where('request_status', 'Pending')
                                           ->get();
+
+        $threeHoursBeforeExpiry = clone $now;
+        $threeHoursBeforeExpiry->addHours(3);
+
+        $sendRequests = PendingRequests::where('expiration_time', '>', $now)
+                        ->where('expiration_time', '<=', $threeHoursBeforeExpiry)
+                        ->where('request_status', 'Pending')
+                        ->get();
     
         foreach ($expiredRequests as $expiredRequest) {
             // Increment available_copies for expired requests
@@ -29,6 +39,10 @@ class handleRequests extends Controller
             // Update the request status to 'Expired'
             $expiredRequest->update(['request_status' => 'Expired']);
         }
+
+        foreach ($sendRequests as $sendRequests) {
+            $this->sendExpiryNotification($sendRequests);
+        }
     
         $pendingRequests = PendingRequests::where('expiration_time', '>', $now)
                                           ->where('request_status', 'Pending')
@@ -37,6 +51,17 @@ class handleRequests extends Controller
         $accountHistory = AccountHistory::all();
     
         return view('requests', ['pendingRequests' => $pendingRequests, 'accountHistory' => $accountHistory]);
+    }
+
+    protected function sendExpiryNotification($sendRequests)
+    {
+        // You can customize the mail content and subject as needed
+        $emailData = [
+            'title' => $sendRequests->book_request,
+            'expiration_time' => $sendRequests->expiration_time,
+        ];
+
+        Mail::to($sendRequests->email)->send(new ExpiredRequestNotification($emailData['title'], $emailData['expiration_time']));
     }
     
 

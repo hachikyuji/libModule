@@ -10,14 +10,14 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
-class BookController extends Controller
+class PatronBookControll extends Controller
 {
     private $books;
 
     public function show($id)
     {
         $this->books = Books::findOrFail($id);
-        return view('view', ['books' => $this->books]);
+        return view('patron_view', ['books' => $this->books]);
     }
 
     public function showBooksWithHighestCount()
@@ -32,17 +32,26 @@ class BookController extends Controller
             ->orderByDesc('count')
             ->first();
     
-        $mostPopularBooks = collect();
+        $userPreferences = DB::table('user_preferences')->where('email', $userEmail)->first();
     
-        if ($mostPopularSublocation) {
-            $mostPopularBooks = Books::where('sublocation', $mostPopularSublocation->sublocation)
-                ->orderByDesc('count')
-                ->take(5)
+        $filteredBooks = []; // Initialize an empty array
+    
+        // Check if user preferences are found
+        if ($userPreferences) {
+            $filteredBooks = Books::join('user_preferences', function($join) use ($userPreferences) {
+                    $join->on('Books.author', '=', DB::raw("'".$userPreferences->author."'"))
+                         ->orOn('Books.publish_location', '=', DB::raw("'".$userPreferences->publish_location."'"))
+                         ->orOn('Books.sublocation', '=', DB::raw("'".$userPreferences->sublocation."'"));
+                })
+                ->select('Books.*')
+                ->orderBy('Books.count', 'desc')
+                ->take(10)
                 ->get();
         }
     
-        return view('dashboard', compact('booksWithHighestCount', 'mostPopularBooks'));
+        return view('patron_dashboard', compact('booksWithHighestCount', 'filteredBooks'));
     }
+    
 
     public function checkIn($title, $sublocation)
     {

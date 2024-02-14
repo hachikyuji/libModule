@@ -32,16 +32,24 @@ class BookController extends Controller
             ->orderByDesc('count')
             ->first();
     
-        $mostPopularBooks = collect();
+        $userPreferences = DB::table('user_preferences')->where('email', $userEmail)->first();
     
-        if ($mostPopularSublocation) {
-            $mostPopularBooks = Books::where('sublocation', $mostPopularSublocation->sublocation)
-                ->orderByDesc('count')
-                ->take(5)
+        $filteredBooks = []; // Initialize an empty array
+    
+        // Check if user preferences are found
+        if ($userPreferences) {
+            $filteredBooks = Books::join('user_preferences', function($join) use ($userPreferences) {
+                    $join->on('Books.author', '=', DB::raw("'".$userPreferences->author."'"))
+                         ->orOn('Books.publish_location', '=', DB::raw("'".$userPreferences->publish_location."'"))
+                         ->orOn('Books.sublocation', '=', DB::raw("'".$userPreferences->sublocation."'"));
+                })
+                ->select('Books.*')
+                ->orderBy('Books.count', 'desc')
+                ->take(10)
                 ->get();
         }
     
-        return view('dashboard', compact('booksWithHighestCount', 'mostPopularBooks'));
+        return view('dashboard', compact('booksWithHighestCount', 'filteredBooks'));
     }
 
     public function checkIn($title, $sublocation)
@@ -56,28 +64,23 @@ class BookController extends Controller
             ->first();
     
         if (!$pendingCheckOutRequest) {
-            // No pending check-out request found, show error or redirect as needed
             return redirect()->back()->with('error', 'No pending check-out request found for this book.');
         }
     
         $now = Carbon::now('Asia/Manila');
     
-        // Retrieve the corresponding check-out record for the specific book
         $checkOutRecord = AccountHistory::where('email', $userEmail)
             ->where('books_borrowed', $title)
             ->where('sublocation', $sublocation)
-            ->whereNotNull('borrowed_date') // Only consider records with borrowed_date
-            ->orderBy('borrowed_date', 'desc') // Assuming you want the latest check-out record
+            ->whereNotNull('borrowed_date') 
+            ->orderBy('borrowed_date', 'desc') 
             ->first();
     
         if (!$checkOutRecord) {
-            // No check-out record found, show error or redirect as needed
             return redirect()->back()->with('error', 'No check-out record found for this book.');
         }
     
-        // Check if the book has already been checked in
         if ($checkOutRecord->returned_date !== null) {
-            // Book has already been checked in, show error or redirect as needed
             return redirect()->back()->with('error', 'This book has already been checked in.');
         }
     
@@ -158,6 +161,5 @@ class BookController extends Controller
     
         return redirect()->back()->with('success', 'Check-out request submitted successfully!');
     }
-    
 
 }

@@ -20,6 +20,7 @@ use App\Http\Controllers\PatronSearchControl;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QueueController;
 use App\Http\Controllers\RequestHistory;
+use App\Http\Controllers\UserPreferenceController;
 use App\Http\Controllers\requestsDecision;
 use App\Models\pendingRequests;
 
@@ -144,8 +145,20 @@ Route::get('/search/{id}', [BookController::class, 'show'])
 Route::post('/search/checkout/{title}/{sublocation}', [BookController::class, 'checkOut'])
     ->middleware(['auth', 'verified'])
     ->name('request.checkOut');
+/*
+Route::get('/user_preference', function () {
+        return view('user_preference');
+    })->middleware(['auth', 'verified', 'admin'])->name('user_preference');
+*/
 
+Route::post('/save_user_preference', [UserPreferenceController::class, 'save'])
+    ->middleware(['auth', 'verified'])
+    ->name('save_user_preference');
 
+Route::get('/user_preference', [UserPreferenceController::class, 'create'])
+    ->middleware(['auth', 'verified']) // Add any necessary middleware
+    ->name('user_preference.create');
+    
 // Temporary Routes
 
 /*

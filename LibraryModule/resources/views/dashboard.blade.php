@@ -140,44 +140,56 @@
 
         <!-- For You -->
 
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-4/5 lg:w-3/4 xl:w-2/3 mx-auto">
-            <h2 class="text-lg font-semibold text-blue-900 dark:text-blue-600 mb-3 ml-1 pt-10">For You</h2>
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead
-                    class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">
-                            Title
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Author
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Publish Date
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($mostPopularBooks as $subbook)
-                        <tr
-                            class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
-                            <td
-                                class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                <a href="{{ route('book.show', ['id' => $subbook->id]) }}" class="text-sm text-blue-500">{{ $subbook->title }}</a>
-                            </td>
-                            <td
-                                class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                {{ $subbook->author }}
-                            </td>
-                            <td
-                                class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                {{ $subbook->publish_date }}
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-4/5 lg:w-3/4 xl:w-2/3 mx-auto">
+        <div class="flex justify-between items-center mb-3 ml-1 pt-10">
+            <h2 class="text-lg font-semibold text-blue-900 dark:text-blue-600">For You</h2>
+            <a href="{{ route('user_preference.create') }}" class="text-sm text-blue-600">Edit Preference</a>
         </div>
+
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        Title
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Author
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Publish Date
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Sublocation
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($filteredBooks as $subbook)
+                    <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
+                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                            <a href="{{ route('book.show', ['id' => $subbook->id]) }}" class="text-sm text-blue-500">{{ $subbook->title }}</a>
+                        </td>
+                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                            {{ $subbook->author }}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                            {{ $subbook->publish_date }}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                            {{ $subbook->sublocation }}
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="px-6 py-4 text-center text-red-500">
+                            No data available! Please click the "Edit Preferences" button to set up your preferences.
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+
     </div>
+</div>
   
 </x-app-layout>

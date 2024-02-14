@@ -86,76 +86,36 @@
    </aside>
 
    <div class="sm:ml-64 flex items-center justify-center">
-    <div class="flex flex-col items-center justify-center h-full pt-10">
-      <a href="{{ route('book_management') }}"
-                    class="text-blue-600 dark:text-blue-600 hover:text-blue-800 dark:hover:text-blue-600 mb-3 ml-1 pt-10">
-                    &lt; Book Management
-                </a>
-            <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1">
-                Book Acquisition
+        <div class="flex flex-col items-center justify-center h-full pt-10">
+         <a href="{{ route('dashboard') }}"
+                class="text-blue-600 dark:text-blue-600 hover:text-blue-800 dark:hover:text-blue-600 mb-3 ml-1">
+                &lt; Home
+            </a>
+            <h1 class="text-3xl font-bold text-blue-800 dark:text-blue-600 mb-3 ml-1">
+                User Preference
             </h1>
 
-      <form method="POST" action="{{ route('book_acquisition') }}" class="w-full max-w-md">
-            @csrf
-            <div class="mb-4">
-                <label for="call_number" class="block text-sm font-medium text-blue-500">Call Number</label>
-                <input id="call_number" type="text" name="call_number" value="{{ old('call_number') }}" required autofocus autocomplete="call_number" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                @error('call_number')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
+            <!-- Form for User Preference -->
+            <form method="POST" action="{{ route('save_user_preference') }}" class="w-full max-w-md">
+                @csrf
 
-            <div class="mb-4">
-                <label for="author" class="block text-sm font-medium text-blue-500">Author</label>
-                <input id="author" type="text" name="author" value="{{ old('author') }}" required autofocus autocomplete="author" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                @error('author')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
+                <div class="mb-4">
+                    <label for="author" class="block text-gray-700 text-sm font-bold mb-2">Author:</label>
+                    <input type="text" name="author" id="author" class="w-full px-3 py-2 border rounded" required>
+                </div>
 
-            <div class="mb-4">
-                <label for="title" class="block text-sm font-medium text-blue-500">Title</label>
-                <input id="title" type="text" name="title" value="{{ old('title') }}" required autofocus autocomplete="title" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                @error('title')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
+                <div class="mb-4">
+                <label for="publish_location" class="block text-gray-700 text-sm font-bold mb-2">Publish Location:</label>
+                  <select name="publish_location" id="publish_location" class="w-full px-3 py-2 border rounded" required>
+                     @foreach ($publishLocations as $location)
+                        <option value="{{ $location }}">{{ $location }}</option>
+                     @endforeach
+                  </select>
+               </div>
 
-            <div class="mb-4">
-                <label for="publish_location" class="block text-sm font-medium text-blue-500">Publish Location</label>
-                <input id="publish_location" type="text" name="publish_location" value="{{ old('publish_location') }}" required autofocus autocomplete="publish_location" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                @error('publish_location')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="mb-4">
-                <label for="publish_date" class="block text-sm font-medium text-blue-500">Publavailable_copiesish Date</label>
-                <input id="publish_date" type="date" name="publish_date" value="{{ old('publish_date') }}" required autofocus autocomplete="publish_date"  class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                @error('publish_date')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="mb-4">
-                <label for="available_copies" class="block text-sm font-medium text-blue-500">Available Copies</label>
-                <input id="available_copies" type="number" name="available_copies" value="{{ old('available_copies') }}" required autofocus autocomplete="available_copies"  class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                @error('available_copies')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="mb-4">
-                <label for="total_copies" class="block text-sm font-medium text-blue-500">Total Copies</label>
-                <input id="total_copies" type="number" name="total_copies" value="{{ old('total_copies') }}" required autofocus autocomplete="total_copies"  class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                @error('total_copies')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="mb-4">
-                <label for="sublocation" class="block text-sm font-medium text-blue-500">Sublocation</label>
-                <select name="sublocation" id="sublocation" class="w-full px-3 py-2 border rounded" required>
+                <div class="mb-4">
+                  <label for="sublocation" class="block text-gray-700 text-sm font-bold mb-2">Sublocation:</label>
+                  <select name="sublocation" id="sublocation" class="w-full px-3 py-2 border rounded" required>
                      <option value="Cataloging Section">Cataloging Section</option>
                      <option value="Circulation Section">Circulation Section</option>
                      <option value="Filipiniana Section">Filipiniana Section</option>
@@ -170,28 +130,17 @@
                      <option value="Reference-Japanese Corner">Reference-Japanese Corner</option>
                      <option value="Reference Section">Reference Section</option>
                   </select>
-                @error('sublocation')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
+               </div>
 
-            <div class="mb-4">
-                <label for="book_description" class="block text-sm font-medium text-blue-500">Book Description</label>
-                <input id="book_description" type="text" name="book_description" value="{{ old('book_description') }}" required autofocus autocomplete="book_description" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                @error('book_description')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
+                <!-- Submit Button -->
+                <div class="flex items-center justify-center mb-6">
+                  <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                     Save Preference
+                  </button>
+               </div>
+            </form>
+        </div>
+    </div>
 
-            <div class="flex items-center justify-center">
-                <button class="bg-yellow-500 text-white py-2 px-4 rounded">
-                    {{ __('Create') }}
-                </button>
-            </div>
-
-
-      </form>
-
-   </div>
 
 </x-app-layout>
