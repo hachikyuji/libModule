@@ -38,15 +38,14 @@ class PatronBookControll extends Controller
     
         // Check if user preferences are found
         if ($userPreferences) {
-            $filteredBooks = Books::join('user_preferences', function($join) use ($userPreferences) {
-                    $join->on('Books.author', '=', DB::raw("'".$userPreferences->author."'"))
-                         ->orOn('Books.publish_location', '=', DB::raw("'".$userPreferences->publish_location."'"))
-                         ->orOn('Books.sublocation', '=', DB::raw("'".$userPreferences->sublocation."'"));
-                })
-                ->select('Books.*')
-                ->orderBy('Books.count', 'desc')
-                ->take(10)
-                ->get();
+            $filteredBooks = Books::where(function ($query) use ($userPreferences) {
+                $query->where('author', $userPreferences->author)
+                    ->orWhere('publish_location', $userPreferences->publish_location)
+                    ->orWhere('sublocation', $userPreferences->sublocation);
+            })
+            ->orderBy('count', 'desc')
+            ->take(10)
+            ->get();
         }
     
         return view('patron_dashboard', compact('booksWithHighestCount', 'filteredBooks'));
@@ -117,13 +116,12 @@ class PatronBookControll extends Controller
             'request_date' => $now,
             'request_type' => 'Check In',
             'request_status' => 'Pending',
-            'expiration_time' => $now->copy()->addHours(1), // Set expiration time for checking in
+            'expiration_time' => $now->copy()->addHours(24), // Set expiration time for checking in
         ]);
     
         // Check if the request has expired
         $expirationTime = Carbon::parse($pendingCheckOutRequest->expiration_time);
         if ($now->greaterThan($expirationTime)) {
-            // The request has expired, show error or redirect as needed
             return redirect()->back()->with('error', 'This check-out request has expired.');
         }
     

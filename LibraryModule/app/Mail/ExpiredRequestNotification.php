@@ -32,7 +32,7 @@ class ExpiredRequestNotification extends Mailable
      */
     public function build()
     {
-        return $this->subject('Your Request is Expiring Soon')
+        return $this->subject('PLM Library - Your Request is Expiring Soon')
                     ->view('expired_request_notification')
                     ->with('title', $this->title)
                     ->with('expiration_time', $this->expiration_time);

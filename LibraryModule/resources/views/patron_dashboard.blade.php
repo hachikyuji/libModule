@@ -119,7 +119,7 @@
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-4/5 lg:w-3/4 xl:w-2/3 mx-auto">
         <div class="flex justify-between items-center mb-3 ml-1 pt-10">
             <h2 class="text-lg font-semibold text-blue-900 dark:text-blue-600">For You</h2>
-            <a href="{{ route('user_preference.create') }}" class="text-sm text-blue-600">Edit Preference</a>
+            <a href="{{ route('patron_user_preference.create') }}" class="text-sm text-blue-600">Edit Preference</a>
         </div>
 
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -140,7 +140,7 @@
                 </tr>
             </thead>
             <tbody>
-                @forelse ($filteredBooks as $subbook)
+                @forelse ($filteredBooks as $key => $subbook)
                     <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
                         <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                             <a href="{{ route('pbook.show', ['id' => $subbook->id]) }}" class="text-sm text-blue-500">{{ $subbook->title }}</a>

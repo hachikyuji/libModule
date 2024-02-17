@@ -17,6 +17,7 @@ use App\Http\Controllers\PatronBookControll;
 use App\Http\Controllers\PatronHistoryControl;
 use App\Http\Controllers\PatronQueueControl;
 use App\Http\Controllers\PatronSearchControl;
+use App\Http\Controllers\PatronUserPreference;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QueueController;
 use App\Http\Controllers\RequestHistory;
@@ -152,12 +153,20 @@ Route::get('/user_preference', function () {
 */
 
 Route::post('/save_user_preference', [UserPreferenceController::class, 'save'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'admin'])
     ->name('save_user_preference');
 
 Route::get('/user_preference', [UserPreferenceController::class, 'create'])
-    ->middleware(['auth', 'verified']) // Add any necessary middleware
+    ->middleware(['auth', 'verified', 'admin']) 
     ->name('user_preference.create');
+
+Route::get('/patron_user_preference', [PatronUserPreference::class, 'create'])
+    ->middleware(['auth', 'verified']) 
+    ->name('patron_user_preference.create');
+
+Route::post('/patron_user_preference', [PatronUserPreference::class, 'save'])
+    ->middleware(['auth', 'verified']) 
+    ->name('patron_save_user_preference');
     
 // Temporary Routes
 

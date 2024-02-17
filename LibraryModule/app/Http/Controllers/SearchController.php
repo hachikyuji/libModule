@@ -35,6 +35,7 @@ class SearchController extends Controller
                     ->orWhere('author', 'like', "%$search_param%")
                     ->orWhere('title', 'like', "%$search_param%")
                     ->orWhere('sublocation', 'like', "%$search_param%")
+                    ->orWhere('publish_date', 'like', "%$search_param%")
                     ->orWhere('publish_location', 'like', "%$search_param%");
             });
         }

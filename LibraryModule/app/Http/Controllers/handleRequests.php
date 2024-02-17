@@ -29,14 +29,12 @@ class handleRequests extends Controller
                         ->get();
     
         foreach ($expiredRequests as $expiredRequest) {
-            // Increment available_copies for expired requests
             $book = Books::where('title', $expiredRequest->book_request)->first();
     
             if ($book) {
                 $book->increment('available_copies');
             }
     
-            // Update the request status to 'Expired'
             $expiredRequest->update(['request_status' => 'Expired']);
         }
 
@@ -55,27 +53,28 @@ class handleRequests extends Controller
 
     protected function sendExpiryNotification($sendRequests)
     {
-        // You can customize the mail content and subject as needed
-        $emailData = [
-            'title' => $sendRequests->book_request,
-            'expiration_time' => $sendRequests->expiration_time,
-        ];
+        if (!$sendRequests->notification_sent) {
+            $emailData = [
+                'title' => $sendRequests->book_request,
+                'expiration_time' => $sendRequests->expiration_time,
+            ];
+    
+            Mail::to($sendRequests->email)->send(new ExpiredRequestNotification($emailData['title'], $emailData['expiration_time']));
 
-        Mail::to($sendRequests->email)->send(new ExpiredRequestNotification($emailData['title'], $emailData['expiration_time']));
+            $sendRequests->update(['notification_sent' => true]);
+        }
     }
+    
     
 
     public function approveRequest($email,  $title, $sublocation)
     {
-        // Find the first pending request for the given email
         $request = PendingRequests::where('email', $email)->where('request_status', 'Pending')->first();
     
         if ($request) {
-            // Update the specific request to 'Approved'
             $request->update(['request_status' => 'Approved']);
             $now = Carbon::now('Asia/Manila');
     
-            // Handle Check In or Check Out based on request type
             if ($request->request_type === 'Check In') {
                 $this->handleCheckIn($request);
                 AccountHistory::create([
@@ -106,11 +105,15 @@ class handleRequests extends Controller
     
     public function denyRequest($email)
     {
-        // Find the first pending request for the given email
         $request = PendingRequests::where('email', $email)->where('request_status', 'Pending')->first();
-    
+
         if ($request) {
-            // Update the specific request to 'Denied'
+            $book = Books::where('title', $request->book_request)->first();
+    
+            if ($book && $request->request_type === 'Check Out') {
+                $book->increment('available_copies');
+            }
+    
             $request->update(['request_status' => 'Denied']);
         }
     
@@ -135,7 +138,7 @@ class handleRequests extends Controller
     $book = Books::where('title', $request->book_request)->first();
     
     if ($book && $book->available_copies > 0) {
-        //  $book->decrement('available_copies');
+        // $book->decrement('available_copies');
 
 
     }

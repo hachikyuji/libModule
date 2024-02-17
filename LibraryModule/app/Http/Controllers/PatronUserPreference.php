@@ -9,8 +9,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 
-class UserPreferenceController extends Controller
+class PatronUserPreference extends Controller
 {
+
     public function save(Request $request)
     {
         $userEmail = Auth::user()->email;
@@ -51,6 +52,6 @@ class UserPreferenceController extends Controller
     {
         $publishLocations = Books::distinct('publish_location')->pluck('publish_location');
         
-        return view('user_preference', compact('publishLocations'));
+        return view('patron_user_preference', compact('publishLocations'));
     }
 }

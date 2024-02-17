@@ -34,9 +34,8 @@ class BookController extends Controller
     
         $userPreferences = DB::table('user_preferences')->where('email', $userEmail)->first();
     
-        $filteredBooks = []; // Initialize an empty array
+        $filteredBooks = [];
     
-        // Check if user preferences are found
         if ($userPreferences) {
             $filteredBooks = Books::join('user_preferences', function($join) use ($userPreferences) {
                     $join->on('Books.author', '=', DB::raw("'".$userPreferences->author."'"))
@@ -111,13 +110,12 @@ class BookController extends Controller
             'request_date' => $now,
             'request_type' => 'Check In',
             'request_status' => 'Pending',
-            'expiration_time' => $now->copy()->addHours(1), // Set expiration time for checking in
+            'expiration_time' => $now->copy()->addHours(24), 
         ]);
     
         // Check if the request has expired
         $expirationTime = Carbon::parse($pendingCheckOutRequest->expiration_time);
         if ($now->greaterThan($expirationTime)) {
-            // The request has expired, show error or redirect as needed
             return redirect()->back()->with('error', 'This check-out request has expired.');
         }
     
@@ -131,21 +129,21 @@ class BookController extends Controller
         $userEmail = Auth::user()->email;
         $now = Carbon::now('Asia/Manila');
     
-        // Check if available_copies is greater than 0
         $book = Books::where('title', $title)->first();
 
         if ($book && $book->available_copies > 0) {
             $book->decrement('available_copies');
     
         }
-    
-        if (!$book || $book->available_copies <= 0) {
+        
+        /*
+        if (!$book || $book->available_copies == 0) {
             return redirect()->back()->with('error', 'This book is not available for check-out.');
         }
+        */
     
-        $expirationTime = $now->copy()->addHours(1);
+        $expirationTime = $now->copy()->addHours(4); // Adjusts here the expiry date/hour!
     
-        // Create the check-out request with the expiration time
         PendingRequests::create([
             'email' => $userEmail,
             'book_request' => $title,
@@ -155,8 +153,6 @@ class BookController extends Controller
             'expiration_time' => $expirationTime,
         ]);
     
-    
-        // Update available_copies in the Books table
         Books::where('title', $title)->update(['count' => DB::raw('count + 1')]);
     
         return redirect()->back()->with('success', 'Check-out request submitted successfully!');
