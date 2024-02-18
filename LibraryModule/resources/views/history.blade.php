@@ -105,6 +105,9 @@
                         Sublocation
                     </th>
                     <th scope="col" class="px-6 py-3">
+                        Request Type
+                    </th>
+                    <th scope="col" class="px-6 py-3">
                         Borrowed Date
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -127,6 +130,15 @@
                         </td>
                         <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                             {{ $history->sublocation }}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                           @if($history->returned_date)
+                              Check In
+                           @elseif($history->borrowed_date)
+                              Check Out
+                           @else
+                              Request Type Error
+                           @endif
                         </td>
                         <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                             {{ $history->borrowed_date }}
