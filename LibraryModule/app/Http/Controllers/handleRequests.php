@@ -139,8 +139,6 @@ class handleRequests extends Controller
     
     if ($book && $book->available_copies > 0) {
         // $book->decrement('available_copies');
-
-
     }
 }
 

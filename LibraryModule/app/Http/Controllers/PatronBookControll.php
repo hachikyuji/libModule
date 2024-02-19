@@ -8,6 +8,8 @@ use App\Models\Books;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Mail\ExpiredRequestNotification;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
 class PatronBookControll extends Controller
@@ -34,21 +36,52 @@ class PatronBookControll extends Controller
     
         $userPreferences = DB::table('user_preferences')->where('email', $userEmail)->first();
     
-        $filteredBooks = []; // Initialize an empty array
+        $filteredBooks = []; 
     
-        // Check if user preferences are found
         if ($userPreferences) {
-            $filteredBooks = Books::where(function ($query) use ($userPreferences) {
-                $query->where('author', $userPreferences->author)
-                    ->orWhere('publish_location', $userPreferences->publish_location)
-                    ->orWhere('sublocation', $userPreferences->sublocation);
+            $filteredBooks = Books::where(function($query) use ($userPreferences) {
+                $author = trim($userPreferences->author);
+                $publishLocation = trim($userPreferences->publish_location);
+                $sublocation = trim($userPreferences->sublocation);
+        
+                $query->orWhereRaw("author = ?", [$author])
+                    ->orWhereRaw("publish_location = ?", [$publishLocation])
+                    ->orWhereRaw("sublocation = ?", [$sublocation]);
             })
             ->orderBy('count', 'desc')
             ->take(10)
             ->get();
         }
+
+        $now = Carbon::now('Asia/Manila');
+
+        $threeHoursBeforeExpiry = clone $now;
+        $threeHoursBeforeExpiry->addHours(3);
+
+        $sendRequests = PendingRequests::where('expiration_time', '>', $now)
+        ->where('expiration_time', '<=', $threeHoursBeforeExpiry)
+        ->where('request_status', 'Pending')
+        ->get();
+
+        foreach ($sendRequests as $sendRequests) {
+            $this->sendExpiryNotification($sendRequests);
+        }
     
         return view('patron_dashboard', compact('booksWithHighestCount', 'filteredBooks'));
+    }
+
+    protected function sendExpiryNotification($sendRequests)
+    {
+        if (!$sendRequests->notification_sent) {
+            $emailData = [
+                'title' => $sendRequests->book_request,
+                'expiration_time' => $sendRequests->expiration_time,
+            ];
+    
+            Mail::to($sendRequests->email)->send(new ExpiredRequestNotification($emailData['title'], $emailData['expiration_time']));
+
+            $sendRequests->update(['notification_sent' => true]);
+        }
     }
     
 
@@ -56,7 +89,6 @@ class PatronBookControll extends Controller
     {
         $userEmail = Auth::user()->email;
     
-        // Check if there is a pending check-out request for the specific book and user
         $pendingCheckOutRequest = PendingRequests::where('email', $userEmail)
             ->where('book_request', $title)
             ->where('request_type', 'Check Out')
@@ -64,41 +96,37 @@ class PatronBookControll extends Controller
             ->first();
     
         if (!$pendingCheckOutRequest) {
-            // No pending check-out request found, show error or redirect as needed
             return redirect()->back()->with('error', 'No pending check-out request found for this book.');
         }
     
         $now = Carbon::now('Asia/Manila');
     
-        // Retrieve the corresponding check-out record for the specific book
         $checkOutRecord = AccountHistory::where('email', $userEmail)
             ->where('books_borrowed', $title)
             ->where('sublocation', $sublocation)
-            ->whereNotNull('borrowed_date') // Only consider records with borrowed_date
-            ->orderBy('borrowed_date', 'desc') // Assuming you want the latest check-out record
+            ->whereNotNull('borrowed_date')
+            ->orderBy('borrowed_date', 'desc') 
             ->first();
     
         if (!$checkOutRecord) {
-            // No check-out record found, show error or redirect as needed
             return redirect()->back()->with('error', 'No check-out record found for this book.');
         }
     
-        // Check if the book has already been checked in
         if ($checkOutRecord->returned_date !== null) {
-            // Book has already been checked in, show error or redirect as needed
             return redirect()->back()->with('error', 'This book has already been checked in.');
         }
     
-        // If more than 3 days have passed, calculate fines
+        /* Library does not have a fine system anymore
         $borrowedDate = Carbon::parse($checkOutRecord->borrowed_date);
         $daysPassed = $borrowedDate->diffInDays($now);
     
         if ($daysPassed > 3) {
-            $fineAmount = ($daysPassed - 3) * 50; // 50 is the fine amount per day
+            $fineAmount = ($daysPassed - 3) * 50;
             $checkOutRecord->update(['fines' => $fineAmount]);
         }
+        */
     
-        PendingRequests::where('id', $pendingCheckOutRequest->id)->delete(); // Remove the pending check-out request
+        PendingRequests::where('id', $pendingCheckOutRequest->id)->delete();
     
         /*
         AccountHistory::create([
@@ -116,10 +144,9 @@ class PatronBookControll extends Controller
             'request_date' => $now,
             'request_type' => 'Check In',
             'request_status' => 'Pending',
-            'expiration_time' => $now->copy()->addHours(24), // Set expiration time for checking in
+            'expiration_time' => $now->copy()->addHours(24),
         ]);
     
-        // Check if the request has expired
         $expirationTime = Carbon::parse($pendingCheckOutRequest->expiration_time);
         if ($now->greaterThan($expirationTime)) {
             return redirect()->back()->with('error', 'This check-out request has expired.');
@@ -135,7 +162,6 @@ class PatronBookControll extends Controller
         $userEmail = Auth::user()->email;
         $now = Carbon::now('Asia/Manila');
     
-        // Check if available_copies is greater than 0
         $book = Books::where('title', $title)->first();
 
         if ($book && $book->available_copies > 0) {
@@ -148,8 +174,7 @@ class PatronBookControll extends Controller
         }
     
         $expirationTime = $now->copy()->addHours(1);
-    
-        // Create the check-out request with the expiration time
+
         PendingRequests::create([
             'email' => $userEmail,
             'book_request' => $title,
@@ -159,8 +184,6 @@ class PatronBookControll extends Controller
             'expiration_time' => $expirationTime,
         ]);
     
-    
-        // Update available_copies in the Books table
         Books::where('title', $title)->update(['count' => DB::raw('count + 1')]);
     
         return redirect()->back()->with('success', 'Check-out request submitted successfully!');

@@ -138,8 +138,7 @@
             </table>
         </div>
 
-        <!-- For You -->
-
+    <!-- For You -->
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-4/5 lg:w-3/4 xl:w-2/3 mx-auto">
         <div class="flex justify-between items-center mb-3 ml-1 pt-10">
             <h2 class="text-lg font-semibold text-blue-900 dark:text-blue-600">For You</h2>

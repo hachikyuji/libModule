@@ -8,6 +8,8 @@ use App\Models\Books;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Mail\ExpiredRequestNotification;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
 class BookController extends Controller
@@ -20,8 +22,9 @@ class BookController extends Controller
         return view('view', ['books' => $this->books]);
     }
 
-    public function showBooksWithHighestCount()
+    public function showBooksWithHighestCount() 
     {
+        // This function shows the recommended books on the landing page
         $booksWithHighestCount = Books::orderBy('count', 'desc')->take(5)->get();
     
         $userEmail = Auth::user()->email;
@@ -37,25 +40,59 @@ class BookController extends Controller
         $filteredBooks = [];
     
         if ($userPreferences) {
-            $filteredBooks = Books::join('user_preferences', function($join) use ($userPreferences) {
-                    $join->on('Books.author', '=', DB::raw("'".$userPreferences->author."'"))
-                         ->orOn('Books.publish_location', '=', DB::raw("'".$userPreferences->publish_location."'"))
-                         ->orOn('Books.sublocation', '=', DB::raw("'".$userPreferences->sublocation."'"));
-                })
-                ->select('Books.*')
-                ->orderBy('Books.count', 'desc')
-                ->take(10)
-                ->get();
+            $filteredBooks = Books::where(function($query) use ($userPreferences) {
+                $author = trim($userPreferences->author);
+                $publishLocation = trim($userPreferences->publish_location);
+                $sublocation = trim($userPreferences->sublocation);
+        
+                $query->orWhereRaw("author = ?", [$author])
+                    ->orWhereRaw("publish_location = ?", [$publishLocation])
+                    ->orWhereRaw("sublocation = ?", [$sublocation]);
+            })
+            ->orderBy('count', 'desc')
+            ->take(10)
+            ->get();
         }
+        
+
+        // Send RequestExpiryNotification
+        $now = Carbon::now('Asia/Manila');
+
+        $threeHoursBeforeExpiry = clone $now;
+        $threeHoursBeforeExpiry->addHours(3);
+
+        $sendRequests = PendingRequests::where('expiration_time', '>', $now)
+        ->where('expiration_time', '<=', $threeHoursBeforeExpiry)
+        ->where('request_status', 'Pending')
+        ->get();
+
+        foreach ($sendRequests as $sendRequests) {
+            $this->sendExpiryNotification($sendRequests);
+        }
+
+        // ends here
     
         return view('dashboard', compact('booksWithHighestCount', 'filteredBooks'));
+    }
+
+    protected function sendExpiryNotification($sendRequests)
+    {
+        if (!$sendRequests->notification_sent) {
+            $emailData = [
+                'title' => $sendRequests->book_request,
+                'expiration_time' => $sendRequests->expiration_time,
+            ];
+    
+            Mail::to($sendRequests->email)->send(new ExpiredRequestNotification($emailData['title'], $emailData['expiration_time']));
+
+            $sendRequests->update(['notification_sent' => true]);
+        }
     }
 
     public function checkIn($title, $sublocation)
     {
         $userEmail = Auth::user()->email;
     
-        // Check if there is a pending check-out request for the specific book and user
         $pendingCheckOutRequest = PendingRequests::where('email', $userEmail)
             ->where('book_request', $title)
             ->where('request_type', 'Check Out')
@@ -83,16 +120,17 @@ class BookController extends Controller
             return redirect()->back()->with('error', 'This book has already been checked in.');
         }
     
-        // If more than 3 days have passed, calculate fines
+        /* Library does not have a fine system anymore
         $borrowedDate = Carbon::parse($checkOutRecord->borrowed_date);
         $daysPassed = $borrowedDate->diffInDays($now);
     
         if ($daysPassed > 3) {
-            $fineAmount = ($daysPassed - 3) * 50; // 50 is the fine amount per day
+            $fineAmount = ($daysPassed - 3) * 50;
             $checkOutRecord->update(['fines' => $fineAmount]);
         }
+        */
     
-        PendingRequests::where('id', $pendingCheckOutRequest->id)->delete(); // Remove the pending check-out request
+       // PendingRequests::where('id', $pendingCheckOutRequest->id)->delete(); 
     
         /*
         AccountHistory::create([
@@ -113,7 +151,6 @@ class BookController extends Controller
             'expiration_time' => $now->copy()->addHours(24), 
         ]);
     
-        // Check if the request has expired
         $expirationTime = Carbon::parse($pendingCheckOutRequest->expiration_time);
         if ($now->greaterThan($expirationTime)) {
             return redirect()->back()->with('error', 'This check-out request has expired.');

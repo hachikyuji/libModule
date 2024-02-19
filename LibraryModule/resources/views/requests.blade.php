@@ -142,12 +142,28 @@
                 {{ $bookTitle }}
             </td>
             <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                @php
-                    $book = \App\Models\Books::where('title', $bookTitle)->first();
-                    $status = $book ? ($book->available_copies > 0 ? 'Available' : 'Unavailable') : 'Not Found';
-                    $sublocation = $book ? $book->sublocation : null;
-                @endphp
-                {{ $status }}
+            @php
+                $book = \App\Models\Books::where('title', $bookTitle)->first();
+                if ($book) {
+                    $availableCopies = $book->available_copies;
+                    $pendingCheckouts = \App\Models\PendingRequests::where('book_request', $bookTitle)
+                        ->where('request_type', 'Check Out')
+                        ->where('request_status', 'Pending')
+                        ->count();
+
+                    if ($availableCopies > 0 || $pendingCheckouts > 0) {
+                        $status = ($availableCopies > 0) ? 'Available' : 'Pending Checkout';
+                    } else {
+                        $status = 'Unavailable';
+                    }
+
+                    $sublocation = $book->sublocation;
+                } else {
+                    $status = 'Not Found';
+                    $sublocation = null;
+                }
+            @endphp
+            {{ $status }}
             </td>
             <td class="px-12 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
             @foreach($accountHistory->where('books_borrowed', $bookTitle) as $history)
