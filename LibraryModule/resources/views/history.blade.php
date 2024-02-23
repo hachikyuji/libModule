@@ -85,78 +85,77 @@
       </div>
    </aside>
 
-<div class="sm:ml-64 flex items-center justify-center">
-   <div class="flex flex-col items-center justify-center h-full pt-10">
+   <div class="sm:ml-64 flex items-center justify-center">
+    <div class="flex flex-col items-center justify-center h-full pt-10">
         <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1 pt-10">
             Recent History
         </h1>
 
-    <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-full lg:w-full xl:w-full">
-        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
-                <tr>
-                    <th scope="col" class="px-6 py-3">
-                        Email
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Book Title
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Sublocation
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Request Type
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Borrowed Date
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Returned Date
-                    </th>
-                    <th scope="col" class="px-6 py-3">
-                        Fines
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($accountHistory as $history)
-                <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                    <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                            {{ $history->email }}
-                        </td>
-                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                            {{ $history->books_borrowed }}
-                        </td>
-                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                            {{ $history->sublocation }}
-                        </td>
-                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                           @if($history->returned_date)
-                              Check In
-                           @elseif($history->borrowed_date)
-                              Check Out
-                           @else
-                              Request Type Error
-                           @endif
-                        </td>
-                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                            {{ $history->borrowed_date }}
-                        </td>
-                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                            {{ $history->returned_date }}   
-                        </td>
-                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
-                            {{ $history->fines }}
-                        </td>
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-full lg:w-full xl:w-full">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Email
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Book Title
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Sublocation
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Borrowed Date
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Returned Date
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Return By
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Link
+                        </th>
                     </tr>
-                </tr>   
-            @endforeach
-            </tbody>
-        </table>
-      </div>
-   </div>
+                </thead>
+                <tbody>
+                    @foreach($accountHistory->reverse() as $history)
+                        <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $history->email }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $history->books_borrowed }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $history->sublocation }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $history->borrowed_date }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $history->returned_date }}   
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $history->book_deadline }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-500 whitespace-nowrap dark:text-blue">
+                                @php
+                                    // Fetch the book details based on the book title
+                                    $book = \App\Models\Books::where('title', $history->books_borrowed)->first();
+                                @endphp
 
+                                @if($book)
+                                    <a href="{{ route('book.show', ['id' => $book->id]) }}">View</a>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
 
 </x-app-layout>

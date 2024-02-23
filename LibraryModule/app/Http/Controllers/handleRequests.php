@@ -6,6 +6,7 @@ use App\Models\AccountHistory;
 use App\Mail\ExpiredRequestNotification;
 use Carbon\Carbon;
 use App\Models\Books;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\PendingRequests;
 use Illuminate\Support\Facades\Mail;
@@ -67,41 +68,43 @@ class handleRequests extends Controller
     
     
 
-    public function approveRequest($email,  $title, $sublocation)
+    public function approveRequest($email, $title, $sublocation)
     {
         $request = PendingRequests::where('email', $email)->where('request_status', 'Pending')->first();
     
         if ($request) {
             $request->update(['request_status' => 'Approved']);
             $now = Carbon::now('Asia/Manila');
+            $user = User::where('email', $email)->first();
     
             if ($request->request_type === 'Check In') {
-                $this->handleCheckIn($request);
-                AccountHistory::create([
-                    'email' => $email,
-                    'books_borrowed' => $title,
-                    'returned_date' => $now,
-                    'fines' => 0,
-                    'sublocation' => $sublocation,
-                ]);
+                $this->handleCheckIn($request, $now, $title, $sublocation);
             } elseif ($request->request_type === 'Check Out') {
                 $this->handleCheckOut($request);
+                $bookDeadline = $this->calculateBookDeadline($user->account_type);
+    
                 AccountHistory::create([
                     'email' => $email,
                     'books_borrowed' => $title,
                     'borrowed_date' => $now,
                     'fines' => 0,
                     'sublocation' => $sublocation,
+                    'request_number' => $request->request_number,
+                    'book_deadline' => $bookDeadline,
                 ]);
             }
         }
-
-
-
-
     
         return redirect()->route('requests');
     }
+    
+    private function calculateBookDeadline($accountType)
+    {
+        $weeksToAdd = ($accountType === 'admin') ? 3 : 2;
+        return Carbon::now()->addWeeks($weeksToAdd);
+        // return Carbon::now()->addHours(12); // For testing
+    }
+    
     
     public function denyRequest($email)
     {
@@ -121,15 +124,31 @@ class handleRequests extends Controller
     }
     
     
-    protected function handleCheckIn($request)
+    private function handleCheckIn($request, $now, $title, $sublocation)
     {
+        $userEmail = $request->email;
         $book = Books::where('title', $request->book_request)->first();
-        
-        if ($book) {
+    
+        // Find the corresponding check-out record
+        $checkOutRecord = AccountHistory::where('email', $userEmail)
+            ->where('books_borrowed', $title)
+            ->where('sublocation', $sublocation)
+            ->whereNotNull('borrowed_date')
+            ->whereNull('returned_date')
+            ->orderBy('borrowed_date', 'desc')
+            ->first();
+    
+        if ($checkOutRecord) {
+            // Update the existing check-out record with returned date and request number
+            $checkOutRecord->update([
+                'returned_date' => $now,
+                'request_number' => $request->id, // Assuming request id is unique
+            ]);
+    
             $book->increment('available_copies');
-            AccountHistory::where('books_borrowed', $request->book_request)
-            ->where('email', $request->email)
-            ->update(['fines' => null]);
+        } else {
+            // No corresponding check-out record found, store error message in session
+            session()->flash('error', 'No corresponding check-out record found for this check-in request.');
         }
     }
     

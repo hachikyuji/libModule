@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Mail\ExpiredRequestNotification;
+use App\Mail\InitialRequestNotification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,14 @@ class PatronBookControll extends Controller
     public function show($id)
     {
         $this->books = Books::findOrFail($id);
+
+        $sendIRequests = PendingRequests::where('initial_notification_sent', 0)
+        ->get();
+
+        foreach ($sendIRequests as $sendRequests) {
+            $this->sendInitialNotification($sendRequests);
+        }
+
         return view('patron_view', ['books' => $this->books]);
     }
 
@@ -66,6 +75,30 @@ class PatronBookControll extends Controller
         foreach ($sendRequests as $sendRequests) {
             $this->sendExpiryNotification($sendRequests);
         }
+
+        $sendIRequests = PendingRequests::where('initial_notification_sent', 0)
+        ->get();
+
+        foreach ($sendIRequests as $sendRequests) {
+            $this->sendInitialNotification($sendRequests);
+        }
+
+        // Request Expiry Handling
+        $expiredCheckOutRequests = PendingRequests::where('request_type', 'Check Out')
+        ->where('request_status', 'Pending')
+        ->where('expiration_time', '<=', $now)
+        ->get();
+
+        foreach ($expiredCheckOutRequests as $expiredRequest) {
+
+            $book = Books::where('title', $expiredRequest->book_request)->first();
+
+            if ($book) {
+                $book->increment('available_copies');
+            }
+
+            $expiredRequest->update(['request_status' => 'Expired']);
+        }
     
         return view('patron_dashboard', compact('booksWithHighestCount', 'filteredBooks'));
     }
@@ -81,6 +114,19 @@ class PatronBookControll extends Controller
             Mail::to($sendRequests->email)->send(new ExpiredRequestNotification($emailData['title'], $emailData['expiration_time']));
 
             $sendRequests->update(['notification_sent' => true]);
+        }
+    }
+
+    protected function sendInitialNotification($sendRequests)
+    {
+        if (!$sendRequests->initial_notification_sent) {
+            $emailData = [
+                'title' => $sendRequests->book_request,
+            ];
+    
+            Mail::to($sendRequests->email)->send(new InitialRequestNotification($emailData));
+    
+            $sendRequests->update(['initial_notification_sent' => true]);
         }
     }
     

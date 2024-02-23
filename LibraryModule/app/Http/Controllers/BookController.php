@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Mail\ExpiredRequestNotification;
+use App\Mail\InitialRequestNotification;
+use App\Mail\sendDeadlineNotification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
@@ -19,6 +21,18 @@ class BookController extends Controller
     public function show($id)
     {
         $this->books = Books::findOrFail($id);
+
+        //Initial Notification
+
+        $sendIRequests = PendingRequests::where('initial_notification_sent', 0)
+        ->get();
+
+        foreach ($sendIRequests as $sendRequests) {
+            $this->sendInitialNotification($sendRequests);
+        }
+
+        //
+
         return view('view', ['books' => $this->books]);
     }
 
@@ -59,7 +73,7 @@ class BookController extends Controller
         $now = Carbon::now('Asia/Manila');
 
         $threeHoursBeforeExpiry = clone $now;
-        $threeHoursBeforeExpiry->addHours(3);
+        $threeHoursBeforeExpiry->addHours(1);
 
         $sendRequests = PendingRequests::where('expiration_time', '>', $now)
         ->where('expiration_time', '<=', $threeHoursBeforeExpiry)
@@ -69,7 +83,46 @@ class BookController extends Controller
         foreach ($sendRequests as $sendRequests) {
             $this->sendExpiryNotification($sendRequests);
         }
+        
 
+        $sendIRequests = PendingRequests::where('initial_notification_sent', 0)
+        ->get();
+
+        foreach ($sendIRequests as $sendRequests) {
+            $this->sendInitialNotification($sendRequests);
+        }
+
+        // Deadline Email
+
+        $deadline = clone $now;
+        $deadline->addHours(24);
+
+        $deadlineRequests = AccountHistory::where('book_deadline', '>', $now)
+        ->where('book_deadline', '<=', $deadline)
+        ->whereNull('returned_date')
+        ->whereNotNull('borrowed_date')
+        ->get();
+
+        foreach ($deadlineRequests as $sendDeadRequests){
+            $this->sendDeadlineNotification($sendDeadRequests);
+        }
+
+        // Request Expiry Handling
+        $expiredCheckOutRequests = PendingRequests::where('request_type', 'Check Out')
+        ->where('request_status', 'Pending')
+        ->where('expiration_time', '<=', $now)
+        ->get();
+
+        foreach ($expiredCheckOutRequests as $expiredRequest) {
+
+            $book = Books::where('title', $expiredRequest->book_request)->first();
+
+            if ($book) {
+                $book->increment('available_copies');
+            }
+
+            $expiredRequest->update(['request_status' => 'Expired']);
+        }
         // ends here
     
         return view('dashboard', compact('booksWithHighestCount', 'filteredBooks'));
@@ -89,18 +142,81 @@ class BookController extends Controller
         }
     }
 
+    protected function sendInitialNotification($sendRequests)
+    {
+        if (!$sendRequests->initial_notification_sent) {
+            $emailData = [
+                'title' => $sendRequests->book_request,
+            ];
+    
+            Mail::to($sendRequests->email)->send(new InitialRequestNotification($emailData));
+    
+            $sendRequests->update(['initial_notification_sent' => true]);
+        }
+    }
+
+    protected function sendDeadlineNotification($sendRequests)
+    {
+        if (!$sendRequests->initial_notification_sent) {
+            $emailData = [
+                'title' => $sendRequests->books_borrowed,
+                'expiration_time' => $sendRequests->book_deadline,
+            ];
+    
+            Mail::to($sendRequests->email)->send(new sendDeadlineNotification($emailData['title'], $emailData['expiration_time']));
+    
+            $sendRequests->update(['initial_notification_sent' => true]);
+        }
+    }
+    
+    
+    
+
     public function checkIn($title, $sublocation)
     {
         $userEmail = Auth::user()->email;
     
-        $pendingCheckOutRequest = PendingRequests::where('email', $userEmail)
-            ->where('book_request', $title)
-            ->where('request_type', 'Check Out')
-            ->where('request_status', 'Approved')
+        // Check for the existence of an approved check-out request
+        $pendingCheckOutRequest = AccountHistory::where('email', $userEmail)
+            ->where('books_borrowed', $title)
+            ->whereNotNull('borrowed_date')
+            ->whereNull('returned_date')
             ->first();
     
         if (!$pendingCheckOutRequest) {
-            return redirect()->back()->with('error', 'No pending check-out request found for this book.');
+            return redirect()->back()->with('error', 'No approved check-out request found for this book.');
+        }
+    
+        //      
+        /* Count the number of approved check-out requests for this book
+        $approvedCheckOutRequestsCount = AccountHistory::where('email', $userEmail)
+            ->where('books_borrowed', $title)
+            ->whereNotNull('borrowed_date')
+            ->whereNotNull('returned_date')
+            ->count();
+        */
+
+        $pendingCheckInRequestCount = PendingRequests::where('email', $userEmail)
+            ->where('book_request', $title)
+            ->where('request_status', 'Pending')
+            ->where('request_type', 'Check In')
+            ->count();
+    
+        // Count the number of check-outs that haven't been checked in yet
+        $checkOutCount = AccountHistory::where('email', $userEmail)
+            ->where('books_borrowed', $title)
+            ->whereNotNull('borrowed_date')
+            ->whereNull('returned_date') // Only count if the book hasn't been returned
+            ->count();
+    
+        // Check if the user can perform a check-in based on the count of check-outs
+        
+        if (!$checkOutCount > 1) {
+            return redirect()->back()->with('error', 'You cannot check in more times than the approved check-out requests for this book.');
+        } 
+
+        if (!$checkOutCount > $pendingCheckInRequestCount){
+            return redirect()->back()->with('error', 'You cannot check in more times than the approved check-out requests for this book.');
         }
     
         $now = Carbon::now('Asia/Manila');
@@ -108,19 +224,18 @@ class BookController extends Controller
         $checkOutRecord = AccountHistory::where('email', $userEmail)
             ->where('books_borrowed', $title)
             ->where('sublocation', $sublocation)
-            ->whereNotNull('borrowed_date') 
-            ->orderBy('borrowed_date', 'desc') 
+            ->whereNotNull('borrowed_date')
+            ->orderBy('borrowed_date', 'desc')
             ->first();
     
         if (!$checkOutRecord) {
             return redirect()->back()->with('error', 'No check-out record found for this book.');
         }
     
-        if ($checkOutRecord->returned_date !== null) {
-            return redirect()->back()->with('error', 'This book has already been checked in.');
-        }
+        // Your additional logic goes here
     
-        /* Library does not have a fine system anymore
+        // Example: Update fines based on days passed
+        /*
         $borrowedDate = Carbon::parse($checkOutRecord->borrowed_date);
         $daysPassed = $borrowedDate->diffInDays($now);
     
@@ -130,8 +245,7 @@ class BookController extends Controller
         }
         */
     
-       // PendingRequests::where('id', $pendingCheckOutRequest->id)->delete(); 
-    
+        // Example: Create a check-in record
         /*
         AccountHistory::create([
             'email' => $userEmail,
@@ -142,14 +256,38 @@ class BookController extends Controller
         ]);
         */
     
-        pendingRequests::create([
+        // Example: Create a pending check-in request
+        /*
+        PendingRequests::create([
             'email' => $userEmail,
             'book_request' => $title,
             'request_date' => $now,
             'request_type' => 'Check In',
             'request_status' => 'Pending',
-            'expiration_time' => $now->copy()->addHours(24), 
+            'expiration_time' => $now->copy()->addHours(24),
         ]);
+        */
+
+        $mostRecentCheckOut = PendingRequests::where('email', $userEmail)
+            ->where('book_request', $title)
+            ->where('request_type', 'Check Out')
+            ->where('request_status', 'Approved')
+            ->orderBy('request_date', 'desc')
+            ->first();
+        
+        if ($mostRecentCheckOut) {
+            $requestNumber = $mostRecentCheckOut->request_number;
+        
+            pendingRequests::create([
+                'email' => $userEmail,
+                'book_request' => $title,
+                'request_date' => $now,
+                'request_type' => 'Check In',
+                'request_status' => 'Pending',
+                'expiration_time' => $now->copy()->addHours(24),
+                'request_number' => $requestNumber,
+            ]);
+        }
     
         $expirationTime = Carbon::parse($pendingCheckOutRequest->expiration_time);
         if ($now->greaterThan($expirationTime)) {
@@ -158,6 +296,7 @@ class BookController extends Controller
     
         return redirect()->back()->with('success', 'Check-in request submitted successfully!');
     }
+    
     
     
     
@@ -173,13 +312,14 @@ class BookController extends Controller
     
         }
         
-        /*
+        
         if (!$book || $book->available_copies == 0) {
             return redirect()->back()->with('error', 'This book is not available for check-out.');
         }
-        */
+        
     
         $expirationTime = $now->copy()->addHours(4); // Adjusts here the expiry date/hour!
+        $requestNumber = uniqid();
     
         PendingRequests::create([
             'email' => $userEmail,
@@ -188,6 +328,7 @@ class BookController extends Controller
             'request_type' => 'Check Out',
             'request_status' => 'Pending',
             'expiration_time' => $expirationTime,
+            'request_number' => $requestNumber,
         ]);
     
         Books::where('title', $title)->update(['count' => DB::raw('count + 1')]);

@@ -12,7 +12,7 @@ class pendingRequests extends Model
     protected $primaryKey = 'id';
     public $incrementing = false;
 
-    protected $fillable = ['email', 'book_request', 'request_date', 'request_type', 'request_status', 'id','expiration_time', 'notification_sent'];
+    protected $fillable = ['email', 'book_request', 'request_date', 'request_type', 'request_status', 'id','expiration_time', 'notification_sent', 'initial_notification_sent', 'request_number'];
 
 
 

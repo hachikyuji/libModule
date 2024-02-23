@@ -17,7 +17,8 @@ class AccountHistory extends Model
         'fines',
         'sublocation',
         'request_status',
-        'id',
+        'request_number',
+        'book_deadline',
     ];
     protected $table = 'account_history';
 

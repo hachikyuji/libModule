@@ -95,6 +95,12 @@
             <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1">
                 Current Requests
             </h1>
+            
+            @if(session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
 
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-full lg:w-full xl:w-full">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -110,9 +116,6 @@
                             Book Status
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            User Fine
-                        </th>
-                        <th scope="col" class="px-6 py-3">
                             Request Type
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -125,82 +128,68 @@
                 </thead>
                 <tbody>
                 @foreach ($pendingRequests as $request)
-    @if ($request->request_status === 'Pending')
-        @php
-            $userEmail = $request->email;
-            $bookTitle = $request->book_request;
+                    @if ($request->request_status === 'Pending')
+                        @php
+                            $userEmail = $request->email;
+                            $bookTitle = $request->book_request;
 
-            // Check if fines for this user and book combination have already been displayed
-            $finesDisplayed = false;
-        @endphp
+                            // Check if fines for this user and book combination have already been displayed
+                            $finesDisplayed = false;
+                        @endphp
 
-        <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
-            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                {{ $userEmail }}
-            </td>
-            <td class="px-4 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                {{ $bookTitle }}
-            </td>
-            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-            @php
-                $book = \App\Models\Books::where('title', $bookTitle)->first();
-                if ($book) {
-                    $availableCopies = $book->available_copies;
-                    $pendingCheckouts = \App\Models\PendingRequests::where('book_request', $bookTitle)
-                        ->where('request_type', 'Check Out')
-                        ->where('request_status', 'Pending')
-                        ->count();
+                        <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $userEmail }}
+                            </td>
+                            <td class="px-4 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $bookTitle }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                            @php
+                                $book = \App\Models\Books::where('title', $bookTitle)->first();
+                                if ($book) {
+                                    $availableCopies = $book->available_copies;
+                                    $pendingCheckouts = \App\Models\PendingRequests::where('book_request', $bookTitle)
+                                        ->where('request_type', 'Check Out')
+                                        ->where('request_status', 'Pending')
+                                        ->count();
 
-                    if ($availableCopies > 0 || $pendingCheckouts > 0) {
-                        $status = ($availableCopies > 0) ? 'Available' : 'Pending Checkout';
-                    } else {
-                        $status = 'Unavailable';
-                    }
+                                    if ($availableCopies > 0 || $pendingCheckouts > 0) {
+                                        $status = ($availableCopies > 0) ? 'Available' : 'Pending Checkout';
+                                    } else {
+                                        $status = 'Unavailable';
+                                    }
 
-                    $sublocation = $book->sublocation;
-                } else {
-                    $status = 'Not Found';
-                    $sublocation = null;
-                }
-            @endphp
-            {{ $status }}
-            </td>
-            <td class="px-12 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-            @foreach($accountHistory->where('books_borrowed', $bookTitle) as $history)
-                @php
-                    $finesDisplayed = false; // Reset the flag for each iteration
-                @endphp
-                @if($history->email == $userEmail && !$finesDisplayed)
-                    {{ $history->fines }}
-                    @php
-                        // Set the flag to true to indicate that fines have been displayed
-                        $finesDisplayed = true;
-                    @endphp
-                @endif
-            @endforeach
-            </td>
-            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                {{ $request->request_type }}
-            </td>
-            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                {{ $request->expiration_time }}
-            </td>
-            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
-                <form action="{{ route('approve-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation]) }}" method="post" class="inline">
-                    @csrf
-                    <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Approve</button>
-                </form>
-                |
-                <form action="{{ route('deny-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation]) }}" method="post" class="inline">
-                    @csrf
-                    <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Deny</button>
-                </form>
-            </td>
-        </tr> 
-    @endif
-@endforeach
+                                    $sublocation = $book->sublocation;
+                                } else {
+                                    $status = 'Not Found';
+                                    $sublocation = null;
+                                }
+                            @endphp
+                            {{ $status }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $request->request_type }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $request->expiration_time }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
+                                <form action="{{ route('approve-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation]) }}" method="post" class="inline">
+                                    @csrf
+                                    <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Approve</button>
+                                </form>
+                                |
+                                <form action="{{ route('deny-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation]) }}" method="post" class="inline">
+                                    @csrf
+                                    <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Deny</button>
+                                </form>
+                            </td>
+                        </tr> 
+                    @endif
+                @endforeach
 
-</tbody>
+                </tbody>
 
             </table>
         </div>
