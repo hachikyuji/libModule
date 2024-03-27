@@ -107,65 +107,51 @@
             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                 <div class="shadow overflow-hidden border-b border-blue-800 sm:rounded-lg">
                     <table class="min-w-full divide-y divide-blue-600">
-                        <thead class="bg-blue-200">
+                        <thead class="bg-blue-300">
                             <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">
-                                Call Number
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">
-                                Title
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">
-                                Author
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">
-                                Publish Date
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">
-                                Publish Location
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">
-                                Sublocation
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider">
-                                Available Copies
-                            </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider" style="width: 20%">
+                                    Title
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider" style="width: 15%">
+                                    Author
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider" style="width: 10%">
+                                    Publish Date
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider" style="width: 15%">
+                                    Sublocation
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider" style="width: 15%">
+                                    Available Copies
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-blue-200">
-                            @foreach($books as $books)
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-blue-900">{{ $books->call_number }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <a href="{{ route('book.show', ['id' => $books->id]) }}" class="text-sm text-blue-500">{{ $books->title }}</a>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{ $books->author }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{ $books->publish_date }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{ $books->publish_location }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{ $books->sublocation }}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{ $books->available_copies }}</div>
-                                </td>
-                            </tr>
+                            @foreach($books as $book)
+                                <tr>    
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <a href="{{ route('book.show', ['id' => $book->id]) }}" class="text-sm text-blue-500">{{ \Str::limit($book->title, 50) }}</a>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-blue-900">{{ \Str::limit($book->author, 30) }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-blue-900">{{ $book->publish_date }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-blue-900">{{ $book->sublocation }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-blue-900">{{ $book->available_copies }}</div>
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
+            {{ $books->links() }}
         </div>
     </div>
-
-   </div>
-    
 
 </x-app-layout>

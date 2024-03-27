@@ -9,7 +9,7 @@
     <p>The book you have borrowed is due to be returned soon:</p>
 
     <ul>
-        <li>{{ $title }} - Expiration Time: {{ $expiration_time }}</li>
+        <li>{{ $title }} - Return Time: {{ $expiration_time }}</li>
     </ul>
 
     <p>Thank you!</p>

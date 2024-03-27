@@ -62,57 +62,113 @@
 </aside>
 
    <div class="sm:ml-64 flex items-center justify-center">
-      
-      <div class="flex flex-col items-center justify-center h-full pt-10">
-      <a href="{{ route('patron_search') }}"
-              class="text-blue-600 dark:text-blue-600 hover:text-blue-800 dark:hover:text-blue-600 mb-3 ml-1 pt-10">
-              &lt; PLM Library Search
-          </a>
-          <h1 class="text-3xl font-bold text-blue-800 dark:text-blue-600 mb-3 ml-1">
-               PLM Library
-           </h1>
+         
+         <div class="flex flex-col items-center justify-center h-full pt-10">
+         <a href="{{ route('search') }}"
+                  class="text-blue-600 dark:text-blue-600 hover:text-blue-800 dark:hover:text-blue-600 mb-3 ml-1 pt-10">
+                  &lt; PLM Library Search
+               </a>
+               <h1 class="text-3xl font-bold text-blue-800 dark:text-blue-600 mb-3 ml-1">
+                  PLM Library
+               </h1>
 
-           <div class="max-w-2xl p-4 bg-yellow-300 dark:bg-yellow-500 rounded-md shadow-md text-white">
-             <h2 class="text-2xl font-bold text-blue-700">{{ $books->title }}</h2>
-             <p class="text-lg text-white">By: {{ $books->author }}</p>
-             <div class="mt-4">
-                <p class="text-lg font-bold text-blue-700">Description:</p>
-                <p>{{ $books->book_description }}</p>
-             </div>
-             
-             <p class="text-lg text-white">Call Number: {{ $books->call_number }}</p>
-             <p class="text-lg text-white">Available Copies: {{ $books->available_copies }} out of {{ $books->total_copies }}</p>
-             <p class="text-lg text-white">Location: {{ $books->sublocation }}</p>
+               <div class="max-w-3xl w-full p-6 bg-blue-900 dark:bg-blue-900 rounded-md shadow-md text-white">
+                  <h2 class="text-2xl font-bold text-white-700">{{ $books->title }}</h2>
+                  <p class="text-lg text-white">By: {{ $books->author }}</p>
 
-             <div class="mt-4">
-                <p class="text-lg font-bold text-blue-700">Publication Info:</p>
-                <p>Published: {{ $books->publish_date }} </p>
-                <p>{{ $books->publish_location }}</p>
-             </div>
+                  
+                  <div class="mt-4">
+                     <p class="text-lg font-bold text-white-700">Description:</p>
+                     <p>{{ $books->edition }}</p>
+                     <p>{{$books->extent}}</p>
+                  </div>
 
-             <div class="flex flex-col items-center"">
-             <form method="POST" action="{{ route('request.checkIn', ['title' => $books->title, 'sublocation' => $books->sublocation]) }}">
-                   @csrf
-                   <button type="submit" class="mt-4 p-2 bg-green-500 text-white rounded-md justify-center">
-                      Check In
-                   </button>
-                </form>
+                  <div class="mt-4">
+                     <p class="text-lg text-white">
+                        <span class="font-bold">Call Number:</span> {{ $books->call_number }}
+                     </p>
+                     <p class="text-lg text-white">
+                        <span class="font-bold">Available Copies:</span> {{ $books->available_copies }} out of {{ $books->total_copies }}
+                     </p>
+                     <p class="text-lg text-white">
+                        <span class="font-bold">Sublocation:</span> {{ $books->sublocation }}
+                     </p>
+                  </div>
+                  <div class="mt-4">
+                     <p class="text-lg font-bold text-white-700">Publication Info:</p>
+                     <p>{{ $books->publish_date }} </p>
+                     <p>{{ $books->publisher}}</p>
+                     <p>ISBN: {{ $books->isbn}}</p>
+                  </div>
 
+                  <div class="flex flex-col items-center">
+                     <div class="flex">
+                        <form method="POST" action="{{ route('request.checkIn', ['title' => $books->title, 'sublocation' => $books->sublocation]) }}">
+                           @csrf
+                              <button type="submit" class="mt-4 mr-2 p-2 bg-green-500 text-white rounded-md justify-center">
+                                 Check In
+                              </button>
+                        </form>
 
-                <form method="POST" action="{{ route('request.checkOut', ['title' => $books->title, 'sublocation' => $books->sublocation]) }}">
-                @csrf
-                <button type="submit" class="mt-2 p-2 bg-red-500 text-white rounded-md justify-center">
-                   Check Out
-                </button>
-             </form>
+                        <form method="POST" action="{{ route('request.checkOut', ['title' => $books->title, 'sublocation' => $books->sublocation]) }}">
+                           @csrf
+                              <button type="submit" class="mt-4 mr-2 p-2 bg-red-500 text-white rounded-md justify-center">
+                                 Check Out
+                              </button>
+                        </form>
 
-                   @if(session('success'))
-                   <div class="alert alert-success">
-                      {{ session('success') }}
-                   </div>
-                   @endif
-             </div>
+                        <form method="POST" action="{{ route('request.Reserve', ['title' => $books->title, 'sublocation' => $books->sublocation]) }}">
+                           @csrf
+                           <button type="submit" class="mt-4 p-2 bg-yellow-500 text-white rounded-md justify-center">
+                              Reserve
+                           </button>
+                     </form>
+                     </div>
+
+                     @if(session('success'))
+                        <div class="alert alert-success">
+                              {{ session('success') }}
+                        </div>
+                     @endif
+
+                     @if(session('error'))
+                        <div class="alert alert-danger">
+                              {{ session('error') }}
+                        </div>
+                     @endif
+                  </div>
+         </div>
+         </div>
       </div>
-  </div>
+
+      <div class="flex items-center justify-center sm:ml-64">
+         <div class="max-w-3xl w-full p-6 bg-blue-900 dark:bg-blue-900 rounded-md shadow-md text-white mt-8">
+            <h2 class="text-2xl font-bold text-white-700">Recommended Books</h2>
+
+            <h3 class="text-lg text-center font-bold text-white-700 mt-4">Books by Similar Authors</h3>
+            @if(count($similarAuthorsBooks) > 0)
+                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                     @foreach($similarAuthorsBooks as $recommendation)
+                        <div class="bg-gray-800 p-4 rounded-md">
+                        <a href="{{ route('pbook.show', ['id' => $recommendation->id]) }}" class="text-lg font-bold text-white">{{ \Str::limit($recommendation->title, 50) }}</a>
+                              <p class="text-sm text-gray-300">{{ $recommendation->author }}</p>
+                        </div>
+                     @endforeach
+                  </div>
+            @else
+                  <p class="text-center text-gray-300 mt-4">No books by similar authors found.</p>
+            @endif
+
+            <h3 class="text-lg text-center font-bold text-white-700 mt-4">Related Books</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  @foreach($similarSublocationBooks as $recommendation)
+                     <div class="bg-gray-800 p-4 rounded-md">
+                     <a href="{{ route('pbook.show', ['id' => $recommendation->id]) }}" class="text-lg font-bold text-white">{{ \Str::limit($recommendation->title, 50) }}</a>
+                        <p class="text-sm text-gray-300">{{ $recommendation->author }}</p>
+                     </div>
+                  @endforeach
+            </div>
+         </div>
+   </div>
 
 </x-app-layout>

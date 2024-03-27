@@ -101,7 +101,7 @@
                                 {{ $history->email }}
                             </td>
                             <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                {{ $history->books_borrowed }}
+                                {{ \Str::limit($history->books_borrowed, 30) }}
                             </td>
                             <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                                 {{ $history->sublocation }}

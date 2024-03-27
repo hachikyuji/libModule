@@ -5,7 +5,7 @@
          </h2>
       </x-slot> 
 
-   <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+    <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
       <span class="sr-only">Open sidebar</span>
       <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
       <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
@@ -85,92 +85,119 @@
       </div>
    </aside>
 
-
    <div class="sm:ml-64 flex items-center justify-center">
-      <div class="flex flex-col items-center justify-center h-full pt-10">
-               <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1 pt-10">
-                  Current Requests
-               </h1>
 
-         <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-full lg:w-full xl:w-full">
-               <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                  <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
-                     <tr>
-                           <th scope="col" class="px-6 py-3">
-                              Email
-                           </th>
-                           <th scope="col" class="px-6 py-3">
-                              Book
-                           </th>
-                           <th scope="col" class="px-6 py-3">
-                              Book Status
-                           </th>
+    <div class="flex flex-col items-center justify-center h-full pt-10">
+        <a href="{{ route('admin_requests') }}"
+                    class="text-blue-600 dark:text-blue-600 hover:text-blue-800 dark:hover:text-blue-600 mb-3 ml-1 pt-10">
+                    &lt; Requests Approval
+                </a>
+            <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1">
+                Reservation List
+            </h1>
+            
+            @if(session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
 
-                           <th scope="col" class="px-6 py-3">
-                              Request Type
-                           </th>
-                           <th scope="col" class="px-6 py-3">
-                              Request Status
-                           </th>
-                           <th scope="col" class="px-6 py-3">
-                              Expiration Status
-                           </th>
-                           <th scope="col" class="px-6 py-3">
-                              Link
-                           </th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     @foreach($queueRequest->reverse() as $queue)
-                        @if($queue->request_status != 'Approved')
-                           <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
-                              <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 {{ $queue->email }}
-                              </td>
-                              <td class="px-4 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 {{ \Str::limit($queue->book_request, 30) }}
-                              </td>
-                              <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 @php
-                                    $book = \App\Models\Books::where('title', $queue->book_request)->first();
-                                    $status = $book ? ($book->available_copies > 0 ? 'Available' : 'Unavailable') : 'Not Found';
-                                 @endphp
-                                 {{ $status }}
-                              </td>
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-full lg:w-full xl:w-full">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Name
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Email
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Book
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Book Status
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Request Type
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Expiration Time
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Decision
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach ($pendingRequests as $request)
+                    @if ($request->request_status === 'Pending' && ($request->request_type === 'Reserve'))
+                        @php
+                            $userEmail = $request->email;
+                            $userName =  \App\Models\User::where('email', $userEmail)->value('name');
+                            $bookTitle = $request->book_request;
+                        @endphp
 
-                              <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 {{ $queue->request_type }}
-                              </td>
-                              <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 {{ $queue->request_status }}
-                              </td>
-                              <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 @php
-                                    $expirationTime = Carbon\Carbon::parse($queue->expiration_time);
-                                    $currentTime = now();
+                        <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $userName }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $userEmail }}
+                            </td>
+                            <td class="px-4 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ \Str::limit($bookTitle, 30) }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                            @php
+                                $book = \App\Models\Books::where('title', $bookTitle)->first();
+                                if ($book) {
+                                    $availableCopies = $book->available_copies;
+                                    $pendingCheckouts = \App\Models\PendingRequests::where('book_request', $bookTitle)
+                                        ->where('request_type', 'Check Out')
+                                        ->where('request_type', 'Reserve')
+                                        ->where('request_status', 'Pending')
+                                        ->count();
 
-                                    // Check if the request is expired
-                                    $isExpired = $expirationTime->isPast();
-                                 @endphp
+                                    if ($availableCopies > 0 || $pendingCheckouts > 0) {
+                                        $status = ($availableCopies > 0) ? 'Available' : 'Pending Checkout';
+                                    } else {
+                                        $status = 'Unavailable';
+                                    }
 
-                                 @if($isExpired)
-                                    <span class="text-red-500">Expired</span>
-                                 @else
-                                    <span class="text-green-500">Not Expired</span>
-                                 @endif
-                              </td>
-                              <td class="px-6 py-4 font-medium text-blue-500 whitespace-nowrap dark:text-blue">
-                                 @if($book)
-                                    <a href="{{ route('book.show', ['id' => $book->id]) }}">View</a>
-                                 @endif
-                              </td>
-                           </tr>
-                        @endif
-                     @endforeach
-                  </tbody>
+                                    $sublocation = $book->sublocation;
+                                } else {
+                                    $status = 'Not Found';
+                                    $sublocation = null;
+                                }
+                            @endphp
+                            {{ $status }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $request->request_type }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $request->expiration_time }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
+                                <form action="{{ route('approve-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation]) }}" method="post" class="inline">
+                                    @csrf
+                                    <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Approve</button>
+                                </form>
+                                |
+                                <form action="{{ route('deny-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation]) }}" method="post" class="inline">
+                                    @csrf
+                                    <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Deny</button>
+                                </form>
+                            </td>
+                        </tr> 
+                    @endif
+                @endforeach
 
-               </table>
-         </div>
-      </div>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
    </div>
 </x-app-layout>

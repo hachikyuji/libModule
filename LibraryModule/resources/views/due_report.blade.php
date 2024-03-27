@@ -86,91 +86,79 @@
    </aside>
 
 
-   <div class="sm:ml-64 flex items-center justify-center">
-      <div class="flex flex-col items-center justify-center h-full pt-10">
-               <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1 pt-10">
-                  Current Requests
-               </h1>
+<div class="sm:ml-64 flex items-center justify-center">
+    <div class="flex flex-col items-center justify-center h-full pt-10">
+        <a href="{{ route('admin_requests') }}" class="text-blue-600 dark:text-blue-600 hover:text-blue-800 dark:hover:text-blue-600 mb-3 ml-1 pt-10">
+            &lt; Requests Approval
+        </a>
+        <h1 class="text-3xl font-bold text-blue-800 dark:text-blue-600 mb-3 ml-1">
+            Books Overdue Report
+        </h1>
+        <div class="flex items-end">
+            <form action="{{ route('send.report') }}" method="post">
+                @csrf
+                <input type="text" name="email" placeholder="Email" class="px-3 py-1 border border-blue-800 rounded bg-white focus:outline-none focus:ring focus:border-blue-300 dark:bg-white-700 dark:border-blue-600 dark:text-white">
+                <button type="submit" class="px-3 py-1 ml-2 bg-blue-800 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300">
+                    Send Report
+                </button>
+            </form>
+        </div>
+        @if(session('success'))
+            <div class="text-green-600 dark:text-green-400 font-medium mb-3">
+                {{ session('success') }}
+            </div>
+        @endif
 
-         <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-full lg:w-full xl:w-full">
-               <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                  <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
-                     <tr>
-                           <th scope="col" class="px-6 py-3">
-                              Email
-                           </th>
-                           <th scope="col" class="px-6 py-3">
-                              Book
-                           </th>
-                           <th scope="col" class="px-6 py-3">
-                              Book Status
-                           </th>
-
-                           <th scope="col" class="px-6 py-3">
-                              Request Type
-                           </th>
-                           <th scope="col" class="px-6 py-3">
-                              Request Status
-                           </th>
-                           <th scope="col" class="px-6 py-3">
-                              Expiration Status
-                           </th>
-                           <th scope="col" class="px-6 py-3">
-                              Link
-                           </th>
-                     </tr>
-                  </thead>
-                  <tbody>
-                     @foreach($queueRequest->reverse() as $queue)
-                        @if($queue->request_status != 'Approved')
-                           <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
-                              <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 {{ $queue->email }}
-                              </td>
-                              <td class="px-4 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 {{ \Str::limit($queue->book_request, 30) }}
-                              </td>
-                              <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 @php
-                                    $book = \App\Models\Books::where('title', $queue->book_request)->first();
-                                    $status = $book ? ($book->available_copies > 0 ? 'Available' : 'Unavailable') : 'Not Found';
-                                 @endphp
-                                 {{ $status }}
-                              </td>
-
-                              <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 {{ $queue->request_type }}
-                              </td>
-                              <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 {{ $queue->request_status }}
-                              </td>
-                              <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 @php
-                                    $expirationTime = Carbon\Carbon::parse($queue->expiration_time);
-                                    $currentTime = now();
-
-                                    // Check if the request is expired
-                                    $isExpired = $expirationTime->isPast();
-                                 @endphp
-
-                                 @if($isExpired)
-                                    <span class="text-red-500">Expired</span>
-                                 @else
-                                    <span class="text-green-500">Not Expired</span>
-                                 @endif
-                              </td>
-                              <td class="px-6 py-4 font-medium text-blue-500 whitespace-nowrap dark:text-blue">
-                                 @if($book)
-                                    <a href="{{ route('book.show', ['id' => $book->id]) }}">View</a>
-                                 @endif
-                              </td>
-                           </tr>
-                        @endif
-                     @endforeach
-                  </tbody>
-
-               </table>
-         </div>
-      </div>
-   </div>
+        <div class="flex flex-col mb-4 pt-5">
+            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                    <div class="shadow overflow-hidden border-b border-blue-800 sm:rounded-lg">
+                        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3">
+                                        Email
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Name
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Book Borrowed
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Borrowed Date
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Book Deadline
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($overdueHistories as $history)
+                                    <tr>
+                                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                            {{ $history->email }}
+                                        </td>
+                                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                            {{ $history->user_name }}
+                                        </td>
+                                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                            {{ $history->books_borrowed }}
+                                        </td>
+                                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                            {{ $history->borrowed_date }}
+                                        </td>
+                                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                            {{ $history->book_deadline }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
 </x-app-layout>

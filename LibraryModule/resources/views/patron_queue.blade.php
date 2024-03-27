@@ -102,7 +102,7 @@
                                  {{ $queue->email }}
                               </td>
                               <td class="px-4 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 {{ $queue->book_request }}
+                                 {{ \Str::limit($queue->book_request, 30) }}
                               </td>
                               <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                                  @php

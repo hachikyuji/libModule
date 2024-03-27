@@ -22,8 +22,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QueueController;
 use App\Http\Controllers\RequestHistory;
 use App\Http\Controllers\UserPreferenceController;
-use App\Http\Controllers\requestsDecision;
-use App\Models\pendingRequests;
+use App\Http\Controllers\DueReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,34 +42,37 @@ Route::get('/', function () {
 
 // Patron Dashboard Hompage
 Route::get('/patron_dashboard', [PatronBookControll::class, 'showBooksWithHighestCount'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'patron'])
     ->name('patron_dashboard');
 
 // Patron Search
 Route::get('/patron_search', [PatronSearchControl::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'patron'])
     ->name('patron_search');
 
 Route::get('/patron_search/{id}', [PatronBookControll::class, 'show'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'patron'])
     ->name('pbook.show');
 
- Route::post('/patron_search/checkin/{title}/{sublocation}', [PatronBookControll::class, 'checkIn'])
-    ->middleware(['auth', 'verified'])
+Route::post('/patron_search/checkin/{title}/{sublocation}', [PatronBookControll::class, 'checkIn'])
+    ->middleware(['auth', 'verified', 'patron'])
     ->name('request.checkIn');
 
 Route::post('/patron_search/checkout/{title}/{sublocation}}', [PatronBookControll::class, 'checkOut'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'patron'])
     ->name('request.checkOut');
 
+Route::post('/patron_search/checkin/{title}/{sublocation}', [PatronBookControll::class, 'Reserve'])
+    ->middleware(['auth', 'verified', 'patron'])
+    ->name('request.Reserve');
 // Patron Queue
 Route::get('/patron_queue', [PatronQueueControl::class, 'getUserQueue'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'patron'])
     ->name('patron_queue');
 
 // Patron History
 Route::get('/patron_history', [PatronHistoryControl::class, 'getUserAccountHistory'])
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth', 'verified', 'patron'])
     ->name('patron_history'); 
 
 // Admin Dashboard Homepage
@@ -93,6 +95,22 @@ Route::get('/requests', [handleRequests::class, 'getRequests'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('requests');
 
+Route::post('/requests/{email}/{title}/{sublocation}/approve', [handleRequests::class, 'approveRequest'])
+    ->name('approve-request');
+
+Route::post('/requests/{email}/deny', [handleRequests::class, 'denyRequest'])
+    ->name('deny-request');
+
+Route::get('/reservations', [handleRequests::class, 'getReserveRequests']) 
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('reservations');
+
+Route::post('/requests/{email}/{title}/{sublocation}/approve', [handleRequests::class, 'approveRequest'])
+    ->name('approve-request');
+
+Route::post('/requests/{email}/deny', [handleRequests::class, 'denyRequest'])
+    ->name('deny-request');
+
 Route::get('/admin_requests', function () {
         return view('admin_requests');
     })->middleware(['auth', 'verified', 'admin'])->name('admin_requests');
@@ -101,11 +119,9 @@ Route::get('/admin_requests', function () {
     ->middleware(['auth', 'verified', 'admin'])
     ->name('requests_history');
 
-Route::post('/requests/{email}/{title}/{sublocation}/approve', [handleRequests::class, 'approveRequest'])
-    ->name('approve-request');
-
-Route::post('/requests/{email}/deny', [handleRequests::class, 'denyRequest'])
-    ->name('deny-request');
+Route::get('/admin_requests', function () {
+        return view('admin_requests');
+    })->middleware(['auth', 'verified', 'admin'])->name('admin_requests');
 
 // Book Management
 Route::get('/book_management', function () {
@@ -139,13 +155,17 @@ Route::get('/search/{id}', [BookController::class, 'show'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('book.show');
 
- Route::post('/search/checkin/{title}/{sublocation}', [BookController::class, 'checkIn'])
+ Route::post('/search/checkin/{title}/', [BookController::class, 'checkIn'])
     ->middleware(['auth', 'verified'])
     ->name('request.checkIn');
 
 Route::post('/search/checkout/{title}/{sublocation}', [BookController::class, 'checkOut'])
     ->middleware(['auth', 'verified'])
     ->name('request.checkOut');
+
+Route::post('/search/checkin/{title}/{sublocation}', [BookController::class, 'Reserve'])
+    ->middleware(['auth', 'verified'])
+    ->name('request.Reserve');
 /*
 Route::get('/user_preference', function () {
         return view('user_preference');
@@ -161,16 +181,29 @@ Route::get('/user_preference', [UserPreferenceController::class, 'create'])
     ->name('user_preference.create');
 
 Route::get('/patron_user_preference', [PatronUserPreference::class, 'create'])
-    ->middleware(['auth', 'verified']) 
+    ->middleware(['auth', 'verified', 'patron']) 
     ->name('patron_user_preference.create');
 
 Route::post('/patron_user_preference', [PatronUserPreference::class, 'save'])
-    ->middleware(['auth', 'verified']) 
+    ->middleware(['auth', 'verified', 'patron']) 
     ->name('patron_save_user_preference');
-    
+
+
+Route::get('/overdue-books', [DueReportController::class, 'overdueBooks'])
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('overdue_books');
+Route::post('/send-report', [DueReportController::class, 'sendReport'])
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('send.report');
+
 // Temporary Routes
 
+
+
 /*
+Route::post('/patron_search/checkout/{title}/{sublocation}}', [PatronBookControll::class, 'checkOut'])
+    ->middleware(['auth', 'verified'])
+    ->name('request.checkOut');
 Route::get('register', [RegisteredUserController::class, 'create'])
                 ->name('register');
             

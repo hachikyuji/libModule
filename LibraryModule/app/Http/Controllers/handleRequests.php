@@ -22,12 +22,12 @@ class handleRequests extends Controller
                                           ->get();
 
         $threeHoursBeforeExpiry = clone $now;
-        $threeHoursBeforeExpiry->addHours(3);
+        $threeHoursBeforeExpiry->addHours(1);
 
         $sendRequests = PendingRequests::where('expiration_time', '>', $now)
-                        ->where('expiration_time', '<=', $threeHoursBeforeExpiry)
-                        ->where('request_status', 'Pending')
-                        ->get();
+            ->where('expiration_time', '<=', $threeHoursBeforeExpiry)
+            ->where('request_status', 'Pending')
+            ->get();
     
         foreach ($expiredRequests as $expiredRequest) {
             $book = Books::where('title', $expiredRequest->book_request)->first();
@@ -52,6 +52,45 @@ class handleRequests extends Controller
         return view('requests', ['pendingRequests' => $pendingRequests, 'accountHistory' => $accountHistory]);
     }
 
+    public function getReserveRequests(Request $request)
+    {
+        $now = Carbon::now('Asia/Manila');
+    
+        $expiredRequests = PendingRequests::where('expiration_time', '<=', $now)
+                                          ->where('request_status', 'Pending')
+                                          ->get();
+
+        $threeHoursBeforeExpiry = clone $now;
+        $threeHoursBeforeExpiry->addHours(3);
+
+        $sendRequests = PendingRequests::where('expiration_time', '>', $now)
+                        ->where('expiration_time', '<=', $threeHoursBeforeExpiry)
+                        ->where('request_status', 'Pending')
+                        ->get();
+    
+        foreach ($expiredRequests as $expiredRequest) {
+            $book = Books::where('title', $expiredRequest->book_request)->first();
+    
+            if ($book) {
+                $book->increment('available_copies');
+            }
+    
+            $expiredRequest->update(['request_status' => 'Expired']);
+        }
+
+        foreach ($sendRequests as $sendRequests) {
+            $this->sendExpiryNotification($sendRequests);
+        }
+    
+        $pendingRequests = PendingRequests::where('expiration_time', '>', $now)
+                                          ->where('request_status', 'Pending')
+                                          ->where('request_type', 'Reserve')
+                                          ->get();
+    
+        $accountHistory = AccountHistory::all();
+    
+        return view('reservations', ['pendingRequests' => $pendingRequests, 'accountHistory' => $accountHistory]);
+    }
     protected function sendExpiryNotification($sendRequests)
     {
         if (!$sendRequests->notification_sent) {
@@ -92,10 +131,28 @@ class handleRequests extends Controller
                     'request_number' => $request->request_number,
                     'book_deadline' => $bookDeadline,
                 ]);
+            } else if($request->request_type === 'Reserve'){
+                $expirationTime = $now->copy()->addHours(4); // Adjust here the expiry date/hour!
+                $requestNumber = uniqid();
+                
+                PendingRequests::create([
+                    'email' => $email,
+                    'book_request' => $title,
+                    'request_date' => $now,
+                    'request_type' => 'Check Out',
+                    'request_status' => 'Pending',
+                    'expiration_time' => $expirationTime,
+                    'request_number' => $requestNumber,
+                ]);
             }
         }
-    
-        return redirect()->route('requests');
+        if ($request->request_type === 'Check Out' || $request->request_type === 'Check In'){
+            return redirect()->route('requests');
+        }
+        elseif($request->request_type === 'Reserve'){
+            return redirect()->route('reservations');
+        }
+
     }
     
     private function calculateBookDeadline($accountType)
@@ -139,7 +196,6 @@ class handleRequests extends Controller
             ->first();
     
         if ($checkOutRecord) {
-            // Update the existing check-out record with returned date and request number
             $checkOutRecord->update([
                 'returned_date' => $now,
                 'request_number' => $request->id, // Assuming request id is unique
@@ -147,7 +203,6 @@ class handleRequests extends Controller
     
             $book->increment('available_copies');
         } else {
-            // No corresponding check-out record found, store error message in session
             session()->flash('error', 'No corresponding check-out record found for this check-in request.');
         }
     }

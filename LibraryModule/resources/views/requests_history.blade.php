@@ -141,19 +141,21 @@
                                     <div class="text-sm font-medium text-blue-900"> {{$request ->email}}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{$request ->book_request}}</a>
+                                    <div class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                     {{ \Str::limit($request ->book_request, 30) }}
+                                </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{$request ->request_date}}</div>
+                                    <div class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">{{$request ->request_date}}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{$request ->request_type}}</div>
+                                    <div class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">{{$request ->request_type}}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{$request ->request_status}}</div>
+                                    <div class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">{{$request ->request_status}}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{$request ->id}}</div>
+                                    <div class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">{{$request ->id}}</div>
                                 </td>
                             </tr>
                         </tbody>

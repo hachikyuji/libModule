@@ -19,16 +19,35 @@ class PatronBookControll extends Controller
 
     public function show($id)
     {
-        $this->books = Books::findOrFail($id);
+        $books = Books::findOrFail($id);
+
+        $similarAuthorsBooks = Books::where('author', $books->author)
+            ->where('id', '!=', $books->id)
+            ->inRandomOrder()
+            ->limit(6)
+            ->get();
+
+        $similarSublocationBooks = Books::where('sublocation', $books->sublocation)
+            ->where('id', '!=', $books->id)
+            ->inRandomOrder()
+            ->limit(6)
+            ->get();
+
+        //Initial Notification
 
         $sendIRequests = PendingRequests::where('initial_notification_sent', 0)
+        ->whereNotIn('request_type', ['Reserve'])
         ->get();
 
         foreach ($sendIRequests as $sendRequests) {
             $this->sendInitialNotification($sendRequests);
         }
 
-        return view('patron_view', ['books' => $this->books]);
+        //
+
+        return view('patron_view', ['books' => $books, 
+        'similarAuthorsBooks' => $similarAuthorsBooks,
+        'similarSublocationBooks' => $similarSublocationBooks,]);
     }
 
     public function showBooksWithHighestCount()
@@ -234,6 +253,43 @@ class PatronBookControll extends Controller
     
         return redirect()->back()->with('success', 'Check-out request submitted successfully!');
     }
+    
+    public function Reserve($title, $sublocation)
+    {
+        $userEmail = Auth::user()->email;
+        $now = Carbon::now('Asia/Manila');
+    
+        $book = Books::where('title', $title)->first();
+
+        if ($book && $book->available_copies > 0) {
+            $book->decrement('available_copies');
+    
+        }
+        
+        
+        if (!$book || $book->available_copies == 0) {
+            return redirect()->back()->with('error', 'This book is not available for reservation.');
+        }
+        
+    
+        $expirationTime = $now->copy()->addHours(72); // Adjusts here the expiry date/hour!
+        $requestNumber = uniqid();
+    
+        PendingRequests::create([
+            'email' => $userEmail,
+            'book_request' => $title,
+            'request_date' => $now,
+            'request_type' => 'Reserve',
+            'request_status' => 'Pending',
+            'expiration_time' => $expirationTime,
+            'request_number' => $requestNumber,
+        ]);
+    
+        Books::where('title', $title)->update(['count' => DB::raw('count + 1')]);
+    
+        return redirect()->back()->with('success', 'Reservation request submitted successfully!');
+    }
+
     
 
 }

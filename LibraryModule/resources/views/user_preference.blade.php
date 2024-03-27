@@ -101,14 +101,18 @@
 
                 <div class="mb-4">
                     <label for="author" class="block text-gray-700 text-sm font-bold mb-2">Author:</label>
-                    <input type="text" name="author" id="author" class="w-full px-3 py-2 border rounded" required>
+                    <select name="author" id="publish_location" class="w-full px-3 py-2 border rounded" required>
+                    @foreach ($authors as $author)
+                              <option value="{{ $author }}">{{ \Str::limit($author, 40) }}</option>
+                     @endforeach
+                    </select>
                 </div>
 
-                <div class="mb-4">
-                <label for="publish_location" class="block text-gray-700 text-sm font-bold mb-2">Publish Location:</label>
+                <div class="mb-4" id="dropdown-container">
+                  <label for="publish_location" class="block text-gray-700 text-sm font-bold mb-2">Publisher:</label>
                   <select name="publish_location" id="publish_location" class="w-full px-3 py-2 border rounded" required>
-                     @foreach ($publishLocations as $location)
-                        <option value="{{ $location }}">{{ $location }}</option>
+                     @foreach ($publishLocations as $publisher)
+                           <option value="{{ $publisher }}">{{ \Str::limit($publisher, 40) }}</option>
                      @endforeach
                   </select>
                </div>
@@ -116,19 +120,9 @@
                 <div class="mb-4">
                   <label for="sublocation" class="block text-gray-700 text-sm font-bold mb-2">Sublocation:</label>
                   <select name="sublocation" id="sublocation" class="w-full px-3 py-2 border rounded" required>
-                     <option value="Cataloging Section">Cataloging Section</option>
-                     <option value="Circulation Section">Circulation Section</option>
-                     <option value="Filipiniana Section">Filipiniana Section</option>
-                     <option value="Graduate School Library">Graduate School Library</option>
-                     <option value="Health Sciences Library">Health Sciences Library</option>
-                     <option value="Law Library">Law Library</option>
-                     <option value="Liliosa Hilao Gender and Development Corner">Liliosa Hilao Gender and Development Corner</option>
-                     <option value="Medical Library">Medical Library</option>
-                     <option value="Multimedia Library">Multimedia Library</option>
-                     <option value="Ospital ng Maynila Medical Library">Ospital ng Maynila Medical Library</option>
-                     <option value="Periodicals Section">Periodicals Section</option>
-                     <option value="Reference-Japanese Corner">Reference-Japanese Corner</option>
-                     <option value="Reference Section">Reference Section</option>
+                     @foreach ($sublocations as $sublocation)
+                              <option value="{{ $sublocation }}">{{ \Str::limit($sublocation, 40) }}</option>
+                     @endforeach
                   </select>
                </div>
 

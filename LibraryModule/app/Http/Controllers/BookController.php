@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Mail\ExpiredRequestNotification;
 use App\Mail\InitialRequestNotification;
 use App\Mail\sendDeadlineNotification;
+use App\Mail\ReserveRequestNotification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
@@ -20,20 +21,45 @@ class BookController extends Controller
 
     public function show($id)
     {
-        $this->books = Books::findOrFail($id);
+        $books = Books::findOrFail($id);
 
-        //Initial Notification
+        $similarAuthorsBooks = Books::where('author', $books->author)
+            ->where('id', '!=', $books->id)
+            ->inRandomOrder()
+            ->limit(6)
+            ->get();
+
+        $similarSublocationBooks = Books::where('sublocation', $books->sublocation)
+            ->where('id', '!=', $books->id)
+            ->inRandomOrder()
+            ->limit(6)
+            ->get();
+
+        //  Initial Notification
 
         $sendIRequests = PendingRequests::where('initial_notification_sent', 0)
-        ->get();
+            ->whereNotIn('request_type', ['Reserve'])
+            ->get();
 
         foreach ($sendIRequests as $sendRequests) {
             $this->sendInitialNotification($sendRequests);
         }
 
+        //  Reservation Notification
+
+        $sendRRequests = PendingRequests::where('initial_notification_sent', 0)
+            ->where('request_type', 'Reserve')
+            ->get();
+
+        foreach ($sendRRequests as $sendRequests){
+            $this->sendReservationNotification($sendRequests);
+        }
+
         //
 
-        return view('view', ['books' => $this->books]);
+        return view('view', ['books' => $books, 
+        'similarAuthorsBooks' => $similarAuthorsBooks,
+        'similarSublocationBooks' => $similarSublocationBooks,]);
     }
 
     public function showBooksWithHighestCount() 
@@ -86,14 +112,10 @@ class BookController extends Controller
         
 
         $sendIRequests = PendingRequests::where('initial_notification_sent', 0)
+        ->whereNotIn('request_type', ['Reserve'])
         ->get();
 
-        foreach ($sendIRequests as $sendRequests) {
-            $this->sendInitialNotification($sendRequests);
-        }
-
         // Deadline Email
-
         $deadline = clone $now;
         $deadline->addHours(24);
 
@@ -154,6 +176,19 @@ class BookController extends Controller
             $sendRequests->update(['initial_notification_sent' => true]);
         }
     }
+    
+    protected function sendReservationNotification($sendRequests)
+    {
+        if (!$sendRequests->initial_notification_sent) {
+            $emailData = [
+                'title' => $sendRequests->book_request,
+            ];
+    
+            Mail::to($sendRequests->email)->send(new ReserveRequestNotification($emailData));
+    
+            $sendRequests->update(['initial_notification_sent' => true]);
+        }
+    }
 
     protected function sendDeadlineNotification($sendRequests)
     {
@@ -172,7 +207,7 @@ class BookController extends Controller
     
     
 
-    public function checkIn($title, $sublocation)
+    public function checkIn($title)
     {
         $userEmail = Auth::user()->email;
     
@@ -223,7 +258,7 @@ class BookController extends Controller
     
         $checkOutRecord = AccountHistory::where('email', $userEmail)
             ->where('books_borrowed', $title)
-            ->where('sublocation', $sublocation)
+            # ->where('sublocation', $sublocation)
             ->whereNotNull('borrowed_date')
             ->orderBy('borrowed_date', 'desc')
             ->first();
@@ -231,43 +266,7 @@ class BookController extends Controller
         if (!$checkOutRecord) {
             return redirect()->back()->with('error', 'No check-out record found for this book.');
         }
-    
-        // Your additional logic goes here
-    
-        // Example: Update fines based on days passed
-        /*
-        $borrowedDate = Carbon::parse($checkOutRecord->borrowed_date);
-        $daysPassed = $borrowedDate->diffInDays($now);
-    
-        if ($daysPassed > 3) {
-            $fineAmount = ($daysPassed - 3) * 50;
-            $checkOutRecord->update(['fines' => $fineAmount]);
-        }
-        */
-    
-        // Example: Create a check-in record
-        /*
-        AccountHistory::create([
-            'email' => $userEmail,
-            'books_borrowed' => $title,
-            'returned_date' => $now,
-            'fines' => 0, // Initialize fines to 0 for check-in
-            'sublocation' => $sublocation,
-        ]);
-        */
-    
-        // Example: Create a pending check-in request
-        /*
-        PendingRequests::create([
-            'email' => $userEmail,
-            'book_request' => $title,
-            'request_date' => $now,
-            'request_type' => 'Check In',
-            'request_status' => 'Pending',
-            'expiration_time' => $now->copy()->addHours(24),
-        ]);
-        */
-
+        
         $mostRecentCheckOut = PendingRequests::where('email', $userEmail)
             ->where('book_request', $title)
             ->where('request_type', 'Check Out')
@@ -334,6 +333,42 @@ class BookController extends Controller
         Books::where('title', $title)->update(['count' => DB::raw('count + 1')]);
     
         return redirect()->back()->with('success', 'Check-out request submitted successfully!');
+    }
+
+    public function Reserve($title, $sublocation)
+    {
+        $userEmail = Auth::user()->email;
+        $now = Carbon::now('Asia/Manila');
+    
+        $book = Books::where('title', $title)->first();
+
+        if ($book && $book->available_copies > 0) {
+            $book->decrement('available_copies');
+    
+        }
+        
+        
+        if (!$book || $book->available_copies == 0) {
+            return redirect()->back()->with('error', 'This book is not available for reservation.');
+        }
+        
+    
+        $expirationTime = $now->copy()->addHours(72); // Adjusts here the expiry date/hour!
+        $requestNumber = uniqid();
+    
+        PendingRequests::create([
+            'email' => $userEmail,
+            'book_request' => $title,
+            'request_date' => $now,
+            'request_type' => 'Reserve',
+            'request_status' => 'Pending',
+            'expiration_time' => $expirationTime,
+            'request_number' => $requestNumber,
+        ]);
+    
+        Books::where('title', $title)->update(['count' => DB::raw('count + 1')]);
+    
+        return redirect()->back()->with('success', 'Reservation request submitted successfully!');
     }
 
 }

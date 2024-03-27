@@ -49,8 +49,10 @@ class UserPreferenceController extends Controller
 
     public function create()
     {
-        $publishLocations = Books::distinct('publish_location')->pluck('publish_location');
+        $publishLocations = Books::distinct('publisher')->pluck('publisher');
+        $sublocations = Books::distinct('sublocation')->pluck('sublocation');
+        $authors = Books::distinct('author')->pluck('author');
         
-        return view('user_preference', compact('publishLocations'));
+        return view('user_preference', compact('publishLocations', 'sublocations', 'authors'));
     }
 }

@@ -107,6 +107,9 @@
                 <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
                     <tr>
                         <th scope="col" class="px-6 py-3">
+                            Name
+                        </th>
+                        <th scope="col" class="px-6 py-3">
                             Email
                         </th>
                         <th scope="col" class="px-6 py-3">
@@ -122,15 +125,16 @@
                             Expiration Time
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            
+                            Decision
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                 @foreach ($pendingRequests as $request)
-                    @if ($request->request_status === 'Pending')
+                    @if ($request->request_status === 'Pending' && ($request->request_type === 'Check Out' || $request->request_type === 'Check In'))
                         @php
                             $userEmail = $request->email;
+                            $userName =  \App\Models\User::where('email', $userEmail)->value('name');
                             $bookTitle = $request->book_request;
 
                             // Check if fines for this user and book combination have already been displayed
@@ -139,10 +143,13 @@
 
                         <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
                             <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                {{ $userName }}
+                            </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                                 {{ $userEmail }}
                             </td>
                             <td class="px-4 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                {{ $bookTitle }}
+                                {{ \Str::limit($bookTitle, 30) }}
                             </td>
                             <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                             @php
