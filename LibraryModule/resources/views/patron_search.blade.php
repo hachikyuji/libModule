@@ -67,7 +67,7 @@
                 PLM Library
             </h1>
 
-<form action="{{ route('search', request()->query()) }}">
+<form action="{{ route('patron_search', request()->query()) }}">
         <div class="flex my-2">
             <input type="text" name="q" placeholder="Search" class="py-2 px-2 text-md border border-blue-200 rounded-l focus:outline-none" value="{{$search_param}}" />
             <button type="submit" class="w-10 flex items-center justify-center border-t border-r border-b border-blue-200 rounded-r text-blue-100 bg-blue-500">
@@ -106,7 +106,7 @@
                             @foreach($books as $book)
                                 <tr>    
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        <a href="{{ route('book.show', ['id' => $book->id]) }}" class="text-sm text-blue-500">{{ \Str::limit($book->title, 50) }}</a>
+                                        <a href="{{ route('pbook.show', ['id' => $book->id]) }}" class="text-sm text-blue-500">{{ \Str::limit($book->title, 50) }}</a>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-blue-900">{{ \Str::limit($book->author, 30) }}</div>
