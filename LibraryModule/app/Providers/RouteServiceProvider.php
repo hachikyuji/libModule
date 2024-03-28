@@ -19,6 +19,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public const HOME = '/dashboard';
 
+    public const REGISTER = '/register';
+
     public const PATRONHOME = '/patron_dashboard';
 
     public const MANAGEMENT = '/book_management';

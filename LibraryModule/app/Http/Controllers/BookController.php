@@ -150,6 +150,65 @@ class BookController extends Controller
         return view('dashboard', compact('booksWithHighestCount', 'filteredBooks'));
     }
 
+    public function plmLibrary() 
+    {
+        // This function shows the recommended books on the landing page
+        $booksWithHighestCount = Books::orderBy('count', 'desc')->take(5)->get();
+        
+        // Send RequestExpiryNotification
+        $now = Carbon::now('Asia/Manila');
+
+        $threeHoursBeforeExpiry = clone $now;
+        $threeHoursBeforeExpiry->addHours(1);
+
+        $sendRequests = PendingRequests::where('expiration_time', '>', $now)
+        ->where('expiration_time', '<=', $threeHoursBeforeExpiry)
+        ->where('request_status', 'Pending')
+        ->get();
+
+        foreach ($sendRequests as $sendRequests) {
+            $this->sendExpiryNotification($sendRequests);
+        }
+        
+
+        $sendIRequests = PendingRequests::where('initial_notification_sent', 0)
+        ->whereNotIn('request_type', ['Reserve'])
+        ->get();
+
+        // Deadline Email
+        $deadline = clone $now;
+        $deadline->addHours(24);
+
+        $deadlineRequests = AccountHistory::where('book_deadline', '>', $now)
+        ->where('book_deadline', '<=', $deadline)
+        ->whereNull('returned_date')
+        ->whereNotNull('borrowed_date')
+        ->get();
+
+        foreach ($deadlineRequests as $sendDeadRequests){
+            $this->sendDeadlineNotification($sendDeadRequests);
+        }
+
+        // Request Expiry Handling
+        $expiredCheckOutRequests = PendingRequests::where('request_type', 'Check Out')
+        ->where('request_status', 'Pending')
+        ->where('expiration_time', '<=', $now)
+        ->get();
+
+        foreach ($expiredCheckOutRequests as $expiredRequest) {
+
+            $book = Books::where('title', $expiredRequest->book_request)->first();
+
+            if ($book) {
+                $book->increment('available_copies');
+            }
+
+            $expiredRequest->update(['request_status' => 'Expired']);
+        }
+        // ends here
+    
+        return view('plm_library', compact('booksWithHighestCount'));
+    }
     protected function sendExpiryNotification($sendRequests)
     {
         if (!$sendRequests->notification_sent) {
@@ -371,4 +430,46 @@ class BookController extends Controller
         return redirect()->back()->with('success', 'Reservation request submitted successfully!');
     }
 
+    public function plmShow($id)
+    {
+        $books = Books::findOrFail($id);
+
+        $similarAuthorsBooks = Books::where('author', $books->author)
+            ->where('id', '!=', $books->id)
+            ->inRandomOrder()
+            ->limit(6)
+            ->get();
+
+        $similarSublocationBooks = Books::where('sublocation', $books->sublocation)
+            ->where('id', '!=', $books->id)
+            ->inRandomOrder()
+            ->limit(6)
+            ->get();
+
+        //  Initial Notification
+
+        $sendIRequests = PendingRequests::where('initial_notification_sent', 0)
+            ->whereNotIn('request_type', ['Reserve'])
+            ->get();
+
+        foreach ($sendIRequests as $sendRequests) {
+            $this->sendInitialNotification($sendRequests);
+        }
+
+        //  Reservation Notification
+
+        $sendRRequests = PendingRequests::where('initial_notification_sent', 0)
+            ->where('request_type', 'Reserve')
+            ->get();
+
+        foreach ($sendRRequests as $sendRequests){
+            $this->sendReservationNotification($sendRequests);
+        }
+
+        //
+
+        return view('plm_view', ['books' => $books, 
+        'similarAuthorsBooks' => $similarAuthorsBooks,
+        'similarSublocationBooks' => $similarSublocationBooks,]);
+    }
 }

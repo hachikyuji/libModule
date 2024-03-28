@@ -40,10 +40,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Visitor Routes
+Route::get('/plm_library', [BookController::class, 'plmLibrary'])
+    ->name('plm_library');
+
+Route::get('/plm_search', [SearchController::class, 'visitIndex'])
+    ->name('plm_search');
+
+Route::get('/plm_search/{id}', [BookController::class, 'plmShow'])
+    ->name('plmbook.show');
+
 // Patron Dashboard Hompage
 Route::get('/patron_dashboard', [PatronBookControll::class, 'showBooksWithHighestCount'])
     ->middleware(['auth', 'verified', 'patron'])
     ->name('patron_dashboard');
+
 
 // Patron Search
 Route::get('/patron_search', [PatronSearchControl::class, 'index'])

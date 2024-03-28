@@ -112,7 +112,7 @@
 
                         <form method="POST" action="{{ route('request.checkOut', ['title' => $books->title, 'sublocation' => $books->sublocation]) }}">
                            @csrf
-                              <button type="submit" class="mt-4 mr-2 p-2 bg-red-500 text-white rounded-md justify-center">
+                              <button type="submit" class="mt-4 mr-2 p-2 bg-blue-500 text-white rounded-md justify-center">
                                  Check Out
                               </button>
                         </form>

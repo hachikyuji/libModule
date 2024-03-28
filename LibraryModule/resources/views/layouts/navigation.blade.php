@@ -1,10 +1,23 @@
 <nav x-data="{ open: false }" class="bg-white dark:bg-white-800 border-b border-white-100 dark:border-white-700 fixed w-full z-50">
-    <div class="max-w-7xl  flex justify-between items-center h-20">
+    <div class="max-w-7xl flex justify-between items-center h-20">
         <div class="flex-shrink-0 flex items-center logo-container ml--3">
             <a href="#">
                 <img src="{{ asset('images/plmLogo.png') }}" alt="PLM Logo" class="block h-20 w-auto">
             </a>
         </div>
+
+        <div class="flex items-center ml-auto">
+            
+        </div>
+
+        @auth
+        <div class="flex items-center ml-auto"> 
+            <div class="flex flex-col items-end"> 
+                <span class="text-lg font-bold text-blue-600 dark:text-blue-400">{{ Auth::user()->name }}</span>
+                <span class="mr-4 text-gray-600 dark:text-gray-500 text-sm">Account Type: {{ Auth::user()->account_type }}</span>
+            </div>
+        </div>
+        @endauth
     </div>
 </nav>
 
