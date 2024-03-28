@@ -86,12 +86,16 @@
    </aside>
 
    <div class="sm:ml-64 flex items-center justify-center">
-    <div class="flex flex-col items-center justify-center h-full pt-10">
-      <a href="{{ route('book_management') }}"
-                    class="text-blue-600 dark:text-blue-600 hover:text-blue-800 dark:hover:text-blue-600 mb-3 ml-1 pt-10">
-                    &lt; Book Management
-                </a>
-            <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1">
+        <div class="flex flex-col items-center justify-center h-full pt-10">
+            <form action="{{ route('book_management') }}" method="GET">
+                    <button type="submit" class="flex items-center justify-center mt-4 p-2 bg-blue-800 hover:bg-blue-100 dark:hover:bg-blue-700 text-white rounded-md">
+                    <svg class="w-6 h-6 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path fill-rule="evenodd" d="M13.729 5.575c1.304-1.074 3.27-.146 3.27 1.544v9.762c0 1.69-1.966 2.618-3.27 1.544l-5.927-4.881a2 2 0 0 1 0-3.088l5.927-4.88Z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="whitespace-nowrap">Book Management</span>
+                    </button>
+            </form>
+            <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1 pt-1">
                 Book Acquisition
             </h1>
 
@@ -155,21 +159,7 @@
 
             <div class="mb-4">
                 <label for="sublocation" class="block text-sm font-medium text-blue-500">Sublocation</label>
-                <select name="sublocation" id="sublocation" class="w-full px-3 py-2 border rounded" required>
-                     <option value="Cataloging Section">Cataloging Section</option>
-                     <option value="Circulation Section">Circulation Section</option>
-                     <option value="Filipiniana Section">Filipiniana Section</option>
-                     <option value="Graduate School Library">Graduate School Library</option>
-                     <option value="Health Sciences Library">Health Sciences Library</option>
-                     <option value="Law Library">Law Library</option>
-                     <option value="Liliosa Hilao Gender and Development Corner">Liliosa Hilao Gender and Development Corner</option>
-                     <option value="Medical Library">Medical Library</option>
-                     <option value="Multimedia Library">Multimedia Library</option>
-                     <option value="Ospital ng Maynila Medical Library">Ospital ng Maynila Medical Library</option>
-                     <option value="Periodicals Section">Periodicals Section</option>
-                     <option value="Reference-Japanese Corner">Reference-Japanese Corner</option>
-                     <option value="Reference Section">Reference Section</option>
-                  </select>
+                <input id="sublocation" type="text" name="sublocation" value="{{ old('sublocation') }}" required autofocus autocomplete="sublocation" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                 @error('sublocation')
                     <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
                 @enderror

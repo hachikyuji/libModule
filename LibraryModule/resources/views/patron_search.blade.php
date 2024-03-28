@@ -82,22 +82,22 @@
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                 <div class="shadow overflow-hidden border-b border-blue-800 sm:rounded-lg">
-                    <table class="min-w-full divide-y divide-blue-600">
-                        <thead class="bg-blue-200">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
                             <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider" style="width: 20%">
+                                <th scope="col" class="px-6 py-3" style="width: 20%">
                                     Title
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider" style="width: 15%">
+                                <th scope="col" class="px-6 py-3" style="width: 15%">
                                     Author
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider" style="width: 10%">
+                                <th scope="col" class="px-6 py-3" style="width: 10%">
                                     Publish Date
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider" style="width: 15%">
+                                <th scope="col" class="px-6 py-3" style="width: 15%">
                                     Sublocation
                                 </th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-blue-500 uppercase tracking-wider" style="width: 15%">
+                                <th scope="col" class="px-6 py-3" style="width: 15%">
                                     Available Copies
                                 </th>
                             </tr>
