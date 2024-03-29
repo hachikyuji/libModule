@@ -85,23 +85,25 @@
       </div>
    </aside>
 
-   <div class="sm:ml-64 overflow-y-auto mt-16 flex justify-center pt-48" role="group">
-      <button type="button" class="px-5 py-2.5 mt-4 mr-0.5 text-md font-medium text-white bg-blue-800 rounded-l-lg hover:bg-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-500">
-         <a href="{{ route('requests') }}">Current Requests</a>
-      </button>
-      <button type="button" class="px-5 py-2.5 mt-4 mx-0.5 text-md font-medium text-white bg-blue-800 hover:bg-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-500">
-         <a href="{{ route('reservations') }}">Reservations</a>
-      </button>
-      <button type="button" class="px-5 py-2.5 mt-4 mx-0.5 text-md font-medium text-white bg-blue-800 hover:bg-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-500">
-         <a href="{{ route('requests_history') }}">Requests History</a>
-      </button>
-      <button type="button" class="px-5 py-2.5 mt-4 mx-0.5 text-md font-medium text-white bg-blue-800 hover:bg-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-500">
-         <a href="{{ route('fines_management') }}">Fines Management</a>
-      </button>
-      <button type="button" class="px-5 py-2.5 mt-4 ml-0.5 text-md font-medium text-white bg-blue-800 rounded-r-lg hover:bg-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-500">
-         <a href="{{ route('overdue_books') }}">Due Books Report</a>
-      </button>
-   </div>
+   <div class="sm:ml-64 overflow-y-auto mt-16 flex justify-center pt-20" role="group">
+    <div class="flex flex-col">
+        <button type="button" class="px-5 py-2.5 mt-4 mr-0.5 text-md font-medium text-white bg-blue-800 rounded-l-lg rounded-r-lg  hover:bg-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-500">
+            <a href="{{ route('requests') }}">Current Requests</a>
+        </button>
+        <button type="button" class="px-5 py-2.5 mt-4 mx-0.5 text-md font-medium text-white bg-blue-800 rounded-l-lg rounded-r-lg  hover:bg-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-500">
+            <a href="{{ route('reservations') }}">Reservations</a>
+        </button>
+        <button type="button" class="px-5 py-2.5 mt-4 mx-0.5 text-md font-medium text-white bg-blue-800 rounded-l-lg rounded-r-lg  hover:bg-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-500">
+            <a href="{{ route('requests_history') }}">Requests History</a>
+        </button>
+        <button type="button" class="px-5 py-2.5 mt-4 mx-0.5 text-md font-medium text-white bg-blue-800 rounded-l-lg rounded-r-lg hover:bg-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-500">
+            <a href="{{ route('fines_management') }}">Fines Management</a>
+        </button>
+        <button type="button" class="px-5 py-2.5 mt-4 ml-0.5 text-md font-medium text-white bg-blue-800 rounded-l-lg rounded-r-lg hover:bg-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-500">
+            <a href="{{ route('overdue_books') }}">Due Books Report</a>
+        </button>
+    </div>
+</div>
 
 
    @if (Session::has('success'))

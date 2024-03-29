@@ -87,25 +87,18 @@
 
    <div class="sm:ml-64 overflow-y-auto">
 
-      <div class="text-3xl font-bold text-blue-600 dark:text-blue-600 pt-60 text-center">
-         <a href="{{ route('book_acquisition') }}">Book Acquisition</a>
-         <span class="mx-4">|</span>
-         <a href="{{ route('book_termination') }}">Book Termination</a>
-      </div>
+   <div class="overflow-y-auto mt-16 flex justify-center pt-48" role="group">
+        <div class="flex">
+            <button type="button" class="px-5 py-2.5 mt-4 mr-0.5 text-md font-medium text-white bg-blue-800 rounded-l-lg hover:bg-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-500 text-lg">
+                <a href="{{ route('book_acquisition') }}">Book Acquisition</a>
+            </button>
+            <button type="button" class="px-5 py-2.5 mt-4 ml-0.5 text-md font-medium text-white bg-blue-800 rounded-r-lg hover:bg-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-500 text-lg">
+                <a href="{{ route('book_termination') }}">Book Termination</a>
+            </button>
+        </div>
+    </div>
 
    </div>
-
-   @if (Session::has('success'))
-      <div class="alert alert-success">
-         {{ Session::get('success') }}
-      </div>
-   @endif
-
-   @if (Session::has('error'))
-      <div class="alert alert-danger">
-         {{ Session::get('error') }}
-      </div>
-   @endif
 
 
 </x-app-layout>
