@@ -25,6 +25,10 @@ class RouteServiceProvider extends ServiceProvider
 
     public const MANAGEMENT = '/book_management';
 
+    public const ACQUISITION = '/book_acquisition';
+
+    public const TERMINATION = '/book_termination';
+
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */

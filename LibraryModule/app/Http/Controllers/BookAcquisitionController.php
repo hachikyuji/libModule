@@ -8,6 +8,8 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+
 
 class BookAcquisitionController extends Controller
 {
@@ -29,23 +31,27 @@ class BookAcquisitionController extends Controller
             'sublocation' => ['required', 'string', 'max:255'],
             'book_description' => ['required', 'string', 'max:255'],
         ]);
-    
-        $user = Books::create([
-            'call_number' => $request->call_number,
-            'author' => $request->author,
-            'title' => $request->title,
-            'publish_location' => $request->publish_location,
-            'publish_date' => $request->publish_date,
-            'available_copies' => $request->available_copies,
-            'total_copies' => $request->total_copies,
-            'sublocation' => $request->sublocation,
-            'book_description' => $request->book_description,
 
-        ]);
-    
-        event(new Registered($user));
-    
-    
-        return redirect(RouteServiceProvider::MANAGEMENT);
+        try {
+            $book = Books::create([
+                'call_number' => $request->call_number,
+                'author' => $request->author,
+                'title' => $request->title,
+                'publish_location' => $request->publish_location,
+                'publish_date' => $request->publish_date,
+                'available_copies' => $request->available_copies,
+                'total_copies' => $request->total_copies,
+                'sublocation' => $request->sublocation,
+                'book_description' => $request->book_description,
+            ]);
+
+            Session::flash('success', 'Book acquisition successful.');
+
+            return redirect(RouteServiceProvider::ACQUISITION);
+        } catch (\Exception $e) {
+            Session::flash('error', 'Book acquisition failed: ' . $e->getMessage());
+
+            return redirect(RouteServiceProvider::ACQUISITION)->withErrors(['error' => $e->getMessage()]);
+        }
     }
 }

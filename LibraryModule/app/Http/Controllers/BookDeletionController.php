@@ -16,12 +16,12 @@ class BookDeletionController extends Controller
     
         if ($book) {
             $book->delete();
-            Session::flash('success', 'Book terminated successfully!');
+            Session::flash('success', 'Book terminated successfully.');
         } else {
             Session::flash('error', 'Book not found or could not be terminated.');
         }
     
-        return redirect(RouteServiceProvider::MANAGEMENT);
+        return redirect(RouteServiceProvider::TERMINATION);
     }
 
 }

@@ -99,6 +99,18 @@
                 Book Termination
             </h1>
 
+            @if (Session::has('success'))
+               <div class="alert alert-success">
+                  {{ Session::get('success') }}
+               </div>
+            @endif
+
+            @if (Session::has('error'))
+                  <div class="alert alert-danger">
+                     {{ Session::get('error') }}
+                  </div>
+            @endif
+
             <form method="POST" action="{{ route('book_termination') }}" class="w-full max-w-md">
             @csrf
             <div class="mb-4">
