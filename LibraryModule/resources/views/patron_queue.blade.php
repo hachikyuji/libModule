@@ -95,7 +95,7 @@
                      </tr>
                   </thead>
                   <tbody>
-                     @foreach($queueRequest as $queue)
+                     @foreach($queueRequest->reverse() as $queue)
                         @if($queue->request_status != 'Approved')
                            <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
                               <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">

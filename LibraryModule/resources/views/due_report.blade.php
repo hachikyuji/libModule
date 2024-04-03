@@ -102,7 +102,7 @@
         <div class="flex items-end">
             <form action="{{ route('send.report') }}" method="post">
                 @csrf
-                <input type="text" name="email" placeholder="Email" class="px-3 py-1 border border-blue-800 rounded bg-white focus:outline-none focus:ring focus:border-blue-300 dark:bg-white-700 dark:border-blue-600 dark:text-white">
+                <input type="email" name="email" placeholder="Email" class="px-3 py-1 text-black border border-blue-800 rounded bg-white focus:outline-none focus:ring focus:border-blue-300 dark:bg-white-700 dark:border-blue-600 dark:text-black" required>
                 <button type="submit" class="px-3 py-1 ml-2 bg-blue-800 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300">
                     Send Report
                 </button>
