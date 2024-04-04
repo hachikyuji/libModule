@@ -38,7 +38,7 @@ class BookController extends Controller
         //  Initial Notification
 
         $sendIRequests = PendingRequests::where('initial_notification_sent', 0)
-            ->whereNotIn('request_type', ['Reserve'])
+            ->where('request_type', 'Check Out')
             ->get();
 
         foreach ($sendIRequests as $sendRequests) {
@@ -131,6 +131,7 @@ class BookController extends Controller
 
         // Request Expiry Handling
         $expiredCheckOutRequests = PendingRequests::where('request_type', 'Check Out')
+        ->where('request_type', 'Reserve')
         ->where('request_status', 'Pending')
         ->where('expiration_time', '<=', $now)
         ->get();
@@ -153,7 +154,7 @@ class BookController extends Controller
     public function plmLibrary() 
     {
         // This function shows the recommended books on the landing page
-        $booksWithHighestCount = Books::orderBy('count', 'desc')->take(5)->get();
+        $booksWithHighestCount = Books::orderBy('count', 'desc')->take(10)->get();
         
         // Send RequestExpiryNotification
         $now = Carbon::now('Asia/Manila');

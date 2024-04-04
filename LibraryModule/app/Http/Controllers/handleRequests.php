@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\AccountHistory;
 use App\Mail\ExpiredRequestNotification;
+use App\Mail\RequestDecisionNotification;
+use App\Mail\ReserveRequestNotification;
 use Carbon\Carbon;
 use App\Models\Books;
 use App\Models\User;
@@ -48,6 +50,30 @@ class handleRequests extends Controller
                                           ->get();
     
         $accountHistory = AccountHistory::all();
+        
+        //  Reservation Notification
+
+        $sendRRequests = PendingRequests::where('initial_notification_sent', 0)
+            ->where('request_type', 'Reserve')
+            ->get();
+
+        foreach ($sendRRequests as $sendRequests){
+            $this->sendReservationNotification($sendRequests);
+        }
+
+        //  Accept & Deny Notification
+
+        $sendResponse = PendingRequests::where('request_status_notif', 0)
+        ->where(function($query) {
+            $query->where('request_status', 'Approved')
+                ->orWhere('request_status', 'Denied');
+        })
+        ->get();
+
+        foreach ($sendResponse as $sendRequests){
+            $this->sendAcceptDenyNotification($sendRequests);
+        }
+        //
     
         return view('requests', ['pendingRequests' => $pendingRequests, 'accountHistory' => $accountHistory]);
     }
@@ -105,7 +131,32 @@ class handleRequests extends Controller
         }
     }
     
+    protected function sendReservationNotification($sendRequests)
+    {
+        if (!$sendRequests->initial_notification_sent) {
+            $emailData = [
+                'title' => $sendRequests->book_request,
+            ];
     
+            Mail::to($sendRequests->email)->send(new ReserveRequestNotification($emailData));
+    
+            $sendRequests->update(['initial_notification_sent' => true]);
+        }
+    }
+
+    protected function sendAcceptDenyNotification($sendRequests)
+    {
+        if (!$sendRequests->request_status_notif) {
+            $emailData = [
+                'title' => $sendRequests->book_request,
+                'request_status' => $sendRequests->request_status,
+            ];
+    
+            Mail::to($sendRequests->email)->send(new RequestDecisionNotification($emailData['title'], $emailData['request_status']));
+    
+            $sendRequests->update(['request_status_notif' => true]);
+        }
+    }
 
     public function approveRequest($email, $title, $sublocation, $id)
     {

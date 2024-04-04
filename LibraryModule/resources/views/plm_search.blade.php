@@ -51,7 +51,7 @@
                 PLM Library
             </h1>
 
-<form action="{{ route('search', request()->query()) }}">
+<form action="{{ route('plm_search', request()->query()) }}">
         <div class="flex my-2">
             <input type="text" name="q" placeholder="Search" class="py-2 px-2 text-md border border-blue-200 rounded-l focus:outline-none" value="{{$search_param}}" />
             <button type="submit" class="w-10 flex items-center justify-center border-t border-r border-b border-blue-200 rounded-r text-blue-100 bg-blue-500">

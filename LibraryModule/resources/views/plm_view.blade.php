@@ -84,7 +84,7 @@
 
                <div class="flex flex-col items-center">
                     <div class = "flex">
-                     <form method="get" action="{{ route('login')}}">
+                     <form method="get" action="{{ route('welcome')}}">
                         @csrf
                            <button type="submit" class="mt-4 p-2 bg-blue-500 hover:bg-blue-100 dark:hover:bg-blue-700 text-white rounded-md flex items-center">
                               <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" fill="white">
