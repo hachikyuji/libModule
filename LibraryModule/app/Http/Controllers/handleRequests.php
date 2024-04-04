@@ -150,9 +150,10 @@ class handleRequests extends Controller
             $emailData = [
                 'title' => $sendRequests->book_request,
                 'request_status' => $sendRequests->request_status,
+                'request_type' => $sendRequests->request_type,
             ];
     
-            Mail::to($sendRequests->email)->send(new RequestDecisionNotification($emailData['title'], $emailData['request_status']));
+            Mail::to($sendRequests->email)->send(new RequestDecisionNotification($emailData['title'], $emailData['request_status'], $emailData['request_type']));
     
             $sendRequests->update(['request_status_notif' => true]);
         }

@@ -117,9 +117,10 @@ class BookController extends Controller
 
         // Deadline Email
         $deadline = clone $now;
-        $deadline->addHours(24);
+        $deadline->addHours(48);
 
         $deadlineRequests = AccountHistory::where('book_deadline', '>', $now)
+        ->where('deadline_notif', 0)
         ->where('book_deadline', '<=', $deadline)
         ->whereNull('returned_date')
         ->whereNotNull('borrowed_date')
@@ -260,7 +261,7 @@ class BookController extends Controller
     
             Mail::to($sendRequests->email)->send(new sendDeadlineNotification($emailData['title'], $emailData['expiration_time']));
     
-            $sendRequests->update(['initial_notification_sent' => true]);
+            $sendRequests->update(['deadline_notif' => true]);
         }
     }
     

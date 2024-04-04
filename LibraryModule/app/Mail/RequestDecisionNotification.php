@@ -19,10 +19,12 @@ class RequestDecisionNotification extends Mailable
 
      public $title;
      public $request_status;
-     public function __construct($title, $request_status)
+     public $request_type;
+     public function __construct($title, $request_status, $request_type)
      {
          $this->title = $title;
          $this->request_status = $request_status;
+         $this->request_type = $request_type;
      }
  
      /**
@@ -35,6 +37,8 @@ class RequestDecisionNotification extends Mailable
          return $this->subject('PLM Library - Request Status Notification')
                      ->view('accept_deny_notification')
                      ->with('title', $this->title)
+                     ->with('request_type', $this->request_type)
                      ->with('request_status', $this->request_status);
+    
      }
 }
