@@ -263,9 +263,6 @@ class BookController extends Controller
         }
     }
     
-    
-    
-
     public function checkIn($title)
     {
         $userEmail = Auth::user()->email;
@@ -281,76 +278,18 @@ class BookController extends Controller
             return redirect()->back()->with('error', 'No approved check-out request found for this book.');
         }
     
-        //      
-        /* Count the number of approved check-out requests for this book
-        $approvedCheckOutRequestsCount = AccountHistory::where('email', $userEmail)
-            ->where('books_borrowed', $title)
-            ->whereNotNull('borrowed_date')
-            ->whereNotNull('returned_date')
-            ->count();
-        */
-
-        $pendingCheckInRequestCount = PendingRequests::where('email', $userEmail)
-            ->where('book_request', $title)
-            ->where('request_status', 'Pending')
-            ->where('request_type', 'Check In')
-            ->count();
-    
-        // Count the number of check-outs that haven't been checked in yet
-        $checkOutCount = AccountHistory::where('email', $userEmail)
-            ->where('books_borrowed', $title)
-            ->whereNotNull('borrowed_date')
-            ->whereNull('returned_date') // Only count if the book hasn't been returned
-            ->count();
-    
-        // Check if the user can perform a check-in based on the count of check-outs
-        
-        if (!$checkOutCount > 1) {
-            return redirect()->back()->with('error', 'You cannot check in more times than the approved check-out requests for this book.');
-        } 
-
-        if (!$checkOutCount > $pendingCheckInRequestCount){
-            return redirect()->back()->with('error', 'You cannot check in more times than the approved check-out requests for this book.');
-        }
-    
         $now = Carbon::now('Asia/Manila');
     
-        $checkOutRecord = AccountHistory::where('email', $userEmail)
-            ->where('books_borrowed', $title)
-            # ->where('sublocation', $sublocation)
-            ->whereNotNull('borrowed_date')
-            ->orderBy('borrowed_date', 'desc')
-            ->first();
-    
-        if (!$checkOutRecord) {
-            return redirect()->back()->with('error', 'No check-out record found for this book.');
-        }
-        
-        $mostRecentCheckOut = PendingRequests::where('email', $userEmail)
-            ->where('book_request', $title)
-            ->where('request_type', 'Check Out')
-            ->where('request_status', 'Approved')
-            ->orderBy('request_date', 'desc')
-            ->first();
-        
-        if ($mostRecentCheckOut) {
-            $requestNumber = $mostRecentCheckOut->request_number;
-        
-            pendingRequests::create([
-                'email' => $userEmail,
-                'book_request' => $title,
-                'request_date' => $now,
-                'request_type' => 'Check In',
-                'request_status' => 'Pending',
-                'expiration_time' => $now->copy()->addHours(24),
-                'request_number' => $requestNumber,
-            ]);
-        }
-    
-        $expirationTime = Carbon::parse($pendingCheckOutRequest->expiration_time);
-        if ($now->greaterThan($expirationTime)) {
-            return redirect()->back()->with('error', 'This check-out request has expired.');
-        }
+        // Create a pending check-in request
+        PendingRequests::create([
+            'email' => $userEmail,
+            'book_request' => $title,
+            'request_date' => $now,
+            'request_type' => 'Check In',
+            'request_status' => 'Pending',
+            'expiration_time' => $now->copy()->addHours(24),
+            'request_number' => uniqid(), // Or use any unique identifier
+        ]);
     
         return redirect()->back()->with('success', 'Check-in request submitted successfully!');
     }

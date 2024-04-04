@@ -140,8 +140,8 @@
                             $userEmail = $request->email;
                             $userName =  \App\Models\User::where('email', $userEmail)->value('name');
                             $bookTitle = $request->book_request;
+                            $id = $request->rerquest_number;
 
-                            // Check if fines for this user and book combination have already been displayed
                             $finesDisplayed = false;
                         @endphp
 
@@ -186,12 +186,12 @@
                                 {{ $request->expiration_time }}
                             </td>
                             <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
-                                <form action="{{ route('approve-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation]) }}" method="post" class="inline">
+                                <form action="{{ route('approve-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation, 'id' => $request->id]) }}" method="post" class="inline">
                                     @csrf
                                     <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Approve</button>
                                 </form>
                                 |
-                                <form action="{{ route('deny-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation]) }}" method="post" class="inline">
+                                <form action="{{ route('deny-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation, 'id' => $request->id]) }}" method="post" class="inline">
                                     @csrf
                                     <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Deny</button>
                                 </form>

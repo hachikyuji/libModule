@@ -122,7 +122,7 @@
                                 @endphp
 
                                 @if($book)
-                                    <a href="{{ route('book.show', ['id' => $book->id]) }}">View</a>
+                                    <a href="{{ route('pbook.show', ['id' => $book->id]) }}">View</a>
                                 @endif
                             </td>
                         </tr>

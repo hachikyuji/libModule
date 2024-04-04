@@ -107,9 +107,13 @@ class handleRequests extends Controller
     
     
 
-    public function approveRequest($email, $title, $sublocation)
+    public function approveRequest($email, $title, $sublocation, $id)
     {
-        $request = PendingRequests::where('email', $email)->where('request_status', 'Pending')->first();
+        $request = PendingRequests::find($id);
+
+        if (!$request || $request->request_status !== 'Pending') {
+            return redirect()->back()->with('error', 'Invalid or already processed request.');
+        }
     
         if ($request) {
             $request->update(['request_status' => 'Approved']);
@@ -118,6 +122,9 @@ class handleRequests extends Controller
     
             if ($request->request_type === 'Check In') {
                 $this->handleCheckIn($request, $now, $title, $sublocation);
+
+                return redirect()->route('requests');
+
             } elseif ($request->request_type === 'Check Out') {
                 $this->handleCheckOut($request);
                 $bookDeadline = $this->calculateBookDeadline($user->account_type);
@@ -131,28 +138,44 @@ class handleRequests extends Controller
                     'request_number' => $request->request_number,
                     'book_deadline' => $bookDeadline,
                 ]);
-            } else if($request->request_type === 'Reserve'){
-                $expirationTime = $now->copy()->addHours(4); // Adjust here the expiry date/hour!
-                $requestNumber = uniqid();
-                
-                PendingRequests::create([
-                    'email' => $email,
-                    'book_request' => $title,
-                    'request_date' => $now,
-                    'request_type' => 'Check Out',
-                    'request_status' => 'Pending',
-                    'expiration_time' => $expirationTime,
-                    'request_number' => $requestNumber,
-                ]);
+
+                return redirect()->route('requests');
             }
+            
         }
-        if ($request->request_type === 'Check Out' || $request->request_type === 'Check In'){
-            return redirect()->route('requests');
-        }
-        elseif($request->request_type === 'Reserve'){
-            return redirect()->route('reservations');
+    }
+
+    public function approveReserve($email, $title, $id)
+    {
+        $request = PendingRequests::find($id);
+
+        if (!$request) {
+            return redirect()->back()->with('error', 'Invalid request.');
         }
 
+        if ($request->request_status !== 'Pending') {
+            return redirect()->back()->with('error', 'Request has already been processed.');
+        }
+
+        if ($request->request_type == 'Reserve') {
+            $request->update(['request_status' => 'Approved']);
+
+            $now = Carbon::now('Asia/Manila');
+            $expirationTime = $now->copy()->addHours(4); // Adjusts here the expiry date/hour!
+            $requestNumber = uniqid();
+        
+            PendingRequests::create([
+                'email' => $email,
+                'book_request' => $title,
+                'request_date' => $now,
+                'request_type' => 'Check Out',
+                'request_status' => 'Pending',
+                'expiration_time' => $expirationTime,
+                'request_number' => $requestNumber,
+            ]);
+        }
+
+        return redirect()->route('reservations');
     }
     
     private function calculateBookDeadline($accountType)
@@ -163,28 +186,36 @@ class handleRequests extends Controller
     }
     
     
-    public function denyRequest($email)
-    {
-        $request = PendingRequests::where('email', $email)->where('request_status', 'Pending')->first();
+    public function denyRequest($email, $title, $id)
+{
+    $request = PendingRequests::where('email', $email)
+        ->where('request_status', 'Pending')
+        ->where('book_request', $title)
+        ->first();
 
-        if ($request) {
-            $book = Books::where('title', $request->book_request)->first();
-    
-            if ($book && $request->request_type === 'Check Out') {
-                $book->increment('available_copies');
-            }
-    
-            $request->update(['request_status' => 'Denied']);
+    if ($request) {
+        $book = Books::where('title', $request->book_request)->first();
+
+        if ($book && $request->request_type === 'Check Out' || $request->request_type == 'Reserve') {
+            $book->increment('available_copies');
         }
-    
-        return redirect()->route('requests');
+
+        $request->update(['request_status' => 'Denied']);
     }
+
+    if ($request->request_type == 'Check Out'){
+        return redirect()->route('requests');
+    } elseif($request->request_type == 'Reserve'){
+        return redirect()->route('reservations');
+    }
+    
+}
+
     
     
     private function handleCheckIn($request, $now, $title, $sublocation)
     {
         $userEmail = $request->email;
-        $book = Books::where('title', $request->book_request)->first();
     
         // Find the corresponding check-out record
         $checkOutRecord = AccountHistory::where('email', $userEmail)
@@ -198,9 +229,9 @@ class handleRequests extends Controller
         if ($checkOutRecord) {
             $checkOutRecord->update([
                 'returned_date' => $now,
-                'request_number' => $request->id, // Assuming request id is unique
+                'request_number' => $request->id,
             ]);
-    
+            $book = Books::where('title', $request->book_request)->first();
             $book->increment('available_copies');
         } else {
             session()->flash('error', 'No corresponding check-out record found for this check-in request.');
@@ -211,9 +242,12 @@ class handleRequests extends Controller
     {
     $book = Books::where('title', $request->book_request)->first();
     
+    // Redundant Code, Keeping for debugging purposes
+    /* 
     if ($book && $book->available_copies > 0) {
         // $book->decrement('available_copies');
     }
-}
+    */
+    }
 
 }

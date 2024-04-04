@@ -135,11 +135,12 @@
                 </thead>
                 <tbody>
                 @foreach ($pendingRequests as $request)
-                    @if ($request->request_status === 'Pending' && ($request->request_type === 'Reserve'))
+                    @if ($request->request_status === 'Pending' && $request->request_type === 'Reserve')
                         @php
                             $userEmail = $request->email;
                             $userName =  \App\Models\User::where('email', $userEmail)->value('name');
                             $bookTitle = $request->book_request;
+                            $id = $request->request_number;
                         @endphp
 
                         <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
@@ -158,7 +159,6 @@
                                 if ($book) {
                                     $availableCopies = $book->available_copies;
                                     $pendingCheckouts = \App\Models\PendingRequests::where('book_request', $bookTitle)
-                                        ->where('request_type', 'Check Out')
                                         ->where('request_type', 'Reserve')
                                         ->where('request_status', 'Pending')
                                         ->count();
@@ -184,12 +184,12 @@
                                 {{ $request->expiration_time }}
                             </td>
                             <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
-                                <form action="{{ route('approve-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation]) }}" method="post" class="inline">
+                             <form action="{{ route('approve-reserve', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation, 'id' => $request->id]) }}" method="post" class="inline">
                                     @csrf
                                     <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Approve</button>
                                 </form>
                                 |
-                                <form action="{{ route('deny-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation]) }}" method="post" class="inline">
+                                <form action="{{ route('deny-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation, 'id' => $request->id]) }}" method="post" class="inline">
                                     @csrf
                                     <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Deny</button>
                                 </form>
@@ -197,7 +197,6 @@
                         </tr> 
                     @endif
                 @endforeach
-
                 </tbody>
 
             </table>

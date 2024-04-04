@@ -38,7 +38,7 @@ use App\Http\Controllers\DueReportController;
 // Homepage
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 // Visitor Routes
 Route::get('/plm_library', [BookController::class, 'plmLibrary'])
@@ -106,21 +106,22 @@ Route::get('/requests', [handleRequests::class, 'getRequests'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('requests');
 
-Route::post('/requests/{email}/{title}/{sublocation}/approve', [handleRequests::class, 'approveRequest'])
+Route::post('/requests/{email}/{title}/{sublocation}/{id}/approve', [handleRequests::class, 'approveRequest'])
     ->name('approve-request');
 
-Route::post('/requests/{email}/deny', [handleRequests::class, 'denyRequest'])
+Route::post('/requests/{email}/{title}/{id}/deny', [handleRequests::class, 'denyRequest'])
     ->name('deny-request');
 
 Route::get('/reservations', [handleRequests::class, 'getReserveRequests']) 
     ->middleware(['auth', 'verified', 'admin'])
     ->name('reservations');
 
-Route::post('/requests/{email}/{title}/{sublocation}/approve', [handleRequests::class, 'approveRequest'])
-    ->name('approve-request');
+Route::post('/reservations/{email}/{title}/{id}/approve', [handleRequests::class, 'approveReserve'])
+    ->name('approve-reserve');
 
-Route::post('/requests/{email}/deny', [handleRequests::class, 'denyRequest'])
+Route::post('/reservations/{email}/{title}/{id}/deny', [handleRequests::class, 'denyRequest'])
     ->name('deny-request');
+
 
 Route::get('/admin_requests', function () {
         return view('admin_requests');

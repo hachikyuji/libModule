@@ -95,9 +95,18 @@
                      </tr>
                   </thead>
                   <tbody>
-                     @foreach($queueRequest->reverse() as $queue)
-                        @if($queue->request_status != 'Approved')
-                           <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
+                  @foreach($queueRequest->reverse() as $queue)
+                     @php
+                        $expirationTime = Carbon\Carbon::parse($queue->expiration_time);
+                        $currentTime = now();
+
+                        $isExpired = $expirationTime->isPast();
+                        
+                        $expiredForMoreThanADay = $isExpired && $expirationTime->diffInDays($currentTime) > 1;
+                     @endphp
+
+                     @if($queue->request_status != 'Approved' && !$expiredForMoreThanADay)
+                        <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-200">
                               <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                                  {{ $queue->email }}
                               </td>
@@ -118,18 +127,10 @@
                                  {{ $queue->request_status }}
                               </td>
                               <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 @php
-                                    $expirationTime = Carbon\Carbon::parse($queue->expiration_time);
-                                    $currentTime = now();
-
-                                    // Check if the request is expired
-                                    $isExpired = $expirationTime->isPast();
-                                 @endphp
-
                                  @if($isExpired)
                                     <span class="text-red-500">Expired</span>
                                  @else
-                                    <span class="text-green-500">Not Expired</span>
+                                    <span class="text-green-500">Available</span>
                                  @endif
                               </td>
                               <td class="px-6 py-4 font-medium text-blue-500 whitespace-nowrap dark:text-blue">
@@ -137,9 +138,9 @@
                                     <a href="{{ route('pbook.show', ['id' => $book->id]) }}">View</a>
                                  @endif
                               </td>
-                           </tr>
-                        @endif
-                     @endforeach
+                        </tr>
+                     @endif
+                  @endforeach
                   </tbody>
                </table>
          </div>

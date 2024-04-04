@@ -24,7 +24,7 @@
                </a>
             </li>
             <li>
-               <form method="POST" action="{{ route('logout') }}">
+               <form method="GET" action="{{ route('welcome') }}">
                @csrf
                <button type="submit" class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group">
                   <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512" fill="white">
