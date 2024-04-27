@@ -119,16 +119,16 @@
                     <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
                         <tr>
                             <th scope="col" class="px-6 py-3">
+                                Name
+                            </th>
+                            <th scope="col" class="px-6 py-3">
                                 Email
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Book Borrowed
                             </th>
                             <th scope="col" class="px-6 py-3">
-                                Borrowed Date
-                            </th>
-                            <th scope="col" class="px-6 py-3">
-                                Returned Date
+                                Deadline
                             </th>
                             <th scope="col" class="px-6 py-3">
                                 Fines
@@ -142,16 +142,23 @@
                         @foreach($request as $request)
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-blue-900">
+                                    @php
+                                        $user = \App\Models\User::where('email', $request->email)->first();
+                                    @endphp
+                                    @if ($user)
+                                        {{ $user->name }}
+                                    @endif
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-blue-900"> {{\Str::limit($request ->email, 30) }}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm text-blue-900">{{\Str::limit($request ->books_borrowed, 30)  }}</a>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{$request ->borrowed_date}}</div>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{$request ->returned_date}}</div>
+                                    <div class="text-sm text-blue-900">{{$request ->book_deadline}}</div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-blue-900">{{$request ->fines}}</div>
@@ -163,7 +170,7 @@
                                         <input type="hidden" name="email" value="{{ $request->email }}">
                                         
                                         <!-- Add an input field for fines -->
-                                        <input type="text" name="fines" placeholder="Enter fines" class="border rounded px-3 py-1">
+                                        <input type="text" name="fines" placeholder="Enter fines" class="border rounded px-0.5 py-1">
 
                                         <!-- Add a submit button -->
                                         <button type="submit" class="ml-2 bg-blue-500 text-white px-3 py-1 rounded">Set Fines</button>

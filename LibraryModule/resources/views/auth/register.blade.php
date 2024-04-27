@@ -87,6 +87,21 @@
 
 <div class="h-full p-4 sm:ml-64 flex items-center justify-center pt-20">
         <form method="POST" action="{{ route('register') }}" class="w-full max-w-md">
+
+        <div class="flex items-center justify-center pt-1">
+               @if (Session::has('success'))
+                  <div class="text-green-600 dark:text-green-600 font-medium mb-3">
+                     {{ session('success') }}
+                  </div>
+               @endif
+
+               @if (Session::has('error'))
+                  <div class="text-green-600 dark:text-green-600 font-medium mb-3">
+                     {{ session('error') }}
+                  </div>
+               @endif
+         </div>
+
             @csrf
 
             <div class="mb-4">
@@ -108,15 +123,23 @@
             </div>
 
             <div class="mb-4">
-               <x-input-label for="email" :value="__('Email')" style="color: #0000FF; font-size: 16px; margin-bottom: 8px;" />
-               <x-text-input id="email" class="w-full p-2.5 text-sm rounded-lg" type="email" name="email" :value="old('email')" required autocomplete="username" />
-               <x-input-error :messages="$errors->get('email')" class="mt-2" />
+               <x-input-label for="user_num" :value="__('Student Number / Employee Number')" style="color: #0000FF; font-size: 16px; margin-bottom: 8px;"/>
+               <x-text-input id="user_num" class="w-full p-2.5 text-sm rounded-lg" type="text" name="user_num" :value="old('user_num')" required autofocus />
+               <x-input-error :messages="$errors->get('user_num')" class="mt-2" />
             </div>
-           
+
+            <div class="mb-4">
+            <x-input-label for="email" :value="__('Email')" style="color: #0000FF; font-size: 16px; margin-bottom: 8px;" />
+               <x-text-input id="email" class="w-full p-2.5 text-sm rounded-lg" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            </div>
+            @if ($errors->has('email'))
+               <span class="text-red-500">{{ $errors->first('email') }}</span>
+            @endif
+            
             <div class="mb-4">
                 <x-input-label for="password" :value="__('Password')" style="color: #0000FF; font-size: 16px; margin-bottom: 8px;" />
                 <x-text-input id="password" class="w-full p-2.5 text-sm rounded-lg"
-                    type="password"
+                    type="password" 
                     name="password"
                     required autocomplete="new-password" />
                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
@@ -138,12 +161,12 @@
                 </select>
             </div>
 
-            <!-- Register Button -->
             <div class="flex items-center justify-center">
                 <button class="bg-yellow-500 text-white py-2 px-4 rounded">
                     {{ __('Register') }}
                 </button>
             </div>
+
             </div>
         </form>
     </div>

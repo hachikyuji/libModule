@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Mail\ExpiredRequestNotification;
 use App\Mail\InitialRequestNotification;
+use App\Mail\ReserveRequestNotification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
@@ -41,6 +42,15 @@ class PatronBookControll extends Controller
 
         foreach ($sendIRequests as $sendRequests) {
             $this->sendInitialNotification($sendRequests);
+        }
+        //  Reservation Notification
+
+        $sendRRequests = PendingRequests::where('initial_notification_sent', 0)
+        ->where('request_type', 'Reserve')
+        ->get();
+
+        foreach ($sendRRequests as $sendRequests){
+        $this->sendReservationNotification($sendRequests);
         }
 
         //
@@ -144,6 +154,18 @@ class PatronBookControll extends Controller
             ];
     
             Mail::to($sendRequests->email)->send(new InitialRequestNotification($emailData));
+    
+            $sendRequests->update(['initial_notification_sent' => true]);
+        }
+    }
+    protected function sendReservationNotification($sendRequests)
+    {
+        if (!$sendRequests->initial_notification_sent) {
+            $emailData = [
+                'title' => $sendRequests->book_request,
+            ];
+    
+            Mail::to($sendRequests->email)->send(new ReserveRequestNotification($emailData));
     
             $sendRequests->update(['initial_notification_sent' => true]);
         }

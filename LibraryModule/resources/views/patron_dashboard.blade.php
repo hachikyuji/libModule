@@ -119,7 +119,7 @@
     <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-4/5 lg:w-3/4 xl:w-2/3 mx-auto">
         <div class="flex justify-between items-center mb-3 ml-1 pt-10">
             <h2 class="text-lg font-semibold text-blue-900 dark:text-blue-600">For You</h2>
-            <a href="{{ route('patron_user_preference.create') }}" class="text-sm text-blue-600">Edit Preference</a>
+            <a href="{{ route('patron_user_preference.create') }}" class="flex items-center justify-center mt-4 px-4 py-2 bg-blue-800 hover:bg-blue-500 text-white text-sm rounded-md shadow-md">Edit Preference</a>
         </div>
 
         <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

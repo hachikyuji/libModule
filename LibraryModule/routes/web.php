@@ -23,6 +23,7 @@ use App\Http\Controllers\QueueController;
 use App\Http\Controllers\RequestHistory;
 use App\Http\Controllers\UserPreferenceController;
 use App\Http\Controllers\DueReportController;
+use App\Http\Controllers\ExistingBookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -143,7 +144,7 @@ Route::get('/book_management', function () {
 Route::get('/book_acquisition', [BookAcquisitionController::class, 'create'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('book_acquisition');
-Route::post('book_acquisition', [BookAcquisitionController::class, 'store']);
+Route::post('/book_acquisition', [BookAcquisitionController::class, 'store']);
 
 Route::get('/book_termination', function () {
     return view('book_termination');
@@ -157,6 +158,46 @@ Route::get('/fines_management', [FinesManagementControl::class, 'index'])
 Route::post('/set_fines', [FinesManagementControl::class, 'setFines']) 
 ->middleware(['auth', 'verified', 'admin'])
 ->name('set_fines');
+
+Route::get('/modify_book', function () {
+        return view('book_add');
+    })->middleware(['auth', 'verified', 'admin'])->name('modify_book');
+
+Route::post('/modify_book', [ExistingBookController::class, 'update'])
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('modify_book');
+
+Route::get('/modify_search', [SearchController::class, 'modifyIndex'])
+    ->name('modify_search');
+
+Route::get('/modify_search/{id}', [ExistingBookController::class, 'show'])
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('modbook.show');
+
+
+/*
+modify_book = book_add view (two buttons view)
+existing_book = modify existing book
+
+Route::get('/existing_book', [ExistingBookController::class, 'create'])
+    ->middleware(['auth', 'verified', 'admin']) 
+    ->name('existing_book');
+
+Route::get('/existing_book', function () {
+    return view('modify_book');
+})->middleware(['auth', 'verified', 'admin'])->name('existing_book');
+
+Route::post('/save_user_preference', [UserPreferenceController::class, 'save'])
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('save_user_preference');
+
+Route::get('/user_preference', [UserPreferenceController::class, 'create'])
+    ->middleware(['auth', 'verified', 'admin']) 
+    ->name('user_preference.create');
+
+Route::get('/plm_search', [SearchController::class, 'visitIndex'])
+    ->name('plm_search');
+*/
 
 // Search
 Route::get('/search', [SearchController::class, 'index'])

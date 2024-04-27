@@ -80,65 +80,72 @@
                </button>
                </form>
             </li>
-            
          </ul>
       </div>
    </aside>
 
    <div class="sm:ml-64 flex items-center justify-center">
         <div class="flex flex-col items-center justify-center h-full pt-10">
-            <form action="{{ route('dashboard') }}" method="GET">
+            <form action="{{ route('modify_search') }}" method="GET">
                <button type="submit" class="flex items-center justify-center mt-4 px-4 py-2 bg-blue-800 hover:bg-blue-500 text-white rounded-md shadow-md">
                      <svg class="w-6 h-6 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path fill-rule="evenodd" d="M13.729 5.575c1.304-1.074 3.27-.146 3.27 1.544v9.762c0 1.69-1.966 2.618-3.27 1.544l-5.927-4.881a2 2 0 0 1 0-3.088l5.927-4.88Z" clip-rule="evenodd"/>
                      </svg>
-                     <span class="font-semibold font-bold">Home</span>
+                     <span class="font-semibold font-bold">Book Acquisition</span>
                </button>
             </form>
-            <h1 class="text-3xl font-bold text-blue-800 dark:text-blue-600 mb-3 ml-1">
-                User Preference
-            </h1>
 
-            <!-- Form for User Preference -->
-            <form method="POST" action="{{ route('save_user_preference') }}" class="w-full max-w-md">
-                @csrf
+            <form method="POST" action="{{ route('modify_book') }}" class="w-full max-w-md">
+               @csrf
+               <div class="mb-4 pt-2">
+                  <input type="hidden" name="call_number" value="{{ $books->call_number }}">
+                  <div class="mb-4">
+                        <label for="call_number" class="block text-sm font-medium text-blue-500">Call Number:</label>
+                        {{ $books->call_number }}
+                  </div>
+                  <div class="mb-4">
+                        <label for="title" class="block text-sm font-medium text-blue-500">Title:</label>
+                        {{ $books->title }}
+                  </div>
 
-                <div class="mb-4">
-                    <label for="author" class="block text-gray-700 text-sm font-bold mb-2">Author:</label>
-                    <select name="author" id="publish_location" class="w-full px-3 py-2 border rounded" required>
-                    @foreach ($authors as $author)
-                              <option value="{{ $author }}">{{ \Str::limit($author, 40) }}</option>
-                     @endforeach
-                    </select>
-                </div>
+                  <div class="mb-4">
+                        <label for="available_copies" class="block text-sm font-medium text-blue-500">Available Copies</label>
+                        <input id="available_copies" type="number" name="available_copies" value="{{ old('available_copies') }}" required autofocus autocomplete="available_copies" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        @error('available_copies')
+                           <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                  </div>
 
-                <div class="mb-4" id="dropdown-container">
-                  <label for="publish_location" class="block text-gray-700 text-sm font-bold mb-2">Publisher:</label>
-                  <select name="publish_location" id="publish_location" class="w-full px-3 py-2 border rounded" required>
-                     @foreach ($publishLocations as $publisher)
-                           <option value="{{ $publisher }}">{{ \Str::limit($publisher, 40) }}</option>
-                     @endforeach
-                  </select>
-               </div>
+                  <div class="mb-4">
+                        <label for="total_copies" class="block text-sm font-medium text-blue-500">Total Copies</label>
+                        <input id="total_copies" type="number" name="total_copies" value="{{ old('total_copies') }}" required autofocus autocomplete="total_copies" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                        @error('total_copies')
+                           <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                        @enderror
+                  </div>
 
-                <div class="mb-4">
-                  <label for="sublocation" class="block text-gray-700 text-sm font-bold mb-2">Sublocation:</label>
-                  <select name="sublocation" id="sublocation" class="w-full px-3 py-2 border rounded" required>
-                     @foreach ($sublocations as $sublocation)
-                              <option value="{{ $sublocation }}">{{ \Str::limit($sublocation, 40) }}</option>
-                     @endforeach
-                  </select>
-               </div>
-
-                <!-- Submit Button -->
-                <div class="flex items-center justify-center mb-6">
-                  <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                     Save Preference
-                  </button>
+                  <div class="flex items-center justify-center">
+                        <button class="bg-yellow-500 text-white py-2 px-4 rounded">
+                           {{ __('Update') }}
+                        </button>
+                  </div>
                </div>
             </form>
-        </div>
+
+               <div class= "pt-10">
+                  @if (Session::has('success'))
+                     <div class="text-green-600 dark:text-green-600 font-medium mb-3">
+                        {{ session('success') }}
+                     </div>
+                  @endif
+
+                  @if (Session::has('error'))
+                     <div class="text-green-600 dark:text-green-600 font-medium mb-3">
+                        {{ session('error') }}
+                     </div>
+                  @endif
+               </div>
+
+        </div>    
     </div>
-
-
 </x-app-layout>

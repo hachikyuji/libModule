@@ -70,4 +70,28 @@ class SearchController extends Controller
 
         return view('plm_search', compact('books', 'search_param'));
     }
+
+    function modifyIndex(Request $request) {
+        $books_query = Books::query();
+
+        $search_param = $request->query('q');
+
+        $books = [];
+
+        if ($search_param) {
+            $books_query->where(function ($query) use ($search_param) {
+                $query
+                    ->orWhere('call_number', 'like', "%$search_param%")
+                    ->orWhere('author', 'like', "%$search_param%")
+                    ->orWhere('title', 'like', "%$search_param%")
+                    ->orWhere('sublocation', 'like', "%$search_param%")
+                    ->orWhere('publish_date', 'like', "%$search_param%")
+                    ->orWhere('publisher', 'like', "%$search_param%");
+            });
+        }
+
+        $books = $books_query->paginate(50);
+
+        return view('modify_search', compact('books', 'search_param'));
+    }
 }

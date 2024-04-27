@@ -135,7 +135,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach($similarSublocationBooks as $recommendation)
                 <div class="bg-gray-800 p-4 rounded-md">
-                <a href="{{ route('book.show', ['id' => $recommendation->id]) }}" class="text-lg font-bold text-white">{{ \Str::limit($recommendation->title, 50) }}</a>
+                <a href="{{ route('plmbook.show', ['id' => $recommendation->id]) }}" class="text-lg font-bold text-white">{{ \Str::limit($recommendation->title, 50) }}</a>
                     <p class="text-sm text-gray-300">{{ $recommendation->author }}</p>
                 </div>
             @endforeach

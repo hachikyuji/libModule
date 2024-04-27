@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\AccountHistory;
+use App\Models\User;
 use App\Models\pendingRequests;
 
 class FinesManagementControl extends Controller
 {
     function index(Request $request) {
         $request_query = AccountHistory::query();
+        
 
         $search_param = $request->query('q');
 

@@ -21,6 +21,7 @@ class RequestHistory extends Controller
                     ->orWhere('request_status', 'like', "%$search_param%")
                     ->orWhere('request_type', 'like', "%$search_param%")
                     ->orWhere('id', 'like', "%$search_param%");
+                   
             });
         }
 

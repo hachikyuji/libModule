@@ -100,15 +100,15 @@
             </h1>
 
             @if (Session::has('success'))
-               <div class="alert alert-success">
-                  {{ Session::get('success') }}
+               <div class="text-green-600 dark:text-green-600 font-medium mb-3">
+                  {{ session('success') }}
                </div>
             @endif
 
             @if (Session::has('error'))
-                  <div class="alert alert-danger">
-                     {{ Session::get('error') }}
-                  </div>
+               <div class="text-green-600 dark:text-red-600 font-medium mb-3">
+                  {{ session('error') }}
+               </div>
             @endif
 
             <form method="POST" action="{{ route('book_termination') }}" class="w-full max-w-md">

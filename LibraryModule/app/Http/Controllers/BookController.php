@@ -253,7 +253,7 @@ class BookController extends Controller
 
     protected function sendDeadlineNotification($sendRequests)
     {
-        if (!$sendRequests->initial_notification_sent) {
+        if (!$sendRequests->deadline_notif) {
             $emailData = [
                 'title' => $sendRequests->books_borrowed,
                 'expiration_time' => $sendRequests->book_deadline,

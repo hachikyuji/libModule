@@ -45,11 +45,11 @@ class BookAcquisitionController extends Controller
                 'book_description' => $request->book_description,
             ]);
 
-            Session::flash('success', 'Book acquisition successful.');
+            Session::flash('success', 'Book update successful.');
 
             return redirect(RouteServiceProvider::ACQUISITION);
         } catch (\Exception $e) {
-            Session::flash('error', 'Book acquisition failed: ' . $e->getMessage());
+            Session::flash('error', 'Book update failed: ' . $e->getMessage());
 
             return redirect(RouteServiceProvider::ACQUISITION)->withErrors(['error' => $e->getMessage()]);
         }
