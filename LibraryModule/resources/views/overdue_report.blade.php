@@ -33,6 +33,8 @@
                 <th>Book Borrowed</th>
                 <th>Borrowed Date</th>
                 <th>Book Deadline</th>
+                <th>College</th>
+                <th>Course</th>
             </tr>
         </thead>
         <tbody>
@@ -43,6 +45,8 @@
                     <td>{{ $history->books_borrowed }}</td>
                     <td>{{ $history->borrowed_date }}</td>
                     <td>{{ $history->book_deadline }}</td>
+                    <td>{{ $history->college }}</td>
+                    <td>{{ $history->course }}</td>
                 </tr>
             @endforeach
         </tbody>

@@ -41,9 +41,11 @@ class handleRequests extends Controller
             $expiredRequest->update(['request_status' => 'Expired']);
         }
 
+        /*
         foreach ($sendRequests as $sendRequests) {
             $this->sendExpiryNotification($sendRequests);
         }
+        */
     
         $pendingRequests = PendingRequests::where('expiration_time', '>', $now)
                                           ->where('request_status', 'Pending')
@@ -159,9 +161,14 @@ class handleRequests extends Controller
         }
     }
 
-    public function approveRequest($email, $title, $sublocation, $id)
+    public function approveRequest($email, $title, $sublocation, $id, $course, $college)
     {
-        $request = PendingRequests::find($id);
+        // $request = PendingRequests::find($id);
+        
+        $request = PendingRequests::where('email', $email)
+        ->where('request_status', 'Pending')
+        ->where('book_request', $title)
+        ->first();
 
         if (!$request || $request->request_status !== 'Pending') {
             return redirect()->back()->with('error', 'Invalid or already processed request.');
@@ -189,6 +196,8 @@ class handleRequests extends Controller
                     'sublocation' => $sublocation,
                     'request_number' => $request->request_number,
                     'book_deadline' => $bookDeadline,
+                    'college' => $college,
+                    'course' => $course,
                 ]);
 
                 return redirect()->route('requests');

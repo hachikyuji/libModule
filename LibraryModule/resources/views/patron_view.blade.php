@@ -105,37 +105,42 @@
                      <p>ISBN: {{ $books->isbn}}</p>
                   </div>
 
-                  <div class="flex flex-col items-center">
-                     <div class="flex">
-                        <form method="POST" action="{{ route('request.checkOut', ['title' => $books->title, 'sublocation' => $books->sublocation]) }}">
-                              @csrf
-                              <button type="submit" class="mt-4 mr-2 p-2 bg-blue-500 hover:bg-blue-100 dark:hover:bg-blue-700 text-white rounded-md flex items-center">
-                                 <svg class="w-6 h-6 text-gray-800 dark:text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M5 3a1 1 0 0 0 0 2h.687L7.82 15.24A3 3 0 1 0 11.83 17h2.34A3 3 0 1 0 17 15H9.813l-.208-1h8.145a1 1 0 0 0 .979-.796l1.25-6A1 1 0 0 0 19 6h-2.268A2 2 0 0 1 15 9a2 2 0 1 1-4 0 2 2 0 0 1-1.732-3h-1.33L7.48 3.796A1 1 0 0 0 6.5 3H5Z" clip-rule="evenodd"/>
-                                    <path fill-rule="evenodd" d="M14 5a1 1 0 1 0-2 0v1h-1a1 1 0 1 0 0 2h1v1a1 1 0 1 0 2 0V8h1a1 1 0 1 0 0-2h-1V5Z" clip-rule="evenodd"/>
-                                 </svg>
-                                 <span class="whitespace-nowrap text-white">Check Out</span>
-                              </button>
-                        </form>
-                        <form method="POST" action="{{ route('request.checkIn', ['title' => $books->title, 'sublocation' => $books->sublocation]) }}">
-                              @csrf
-                              <button type="submit" class="mt-4 mr-2 p-2 bg-green-500 hover:bg-green-100 dark:hover:bg-green-700 text-white rounded-md flex items-center">
-                                 <svg class="w-6 h-6 text-gray-800 dark:text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                    <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.707-1.293a1 1 0 0 0-1.414-1.414L11 12.586l-1.793-1.793a1 1 0 0 0-1.414 1.414l2.5 2.5a1 1 0 0 0 1.414 0l4-4Z" clip-rule="evenodd"/>
-                                 </svg>
-                                 <span class="whitespace-nowrap text-white">Check In</span>
-                              </button>
-                        </form>
-                        <form method="POST" action="{{ route('request.Reserve', ['title' => $books->title, 'sublocation' => $books->sublocation]) }}">
-                              @csrf
-                              <button type="submit" class="mt-4 p-2 bg-yellow-500 hover:bg-yellow-100 dark:hover:bg-yellow-700 text-white rounded-md flex items-center">
-                                 <svg class="w-6 h-6 text-gray-800 dark:text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M7.833 2c-.507 0-.98.216-1.318.576A1.92 1.92 0 0 0 6 3.89V21a1 1 0 0 0 1.625.78L12 18.28l4.375 3.5A1 1 0 0 0 18 21V3.889c0-.481-.178-.954-.515-1.313A1.808 1.808 0 0 0 16.167 2H7.833Z"/>
-                                 </svg>
-                                 <span class="whitespace-nowrap text-white">Reserve</span>
-                              </button>
-                        </form>
-                     </div>
+                  @php
+                  $college = auth()->user()->college;
+                  $course = auth()->user()->course;
+               @endphp
+
+               <div class="flex flex-col items-center">
+                  <div class="flex">
+                  <form method="POST" action="{{ route('request.checkOut', ['title' => $books->title, 'sublocation' => $books->sublocation, 'college' => $college, 'course' => $course]) }}">
+                        @csrf
+                        <button type="submit" class="mt-4 mr-2 p-2 bg-blue-500 hover:bg-blue-100 dark:hover:bg-blue-700 text-white rounded-md flex items-center">
+                           <svg class="w-6 h-6 text-gray-800 dark:text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                 <path fill-rule="evenodd" d="M5 3a1 1 0 0 0 0 2h.687L7.82 15.24A3 3 0 1 0 11.83 17h2.34A3 3 0 1 0 17 15H9.813l-.208-1h8.145a1 1 0 0 0 .979-.796l1.25-6A1 1 0 0 0 19 6h-2.268A2 2 0 0 1 15 9a2 2 0 1 1-4 0 2 2 0 0 1-1.732-3h-1.33L7.48 3.796A1 1 0 0 0 6.5 3H5Z" clip-rule="evenodd"/>
+                                 <path fill-rule="evenodd" d="M14 5a1 1 0 1 0-2 0v1h-1a1 1 0 1 0 0 2h1v1a1 1 0 1 0 2 0V8h1a1 1 0 1 0 0-2h-1V5Z" clip-rule="evenodd"/>
+                           </svg>
+                           <span class="whitespace-nowrap text-white">Check Out</span>
+                        </button>
+                     </form>
+                     <form method="POST" action="{{ route('request.checkIn', ['title' => $books->title, 'sublocation' => $books->sublocation, 'college' => $college, 'course' => $course]) }}">
+                           @csrf
+                           <button type="submit" class="mt-4 mr-2 p-2 bg-green-500 hover:bg-green-100 dark:hover:bg-green-700 text-white rounded-md flex items-center">
+                              <svg class="w-6 h-6 text-gray-800 dark:text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                 <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.707-1.293a1 1 0 0 0-1.414-1.414L11 12.586l-1.793-1.793a1 1 0 0 0-1.414 1.414l2.5 2.5a1 1 0 0 0 1.414 0l4-4Z" clip-rule="evenodd"/>
+                              </svg>
+                              <span class="whitespace-nowrap text-white">Check In</span>
+                           </button>
+                     </form>
+                     <form method="POST" action="{{ route('request.Reserve', ['title' => $books->title, 'sublocation' => $books->sublocation, 'college' => $college, 'course' => $course]) }}">
+                           @csrf
+                           <button type="submit" class="mt-4 p-2 bg-yellow-500 hover:bg-yellow-100 dark:hover:bg-yellow-700 text-white rounded-md flex items-center">
+                              <svg class="w-6 h-6 text-gray-800 dark:text-white mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
+                                 <path d="M7.833 2c-.507 0-.98.216-1.318.576A1.92 1.92 0 0 0 6 3.89V21a1 1 0 0 0 1.625.78L12 18.28l4.375 3.5A1 1 0 0 0 18 21V3.889c0-.481-.178-.954-.515-1.313A1.808 1.808 0 0 0 16.167 2H7.833Z"/>
+                              </svg>
+                              <span class="whitespace-nowrap text-white">Reserve</span>
+                           </button>
+                     </form>
+                  </div>
 
                      @if(session('success'))
                         <div class="alert alert-success">

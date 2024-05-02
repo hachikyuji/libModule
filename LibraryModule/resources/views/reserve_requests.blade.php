@@ -6,7 +6,7 @@
 <body>
     <p>Hello,</p>
 
-    <p>You have three days for your reservation of the book: "{{$title}}" before it expires.</p>
+    <p>You have a day for your reservation of the book: "{{$title}}" before it expires.</p>
 
     <p>Thank you!</p>
 </body>

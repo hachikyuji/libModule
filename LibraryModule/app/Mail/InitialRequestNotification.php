@@ -21,7 +21,7 @@ class InitialRequestNotification extends Mailable
     }
     public function build()
     {
-        return $this->subject('PLM Library - You have four hours to complete this request.')
+        return $this->subject('PLM Library - You have an hour to complete this request.')
                     ->view('initial_request_notification');
     }
 }

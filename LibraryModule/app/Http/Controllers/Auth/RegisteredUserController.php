@@ -40,6 +40,8 @@ class RegisteredUserController extends Controller
             'user_num' => ['required', 'string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'account_type' => ['required'],
+            'college' => ['nullable','string', 'max:255'],
+            'course' => ['nullable','string', 'max:255'],
         ]);
         
         if ($request->middle_initial){
@@ -55,6 +57,8 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
             'account_type' => $request->account_type,
             'usernum' => $request->user_num,
+            'college' => $request->college,
+            'course' => $request->course,
         ]);
     
         event(new Registered($user));

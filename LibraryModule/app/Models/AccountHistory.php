@@ -20,6 +20,8 @@ class AccountHistory extends Model
         'request_number',
         'book_deadline',
         'deadline_notif',
+        'college',
+        'course',
     ];
     protected $table = 'account_history';
 

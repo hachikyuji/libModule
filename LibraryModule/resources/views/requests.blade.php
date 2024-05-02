@@ -185,8 +185,11 @@
                             <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                                 {{ $request->expiration_time }}
                             </td>
+                            @php
+                            
+                            @endphp
                             <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue ">
-                                <form action="{{ route('approve-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation, 'id' => $request->id]) }}" method="post" class="inline">
+                                <form action="{{ route('approve-request', ['email' => $userEmail, 'title' => $bookTitle, 'sublocation' => $sublocation, 'id' => $request->id, 'college' => $request->college, 'course' => $request->course]) }}" method="post" class="inline">
                                     @csrf
                                     <button type="submit" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Approve</button>
                                 </form>

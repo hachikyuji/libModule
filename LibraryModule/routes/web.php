@@ -66,15 +66,15 @@ Route::get('/patron_search/{id}', [PatronBookControll::class, 'show'])
     ->middleware(['auth', 'verified', 'patron'])
     ->name('pbook.show');
 
-Route::post('/patron_search/checkin/{title}/{sublocation}', [PatronBookControll::class, 'checkIn'])
+Route::post('/patron_search/checkin/{title}/{college}/{course}', [PatronBookControll::class, 'checkIn'])
     ->middleware(['auth', 'verified', 'patron'])
     ->name('request.checkIn');
 
-Route::post('/patron_search/checkout/{title}/{sublocation}}', [PatronBookControll::class, 'checkOut'])
+Route::post('/patron_search/checkout/{title}/{course}/{college}/{sublocation}', [PatronBookControll::class, 'checkOut'])
     ->middleware(['auth', 'verified', 'patron'])
     ->name('request.checkOut');
 
-Route::post('/patron_search/checkin/{title}/{sublocation}', [PatronBookControll::class, 'Reserve'])
+Route::post('/patron_search/reserve/{title}/{sublocation}/{college}/{course}', [PatronBookControll::class, 'Reserve'])
     ->middleware(['auth', 'verified', 'patron'])
     ->name('request.Reserve');
 // Patron Queue
@@ -107,10 +107,10 @@ Route::get('/requests', [handleRequests::class, 'getRequests'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('requests');
 
-Route::post('/requests/{email}/{title}/{sublocation}/{id}/approve', [handleRequests::class, 'approveRequest'])
+Route::post('/requests/{email}/{title}/{sublocation}/{id}/{course}/{college}/approve', [handleRequests::class, 'approveRequest'])
     ->name('approve-request');
 
-Route::post('/requests/{email}/{title}/{id}/deny', [handleRequests::class, 'denyRequest'])
+Route::post('/requests/{email}/{title}/{id}/{college}/{course}/deny', [handleRequests::class, 'denyRequest'])
     ->name('deny-request');
 
 Route::get('/reservations', [handleRequests::class, 'getReserveRequests']) 
@@ -208,15 +208,15 @@ Route::get('/search/{id}', [BookController::class, 'show'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('book.show');
 
- Route::post('/search/checkin/{title}/', [BookController::class, 'checkIn'])
+ Route::post('/search/checkin/{title}/{college}/{course}', [BookController::class, 'checkIn'])
     ->middleware(['auth', 'verified'])
     ->name('request.checkIn');
 
-Route::post('/search/checkout/{title}/{sublocation}', [BookController::class, 'checkOut'])
+Route::post('/search/checkout/{title}/{course}/{college}/{sublocation}', [BookController::class, 'checkOut'])
     ->middleware(['auth', 'verified'])
     ->name('request.checkOut');
 
-Route::post('/search/checkin/{title}/{sublocation}', [BookController::class, 'Reserve'])
+Route::post('/search/reserve/{title}/{sublocation}/{college}/{course}', [BookController::class, 'Reserve'])
     ->middleware(['auth', 'verified'])
     ->name('request.Reserve');
 /*
@@ -248,6 +248,7 @@ Route::get('/overdue-books', [DueReportController::class, 'overdueBooks'])
 Route::post('/send-report', [DueReportController::class, 'sendReport'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('send.report');
+
 
 // Temporary Routes
 

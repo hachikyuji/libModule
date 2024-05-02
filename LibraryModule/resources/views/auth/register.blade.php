@@ -129,6 +129,18 @@
             </div>
 
             <div class="mb-4">
+               <x-input-label for="college" :value="__('College (ex. CET, CS, etc.)')" style="color: #0000FF; font-size: 16px; margin-bottom: 8px;"/>
+               <x-text-input id="college" class="w-full p-2.5 text-sm rounded-lg" type="text" name="college" :value="old('college')"/>
+               <x-input-error :messages="$errors->get('college')" class="mt-2" />
+            </div>
+
+            <div class="mb-4">
+               <x-input-label for="course" :value="__('Course (ex. BSCS, BSIT, etc.)')" style="color: #0000FF; font-size: 16px; margin-bottom: 8px;"/>
+               <x-text-input id="course" class="w-full p-2.5 text-sm rounded-lg" type="text" name="course" :value="old('course')"/>
+               <x-input-error :messages="$errors->get('course')" class="mt-2" />
+            </div>
+
+            <div class="mb-4">
             <x-input-label for="email" :value="__('Email')" style="color: #0000FF; font-size: 16px; margin-bottom: 8px;" />
                <x-text-input id="email" class="w-full p-2.5 text-sm rounded-lg" type="email" name="email" :value="old('email')" required autocomplete="username" />
             </div>

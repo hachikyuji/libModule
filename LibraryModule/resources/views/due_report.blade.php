@@ -99,15 +99,27 @@
         <h1 class="text-3xl font-bold text-blue-800 dark:text-blue-600 mb-3 ml-1">
             Books Overdue Report
         </h1>
-        <div class="flex items-end">
-            <form action="{{ route('send.report') }}" method="post">
-                @csrf
-                <input type="email" name="email" placeholder="Email" class="px-3 py-1 text-black border border-blue-800 rounded bg-white focus:outline-none focus:ring focus:border-blue-300 dark:bg-white-700 dark:border-blue-600 dark:text-black" required>
-                <button type="submit" class="px-3 py-1 ml-2 bg-blue-800 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300">
-                    Send Report
+        <div class="flex justify-between items-center w-full mb-2" style="margin-left: 80px;" > <!-- Updated -->
+            <form action="{{ route('overdue_books', request()->query()) }}" class="flex"> <!-- Updated -->
+                <input type="text" name="q" placeholder="Search" class="py-2 px-2 text-md border border-blue-200 rounded-l focus:outline-none" value="{{$search_param}}" />
+                <button type="submit" class="w-10 flex items-center justify-center border-t border-r border-b border-blue-800 rounded-r text-blue-200 bg-blue-800">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
                 </button>
             </form>
+            <div class="flex justify-between items-center w-full mb-2" style="margin-left: 350px;">
+                <form action="{{ route('send.report') }}" method="post">
+                    @csrf
+                    <input type="text" name="filter" placeholder="Filter" class="px-3 py-1 text-black border border-blue-800 rounded bg-white focus:outline-none focus:ring focus:border-blue-300 dark:bg-white-700 dark:border-blue-600 dark:text-black" required>
+                    <input type="email" name="email" placeholder="Email" class="px-3 py-1 text-black border border-blue-800 rounded bg-white focus:outline-none focus:ring focus:border-blue-300 dark:bg-white-700 dark:border-blue-600 dark:text-black" required>
+                    <button type="submit" class="px-3 py-1 ml-2 bg-blue-800 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300">
+                        Send Report
+                    </button>
+                </form>
+            </div>
         </div>
+
         @if(session('success'))
             <div class="text-green-600 dark:text-green-400 font-medium mb-3">
                 {{ session('success') }}
@@ -136,6 +148,12 @@
                                     <th scope="col" class="px-6 py-3">
                                         Book Deadline
                                     </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        College
+                                    </th>
+                                    <th scope="col" class="px-6 py-3">
+                                        Course
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -148,13 +166,19 @@
                                             {{ $history->user_name }}
                                         </td>
                                         <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                            {{ $history->books_borrowed }}
+                                            {{ \Str::limit($history->books_borrowed, 30) }}
                                         </td>
                                         <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                                             {{ $history->borrowed_date }}
                                         </td>
                                         <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                                             {{ $history->book_deadline }}
+                                        </td>
+                                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                            {{ $history->college}}
+                                        </td>
+                                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                            {{ $history->course}}
                                         </td>
                                     </tr>
                                 @endforeach
