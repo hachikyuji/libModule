@@ -62,7 +62,7 @@ class RegisteredUserController extends Controller
         ]);
     
         event(new Registered($user));
-        Session::flash('success', 'Book acquisition successful.');
+        Session::flash('success', 'Account creation successful.');
     
         return redirect(RouteServiceProvider::REGISTER);
     }
