@@ -24,6 +24,7 @@ use App\Http\Controllers\RequestHistory;
 use App\Http\Controllers\UserPreferenceController;
 use App\Http\Controllers\DueReportController;
 use App\Http\Controllers\ExistingBookController;
+use App\Http\Controllers\UserProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -208,7 +209,7 @@ Route::get('/search/{id}', [BookController::class, 'show'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('book.show');
 
- Route::post('/search/checkin/{title}/{college}/{course}', [BookController::class, 'checkIn'])
+Route::post('/search/checkin/{title}/{college}/{course}', [BookController::class, 'checkIn'])
     ->middleware(['auth', 'verified'])
     ->name('request.checkIn');
 
@@ -250,11 +251,33 @@ Route::post('/send-report', [DueReportController::class, 'sendReport'])
     ->name('send.report');
 
 
+// User Profile
+
+Route::get('/user_profile', [UserProfileController::class, 'index'])
+    ->middleware('auth','verified')
+    ->name('profile');
+
+Route::get('/patron_user_profile', [UserProfileController::class, 'pindex'])
+    ->middleware('auth','verified')
+    ->name('patron_profile');
+
+// Admin Search
+
+Route::get('/search_user', [SearchController::class, 'userIndex'])
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('search_user');
+
+Route::get('/search_user/{id}', [UserProfileController::class, 'patron_view'])
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('patron.show');
+
 // Temporary Routes
 
-
-
 /*
+Route::get('/search/{id}', [BookController::class, 'show'])
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('book.show');
+
 Route::post('/patron_search/checkout/{title}/{sublocation}}', [PatronBookControll::class, 'checkOut'])
     ->middleware(['auth', 'verified'])
     ->name('request.checkOut');

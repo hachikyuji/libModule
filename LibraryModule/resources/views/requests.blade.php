@@ -107,7 +107,7 @@
                 @endif
 
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-full lg:w-full xl:w-full">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table-sm">
                 <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
                     <tr>
                         <th scope="col" class="px-6 py-3">
@@ -127,6 +127,9 @@
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Expiration Time
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Overdue Book(s)
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Decision
@@ -153,7 +156,7 @@
                                 {{ $userEmail }}
                             </td>
                             <td class="px-4 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                {{ \Str::limit($bookTitle, 30) }}
+                                {{ \Str::limit($bookTitle, 25) }}
                             </td>
                             <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                             @php
@@ -185,6 +188,20 @@
                             <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                                 {{ $request->expiration_time }}
                             </td>
+                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                @php
+                                    // Check if there are any books associated with the current user's email
+                                    $userHasOverdueBooks = \App\Models\AccountHistory::where('email', $userEmail)
+                                        ->where('book_deadline', '<', now())
+                                        ->whereNull('returned_date')
+                                        ->exists();
+                                @endphp
+                                @if($userHasOverdueBooks)
+                                    <span class="text-red-600">Yes</span>
+                                @else
+                                    <span class="text-green-600">No</span>
+                                @endif
+                            </td>
                             @php
                             
                             @endphp
@@ -209,4 +226,10 @@
         </div>
     </div>
    </div>
+
+   <style>
+        .table-sm {
+            font-size: 0.75rem; /* Adjust the font size as needed */
+        }
+    </style>
 </x-app-layout>

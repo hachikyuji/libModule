@@ -5,7 +5,7 @@
          </h2>
       </x-slot> 
 
-      <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+   <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
       <span class="sr-only">Open sidebar</span>
       <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
       <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
@@ -85,77 +85,91 @@
       </div>
    </aside>
 
-   <div class="sm:ml-64 flex items-center justify-center">
-    <div class="flex flex-col items-center justify-center h-full pt-10">
-        <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1 pt-10">
-            Recent History
-        </h1>
+   <x-slot name="header">
+        <h2 class="font-semibold text-xl text-white dark:text-white-200 leading-tight">
+            {{ __('Profile') }}
+        </h2>
+    </x-slot>
 
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-full lg:w-full xl:w-full">
-            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
+<div class="sm:ml-64 flex items-center justify-center">
+    <div class="max-w-lg p-20 mx-2 bg-blue-100 dark:bg-blue-800 shadow-md rounded-md">
+        <h2 class="text-3xl font-bold mb-4 text-white dark:text-gray-200">PLM Library - Profile</h2>
+        <ul class="space-y-4">
+            <li>
+                <span class="block font-bold text-lg text-white dark:text-gray-200">Name:</span>
+                <span class="text-white text-lg">{{ auth()->user()->name }}</span>
+            </li>
+            <li>
+                <span class="block font-bold text-lg text-white dark:text-gray-200">Account Type:</span>
+                <span class="text-white text-lg">{{ auth()->user()->account_type }}</span>
+            </li>
+            <li>
+                <span class="block font-bold text-lg text-white dark:text-gray-200">Email:</span>
+                <span class="text-white text-lg">{{ auth()->user()->email }}</span>
+            </li>
+            <li>
+                <span class="block font-bold text-lg text-white dark:text-gray-200">User Number:</span>
+                <span class="text-white text-lg">{{ auth()->user()->usernum }}</span>
+            </li>
+            <li>
+                <span class="block font-bold text-lg text-white dark:text-gray-200">College:</span>
+                <span class="text-white text-lg">{{ auth()->user()->college }}</span>
+            </li>
+            <li>
+                <span class="block font-bold text-lg text-white dark:text-gray-200">Course:</span>
+                <span class="text-white text-lg">{{ auth()->user()->course }}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="max-w-lg p-20 mx-2 bg-blue-100 dark:bg-blue-800 shadow-md rounded-md flex items-center justify-center">
+      <div class="flex flex-col items-center justify-center h-full">
+         <h1 class="text-2xl font-bold text-white dark:text-gray-200 mb-3 ml-1">
+               Overdue Books
+         </h1>
+         <div class="relative overflow-x-auto shadow-md sm:rounded-lg w-full md:w-full lg:w-full xl:w-full">
+            <table class="w-full text-sm text-left rtl:text-right text-white dark:text-gray-200">
+               <tr>
+                  <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
+                     <th scope="col" class="px-6 py-3">
+                        Book
+                     </th>
+                     <th scope="col" class="px-6 py-3">
+                        Deadline
+                     </th>
+                  </thead>
+               </tr>
+                  <tbody>
+                     @forelse ($accountHistory->reverse() as $history)
+                     <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
+                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                           {{ \Str::limit($history->books_borrowed, 30) }}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                 {{ $history->book_deadline }}
+                        </td>
+                     </tr>
+                     @empty
                     <tr>
-                        <th scope="col" class="px-6 py-3">
-                            Email
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Book Title
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Sublocation
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Borrowed Date
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Returned Date
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Return By
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Link
-                        </th>
+                        <td colspan="4" class="px-6 py-4 text-center text-white dark:text-gray-200">
+                            You have no overdue books. You may proceed to borrow books.
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                        @foreach($accountHistory->reverse() as $history)
-                            <tr class="bg-white border border-blue-500 dark:bg-white-800 dark:border-white-700 hover:bg-blue-50 dark:hover:bg-blue-400">
-                                <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                    {{ $history->email }}
-                                </td>
-                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                {{ \Str::limit($history->books_borrowed, 30) }}
-                            </td>
-                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                {{ $history->sublocation }}
-                            </td>
-                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                {{ $history->borrowed_date }}
-                            </td>
-                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                {{ $history->returned_date }}   
-                            </td>
-                            <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                {{ $history->book_deadline }}
-                            </td>
-                            <td class="px-6 py-4 font-medium text-blue-500 whitespace-nowrap dark:text-blue">
-                                @php
-                                    // Fetch the book details based on the book title
-                                    $book = \App\Models\Books::where('title', $history->books_borrowed)->first();
-                                @endphp
-
-                                @if($book)
-                                    <a href="{{ route('book.show', ['id' => $book->id]) }}">View</a>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
+                     @endforelse
+                     @if ($accountHistory->isNotEmpty())
+                     <tr>
+                        <td colspan="2" class="px-6 py-4 text-center text-white dark:text-gray-200">
+                              You still have overdue books. You may not proceed to borrow books until they're returned.
+                        </td>
+                     </tr>
+                     @endif
+                  </tbody>
             </table>
-        </div>
+         </div>
+      </div>
     </div>
 </div>
+
+
 
 
 </x-app-layout>

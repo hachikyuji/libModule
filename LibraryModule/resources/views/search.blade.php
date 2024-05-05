@@ -154,4 +154,9 @@
         </div>
     </div>
 
+    <style>
+        .table-sm {
+            font-size: 0.75rem; /* Adjust the font size as needed */
+        }
+    </style>
 </x-app-layout>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Books;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -93,5 +94,30 @@ class SearchController extends Controller
         $books = $books_query->paginate(50);
 
         return view('modify_search', compact('books', 'search_param'));
+
+
+    }
+    function userIndex(Request $request) {
+        $user_query = User::query();
+
+        $search_param = $request->query('q');
+
+        $users = [];
+
+        if ($search_param) {
+            $user_query->where(function ($query) use ($search_param) {
+                $query
+                    ->orWhere('name', 'like', "%$search_param%")
+                    ->orWhere('email', 'like', "%$search_param%")
+                    ->orWhere('account_type', 'like', "%$search_param%")
+                    ->orWhere('usernum', 'like', "%$search_param%")
+                    ->orWhere('college', 'like', "%$search_param%")
+                    ->orWhere('course', 'like', "%$search_param%");
+            });
+        }
+
+        $users = $user_query->paginate(100);
+
+        return view('search_user', compact('users', 'search_param'));
     }
 }

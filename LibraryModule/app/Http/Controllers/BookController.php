@@ -182,7 +182,7 @@ class BookController extends Controller
 
         // Deadline Email
         $deadline = clone $now;
-        $deadline->addHours(24);
+        $deadline->addHours(48);
 
         $deadlineRequests = AccountHistory::where('book_deadline', '>', $now)
         ->where('book_deadline', '<=', $deadline)

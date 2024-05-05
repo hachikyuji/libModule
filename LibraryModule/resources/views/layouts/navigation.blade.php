@@ -12,9 +12,17 @@
 
         @auth
         <div class="flex items-center ml-auto"> 
-            <div class="flex flex-col items-end"> 
-                <span class="text-lg font-bold text-blue-600 dark:text-blue-400">{{ Auth::user()->name }}</span>
-                <span class="mr-4 text-gray-600 dark:text-gray-500 text-sm">Account Type: {{ Auth::user()->account_type }}</span>
+            <div class="flex flex-col items-end">
+                @if (Auth::user()->account_type == 'patron')
+                    <a href="{{ route('patron_profile') }}" class="text-lg font-bold text-blue-600 dark:text-blue-400 hover:underline">
+                        {{ Auth::user()->name }}
+                    </a>
+                @elseif (Auth::user()->account_type == 'admin')
+                    <a href="{{ route('profile') }}" class="text-lg font-bold text-blue-600 dark:text-blue-400 hover:underline">
+                        {{ Auth::user()->name }}
+                    </a>
+                @endif
+            <span class="mr-4 text-gray-600 dark:text-gray-500 text-sm">Account Type: {{ Auth::user()->account_type }}</span>
             </div>
         </div>
         @endauth

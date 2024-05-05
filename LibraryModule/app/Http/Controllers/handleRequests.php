@@ -106,8 +106,8 @@ class handleRequests extends Controller
             $expiredRequest->update(['request_status' => 'Expired']);
         }
 
-        foreach ($sendRequests as $sendRequests) {
-            $this->sendExpiryNotification($sendRequests);
+        foreach ($sendRequests as $sendRequest) {
+            $this->sendExpiryNotification($sendRequest);
         }
     
         $pendingRequests = PendingRequests::where('expiration_time', '>', $now)
