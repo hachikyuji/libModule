@@ -264,7 +264,7 @@ class handleRequests extends Controller
         $request->update(['request_status' => 'Denied']);
     }
 
-    if ($request->request_type == 'Check Out'){
+    if ($request->request_type == 'Check Out' || $request->request_type == 'Check In'){
         return redirect()->route('requests');
     } elseif($request->request_type == 'Reserve'){
         return redirect()->route('reservations');
