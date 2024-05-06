@@ -33,7 +33,8 @@
                     <!-- Login Button -->
                     <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-md py-2 px-4 w-full">Log In</button>
                 </form>
-                    <p class="mt-4 text-center text-gray-600">Or <a href="{{ route('plm_library') }}" class="text-blue-500">browse PLM library</a> without signing in</p> 
+                    <p class="mt-4 text-center text-gray-600">Or <a href="{{ route('plm_library') }}" class="text-blue-500">browse PLM library</a> without signing in</p>
+                    <p class="mt-4 text-center text-gray-600">Or <a href="{{ route('temp_register') }}" class="text-blue-500">Temporary Registration</a></p>
             </div>
         </div>
     </header>

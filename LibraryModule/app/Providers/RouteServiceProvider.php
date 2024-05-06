@@ -29,6 +29,9 @@ class RouteServiceProvider extends ServiceProvider
 
     public const TERMINATION = '/book_termination';
 
+    public const LOGIN = '/login';
+
+
     /**
      * Define your route model bindings, pattern filters, and other route configuration.
      */

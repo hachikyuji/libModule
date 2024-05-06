@@ -25,6 +25,7 @@ use App\Http\Controllers\UserPreferenceController;
 use App\Http\Controllers\DueReportController;
 use App\Http\Controllers\ExistingBookController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\TempRegisteredUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -242,6 +243,7 @@ Route::post('/patron_user_preference', [PatronUserPreference::class, 'save'])
     ->middleware(['auth', 'verified', 'patron']) 
     ->name('patron_save_user_preference');
 
+// Overdue Report
 
 Route::get('/overdue-books', [DueReportController::class, 'overdueBooks'])
     ->middleware(['auth', 'verified', 'admin'])
@@ -272,6 +274,11 @@ Route::get('/search_user/{id}', [UserProfileController::class, 'patron_view'])
     ->name('patron.show');
 
 // Temporary Routes
+
+Route::get('temp_register', [TempRegisteredUserController::class, 'create'])
+    ->name('temp_register');
+
+Route::post('save_temp_register', [TempRegisteredUserController::class, 'store'])->name('save_temp_register');
 
 /*
 Route::get('/search/{id}', [BookController::class, 'show'])
