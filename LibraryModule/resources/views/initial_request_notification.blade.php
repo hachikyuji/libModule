@@ -36,7 +36,6 @@
         <img src="https://imgur.com/A4JsCCo.png" alt="PLM Logo">
     </div>
     <div class="content">
-        <p>Hello,</p>
         <p>You have an hour for your request of the book: "<span id="title">{{$title}}</span>" before it expires.</p>
         <p>Thank you!</p>
     </div>

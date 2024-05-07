@@ -36,7 +36,6 @@
         <img src="https://imgur.com/A4JsCCo.png" alt="PLM Logo">
     </div>
     <div class="content">
-        <p>Hello,</p>
         <p>The book you have borrowed is due to be returned soon:</p>
         <ul>
             <li>{{ $title }} - Return Time: {{ $expiration_time }}</li>
