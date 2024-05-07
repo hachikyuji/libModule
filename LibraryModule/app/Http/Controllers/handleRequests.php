@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\PendingRequests;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\InitialRequestNotification;
 
 class handleRequests extends Controller
 {
@@ -83,6 +84,17 @@ class handleRequests extends Controller
     public function getReserveRequests(Request $request)
     {
         $now = Carbon::now('Asia/Manila');
+
+        $sendIRequests = PendingRequests::where('initial_notification_sent', 0)
+        ->where(function($query) {
+            $query->where('request_type', 'Check Out')
+                  ->orWhere('request_type', 'Check In');
+        })
+        ->get();
+
+        foreach ($sendIRequests as $sendRequests) {
+            $this->sendInitialNotification($sendRequests);
+        }
     
         $expiredRequests = PendingRequests::where('expiration_time', '<=', $now)
                                           ->where('request_status', 'Pending')
@@ -105,10 +117,12 @@ class handleRequests extends Controller
     
             $expiredRequest->update(['request_status' => 'Expired']);
         }
-
+        
+        /*
         foreach ($sendRequests as $sendRequest) {
             $this->sendExpiryNotification($sendRequest);
         }
+        */
     
         $pendingRequests = PendingRequests::where('expiration_time', '>', $now)
                                           ->where('request_status', 'Pending')
@@ -116,9 +130,34 @@ class handleRequests extends Controller
                                           ->get();
     
         $accountHistory = AccountHistory::all();
+
+        $sendResponse = PendingRequests::where('request_status_notif', 0)
+        ->where(function($query) {
+            $query->where('request_status', 'Approved')
+                ->orWhere('request_status', 'Denied');
+        })
+        ->get();
+
+        foreach ($sendResponse as $sendRequests){
+            $this->sendAcceptDenyNotification($sendRequests);
+        }
     
         return view('reservations', ['pendingRequests' => $pendingRequests, 'accountHistory' => $accountHistory]);
     }
+
+    protected function sendInitialNotification($sendRequests)
+    {
+        if (!$sendRequests->initial_notification_sent) {
+            $emailData = [
+                'title' => $sendRequests->book_request,
+            ];
+    
+            Mail::to($sendRequests->email)->send(new InitialRequestNotification($emailData));
+    
+            $sendRequests->update(['initial_notification_sent' => true]);
+        }
+    }
+
     protected function sendExpiryNotification($sendRequests)
     {
         if (!$sendRequests->notification_sent) {
@@ -206,9 +245,15 @@ class handleRequests extends Controller
         }
     }
 
-    public function approveReserve($email, $title, $id)
+    public function approveReserve($email, $title, $id, $course, $college)
     {
-        $request = PendingRequests::find($id);
+        // $request = PendingRequests::find($id);
+
+        $request = PendingRequests::where('email', $email)
+        ->where('request_type', 'Reserve')
+        ->where('request_status', 'Pending')
+        ->where('book_request', $title)
+        ->first();
 
         if (!$request) {
             return redirect()->back()->with('error', 'Invalid request.');
@@ -233,6 +278,8 @@ class handleRequests extends Controller
                 'request_status' => 'Pending',
                 'expiration_time' => $expirationTime,
                 'request_number' => $requestNumber,
+                'college' => $college,
+                'course' => $course,
             ]);
         }
 

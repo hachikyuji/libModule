@@ -119,10 +119,10 @@ Route::get('/reservations', [handleRequests::class, 'getReserveRequests'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('reservations');
 
-Route::post('/reservations/{email}/{title}/{id}/approve', [handleRequests::class, 'approveReserve'])
+Route::post('/reservations/{email}/{title}/{sublocation}/{id}/{course}/{college}/approve', [handleRequests::class, 'approveReserve'])
     ->name('approve-reserve');
 
-Route::post('/reservations/{email}/{title}/{id}/deny', [handleRequests::class, 'denyRequest'])
+Route::post('/reservations/{email}/{title}/{sublocation}/{id}/{course}/{college}/deny', [handleRequests::class, 'denyRequest'])
     ->name('deny-request');
 
 
@@ -218,7 +218,7 @@ Route::post('/search/checkout/{title}/{course}/{college}/{sublocation}', [BookCo
     ->middleware(['auth', 'verified'])
     ->name('request.checkOut');
 
-Route::post('/search/reserve/{title}/{sublocation}/{college}/{course}', [BookController::class, 'Reserve'])
+Route::post('/search/reserve/{title}/{college}/{course}/{sublocation}', [BookController::class, 'Reserve'])
     ->middleware(['auth', 'verified'])
     ->name('request.Reserve');
 /*

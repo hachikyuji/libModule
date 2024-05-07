@@ -38,12 +38,16 @@ class BookController extends Controller
         //  Initial Notification
 
         $sendIRequests = PendingRequests::where('initial_notification_sent', 0)
-            ->where('request_type', 'Check Out')
-            ->get();
+        ->where(function($query) {
+            $query->where('request_type', 'Check Out')
+                  ->orWhere('request_type', 'Check In');
+        })
+        ->get();
 
         foreach ($sendIRequests as $sendRequests) {
             $this->sendInitialNotification($sendRequests);
         }
+        
 
         //  Reservation Notification
 
@@ -54,8 +58,6 @@ class BookController extends Controller
         foreach ($sendRRequests as $sendRequests){
             $this->sendReservationNotification($sendRequests);
         }
-
-        //
 
         return view('view', ['books' => $books, 
         'similarAuthorsBooks' => $similarAuthorsBooks,
@@ -247,10 +249,12 @@ class BookController extends Controller
             $emailData = [
                 'title' => $sendRequests->book_request,
             ];
+
+            $sendRequests->update(['initial_notification_sent' => true]);
     
             Mail::to($sendRequests->email)->send(new ReserveRequestNotification($emailData));
     
-            $sendRequests->update(['initial_notification_sent' => true]);
+            
         }
     }
 
@@ -349,7 +353,7 @@ class BookController extends Controller
         return redirect()->back()->with('success', 'Check-out request submitted successfully!');
     }
 
-    public function Reserve($title, $sublocation)
+    public function Reserve($title, $course, $college, $sublocation)
     {
         $userEmail = Auth::user()->email;
         $now = Carbon::now('Asia/Manila');
@@ -385,6 +389,8 @@ class BookController extends Controller
             'request_status' => 'Pending',
             'expiration_time' => $expirationTime,
             'request_number' => $requestNumber,
+            'college' => $college,
+            'course' => $course,
         ]);
     
         Books::where('title', $title)->update(['count' => DB::raw('count + 1')]);
