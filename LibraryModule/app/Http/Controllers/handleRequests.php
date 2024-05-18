@@ -239,7 +239,7 @@ class handleRequests extends Controller
                     'course' => $course,
                 ]);
 
-                return redirect()->route('requests');
+                return redirect()->route('requests')->with('success', 'Request accepted.');
             }
             
         }
@@ -283,7 +283,7 @@ class handleRequests extends Controller
             ]);
         }
 
-        return redirect()->route('reservations');
+        return redirect()->route('reservations')->with('success', 'Reservation request accepted.');
     }
     
     private function calculateBookDeadline($accountType)
@@ -312,9 +312,9 @@ class handleRequests extends Controller
     }
 
     if ($request->request_type == 'Check Out' || $request->request_type == 'Check In'){
-        return redirect()->route('requests');
+        return redirect()->route('requests')->with('success', 'Request denied.');
     } elseif($request->request_type == 'Reserve'){
-        return redirect()->route('reservations');
+        return redirect()->route('reservations')->with('success', 'Reservation request denied.');
     }
     
 }
