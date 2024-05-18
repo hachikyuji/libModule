@@ -146,7 +146,7 @@
             </div>
 
             <div class="mb-4">
-                <label for="publish_date" class="block text-sm font-medium text-blue-500">Publavailable_copiesish Date</label>
+                <label for="publish_date" class="block text-sm font-medium text-blue-500">Publish Date</label>
                 <input id="publish_date" type="date" name="publish_date" value="{{ old('publish_date') }}" required autofocus autocomplete="publish_date"  class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                 @error('publish_date')
                     <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
