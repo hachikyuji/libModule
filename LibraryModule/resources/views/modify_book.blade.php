@@ -140,7 +140,7 @@
                   @endif
 
                   @if (Session::has('error'))
-                     <div class="text-green-600 dark:text-green-600 font-medium mb-3">
+                     <div class="text-red-600 dark:text-red-600 font-medium mb-3">
                         {{ session('error') }}
                      </div>
                   @endif

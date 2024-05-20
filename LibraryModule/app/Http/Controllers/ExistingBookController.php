@@ -23,6 +23,11 @@ class ExistingBookController extends Controller
         ]);
         
         try {
+
+            if ($request->total_copies < $request->available_copies){
+                return redirect()->back()->with('error', 'Available copies cannot exceed total copies.');
+            }
+
             $book = Books::where('call_number', $request->call_number)->firstOrFail();
     
             $book->update([

@@ -18,13 +18,45 @@
         }
 
         th {
-            background-color: #001f3f;
+            background-color: #060270;;
             color: white; 
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+        .header {
+            background-color: #fff176;
+            color: #000;
+            padding: 20px;
+            text-align: center;
+        }
+        .header img {
+            height: 100px; 
+            width: auto;
+            margin-right: 10px;
+        }
+        .content {
+            padding: 20px;
+            background-color: #fff;
+            margin: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin: 0;
+            padding: 20px 0;
         }
     </style>
 </head>
 <body>
-    <h1>PLM Library - Overdue Report</h1>
+    <div class="header">
+        <img src="https://imgur.com/A4JsCCo.png" alt="PLM Logo">
+    </div>
+        <h1>PLM Library - Overdue Report</h1>
     <table>
         <thead>
             <tr>

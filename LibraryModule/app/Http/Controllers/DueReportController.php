@@ -23,6 +23,7 @@ class DueReportController extends Controller
         if ($searchParam) {
             $overdueHistoriesQuery->where(function ($query) use ($searchParam) {
                 $query
+                    ->orWhere('users.name', 'like', "%$searchParam%")
                     ->orWhere('account_history.email', 'like', "%$searchParam%")
                     ->orWhere('books_borrowed', 'like', "%$searchParam%")
                     ->orWhere('borrowed_date', 'like', "%$searchParam%")
@@ -53,6 +54,7 @@ class DueReportController extends Controller
         if ($filter) {
             $overdueHistoriesQuery->where(function ($query) use ($filter) {
                 $query
+                    ->orWhere('users.name', 'like', "%$filter%")
                     ->orWhere('account_history.email', 'like', "%$filter%")
                     ->orWhere('books_borrowed', 'like', "%$filter%")
                     ->orWhere('borrowed_date', 'like', "%$filter%")

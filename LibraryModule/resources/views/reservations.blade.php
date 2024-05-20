@@ -87,27 +87,27 @@
 
    <div class="sm:ml-64 flex items-center justify-center">
 
-    <div class="flex flex-col items-center justify-center h-full pt-10">
-        <form action="{{ route('admin_requests') }}" method="GET">
+    <div class="flex flex-col items-center justify-center h-full pt-20">
+        <!-- <form action="{{ route('admin_requests') }}" method="GET">
             <button type="submit" class="flex items-center justify-center mt-4 p-2 bg-blue-800 hover:bg-blue-500 dark:hover:bg-blue-700 text-white rounded-md text-sm font-medium">
                         <svg class="w-6 h-6 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path fill-rule="evenodd" d="M13.729 5.575c1.304-1.074 3.27-.146 3.27 1.544v9.762c0 1.69-1.966 2.618-3.27 1.544l-5.927-4.881a2 2 0 0 1 0-3.088l5.927-4.88Z" clip-rule="evenodd"/>
                         </svg>
                         <span class="whitespace-nowrap">Request Management</span>
             </button>
-         </form>
+         </form> -->
             <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1">
                 Reservation List
             </h1>
             
             @if(session('error'))
-                    <div class="alert alert-danger">
+                    <div class="text-red-600 dark:text-red-600 font-medium mb-3">
                         {{ session('error') }}
                     </div>
             @endif
 
             @if(session('success'))
-                    <div class="alert alert-danger">
+                    <div class="text-green-600 dark:text-green-600 font-medium mb-3">
                         {{ session('success') }}
                     </div>
             @endif

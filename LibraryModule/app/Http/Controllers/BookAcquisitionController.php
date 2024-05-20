@@ -31,8 +31,13 @@ class BookAcquisitionController extends Controller
             'sublocation' => ['required', 'string', 'max:255'],
             'book_description' => ['required', 'string', 'max:255'],
         ]);
+        
 
         try {
+            if ($request->total_copies < $request->available_copies){
+                return redirect()->back()->with('error', 'Available copies cannot exceed total copies.');
+            }
+            
             $book = Books::create([
                 'call_number' => $request->call_number,
                 'author' => $request->author,

@@ -134,10 +134,12 @@ class BookController extends Controller
         }
 
         // Request Expiry Handling
-        $expiredCheckOutRequests = PendingRequests::where('request_type', 'Check Out')
-        ->where('request_type', 'Reserve')
-        ->where('request_status', 'Pending')
+        $expiredCheckOutRequests = PendingRequests::where('request_status', 'Pending')
         ->where('expiration_time', '<=', $now)
+        ->where(function($query) {
+            $query->where('request_type', 'Check Out')
+                  ->orWhere('request_type', 'Reserve');
+        })
         ->get();
 
         foreach ($expiredCheckOutRequests as $expiredRequest) {
