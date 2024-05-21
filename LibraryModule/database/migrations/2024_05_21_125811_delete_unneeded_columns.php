@@ -11,7 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::rename("patron_accountns","patron_accounts");
+        Schema::table('books', function (Blueprint $table) {
+            $table->dropColumn('publish_location');
+            $table->dropColumn('book_description');
+        });
     }
 
     /**
