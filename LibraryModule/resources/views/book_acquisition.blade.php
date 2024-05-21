@@ -138,16 +138,48 @@
             </div>
 
             <div class="mb-4">
-                <label for="publish_location" class="block text-sm font-medium text-blue-500">Publish Location</label>
-                <input id="publish_location" type="text" name="publish_location" value="{{ old('publish_location') }}" required autofocus autocomplete="publish_location" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                @error('publish_location')
+                <label for="sublocation" class="block text-sm font-medium text-blue-500">Sublocation</label>
+                <input id="sublocation" type="text" name="sublocation" value="{{ old('sublocation') }}" autofocus autocomplete="sublocation" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                @error('sublocation')
+                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+            
+            <div class="mb-4">
+                <label for="edition" class="block text-sm font-medium text-blue-500">Edition</label>
+                <input id="edition" type="text" name="edition" value="{{ old('edition') }}" autofocus autocomplete="edition" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                @error('edition')
+                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-4">
+                <label for="publisher" class="block text-sm font-medium text-blue-500">Publisher</label>
+                <input id="publisher" type="text" name="publisher" value="{{ old('publisher') }}" autofocus autocomplete="publisher" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                @error('publisher')
+                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-4">
+                <label for="extent" class="block text-sm font-medium text-blue-500">Extent</label>
+                <input id="extent" type="text" name="extent" value="{{ old('extent') }}" autofocus autocomplete="extent" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                @error('extent')
+                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="mb-4">
+                <label for="isbn" class="block text-sm font-medium text-blue-500">ISBN</label>
+                <input id="isbn" type="text" name="isbn" value="{{ old('isbn') }}" autofocus autocomplete="isbn" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                @error('isbn')
                     <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
                 @enderror
             </div>
 
             <div class="mb-4">
                 <label for="publish_date" class="block text-sm font-medium text-blue-500">Publish Date</label>
-                <input id="publish_date" type="date" name="publish_date" value="{{ old('publish_date') }}" required autofocus autocomplete="publish_date"  class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                <input id="publish_date" type="date" name="publish_date" value="{{ old('publish_date') }}" autofocus autocomplete="publish_date"  class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                 @error('publish_date')
                     <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
                 @enderror
@@ -165,22 +197,6 @@
                 <label for="total_copies" class="block text-sm font-medium text-blue-500">Total Copies</label>
                 <input id="total_copies" type="number" name="total_copies" value="{{ old('total_copies') }}" required autofocus autocomplete="total_copies"  class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                 @error('total_copies')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="mb-4">
-                <label for="sublocation" class="block text-sm font-medium text-blue-500">Sublocation</label>
-                <input id="sublocation" type="text" name="sublocation" value="{{ old('sublocation') }}" required autofocus autocomplete="sublocation" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                @error('sublocation')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
-
-            <div class="mb-4">
-                <label for="book_description" class="block text-sm font-medium text-blue-500">Book Description</label>
-                <input id="book_description" type="text" name="book_description" value="{{ old('book_description') }}" required autofocus autocomplete="book_description" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                @error('book_description')
                     <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
                 @enderror
             </div>

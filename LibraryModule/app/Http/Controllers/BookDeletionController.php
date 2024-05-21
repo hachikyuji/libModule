@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\Session;
 
 class BookDeletionController extends Controller
 {
+
+    public function show($id)
+    {
+        $books = Books::findOrFail($id);
+
+        return view('book_termination', ['books' => $books]);
+    }
+
     public function destroy(Request $request)
     { 
         $callNumber = $request->input('call_number');
@@ -18,10 +26,10 @@ class BookDeletionController extends Controller
             $book->delete();
             Session::flash('success', 'Book terminated successfully.');
         } else {
-            Session::flash('error', 'Book not found or could not be terminated.');
+            return redirect()->route('deletion_search')->with('error', 'Book not found or could not be terminated.');
         }
     
-        return redirect(RouteServiceProvider::TERMINATION);
+        return redirect()->route('deletion_search')->with('success', 'Book terminated successfully.');
     }
 
 }

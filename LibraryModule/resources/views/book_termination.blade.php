@@ -113,16 +113,29 @@
 
             <form method="POST" action="{{ route('book_termination') }}" class="w-full max-w-md">
             @csrf
+               <div class="mb-4 pt-2">
+                  <input type="hidden" name="call_number" value="{{ $books->call_number }}">
+                  <input type="hidden" name="call_number" value="{{ $books->call_number }}">
+                  <div class="mb-4">
+                        <label for="call_number" class="block text-sm font-medium text-blue-500">Call Number:</label>
+                        {{ $books->call_number }}
+                  </div>
+                  <div class="mb-4">
+                        <label for="title" class="block text-sm font-medium text-blue-500">Title:</label>
+                        {{ $books->title }}
+                  </div>
+
+            <!--
             <div class="mb-4">
                 <label for="call_number" class="block text-sm font-medium text-blue-500">Call Number</label>
                 <input id="call_number" type="text" name="call_number" value="{{ old('call_number') }}" required autofocus autocomplete="call_number" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                 @error('call_number')
                     <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
                 @enderror
-            </div>
+            </div> -->
 
             <div class="flex items-center justify-center">
-                <button class="bg-yellow-500 text-white py-2 px-4 rounded">
+                <button class="bg-red-500 text-white py-2 px-4 rounded">
                     {{ __('Delete') }}
                 </button>
             </div>

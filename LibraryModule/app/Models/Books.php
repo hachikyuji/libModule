@@ -23,6 +23,10 @@ class Books extends Model
         'sublocation',
         'book_description',
         'count',
+        'publisher',
+        'edition',
+        'extent',
+        'isbn',
     ];
 
     

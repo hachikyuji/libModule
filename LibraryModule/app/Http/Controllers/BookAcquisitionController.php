@@ -24,12 +24,14 @@ class BookAcquisitionController extends Controller
             'call_number' => ['required', 'string', 'max:255'],
             'author' => ['required', 'string', 'max:255'],
             'title' => ['required', 'string', 'max:255'],
-            'publish_location' => ['required', 'string', 'max:255'],
-            'publish_date' => ['required', 'date'],
+            'publish_date' => ['date'],
             'available_copies' => ['required', 'integer', 'max:10'],
             'total_copies' => ['required', 'integer', 'max:10'],
-            'sublocation' => ['required', 'string', 'max:255'],
-            'book_description' => ['required', 'string', 'max:255'],
+            'sublocation' => ['string', 'max:255'],
+            'edition' => ['string', 'max:255'],
+            'publisher' => ['string', 'max:255'],
+            'extent' => ['string', 'max:255'],
+            'isbn' => ['string', 'max:255'],
         ]);
         
 
@@ -42,12 +44,14 @@ class BookAcquisitionController extends Controller
                 'call_number' => $request->call_number,
                 'author' => $request->author,
                 'title' => $request->title,
-                'publish_location' => $request->publish_location,
                 'publish_date' => $request->publish_date,
                 'available_copies' => $request->available_copies,
                 'total_copies' => $request->total_copies,
                 'sublocation' => $request->sublocation,
-                'book_description' => $request->book_description,
+                'edition' => $request->edition,
+                'publisher' => $request->publisher,
+                'extent' => $request->extent,
+                'isbn' => $request->extent,
             ]);
 
             Session::flash('success', 'Book update successful.');

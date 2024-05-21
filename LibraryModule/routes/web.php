@@ -148,11 +148,6 @@ Route::get('/book_acquisition', [BookAcquisitionController::class, 'create'])
     ->name('book_acquisition');
 Route::post('/book_acquisition', [BookAcquisitionController::class, 'store']);
 
-Route::get('/book_termination', function () {
-    return view('book_termination');
-})->middleware(['auth', 'verified', 'admin'])->name('book_termination');
-Route::post('/book_termination', [BookDeletionController::class, 'destroy']);
-
 Route::get('/fines_management', [FinesManagementControl::class, 'index']) 
 ->middleware(['auth', 'verified', 'admin'])
 ->name('fines_management');
@@ -175,6 +170,19 @@ Route::get('/modify_search', [SearchController::class, 'modifyIndex'])
 Route::get('/modify_search/{id}', [ExistingBookController::class, 'show'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('modbook.show');
+
+// Book Deletion
+
+Route::get('/deletion_search', [SearchController::class, 'deleteIndex'])
+    ->name('deletion_search');
+
+Route::get('/book_termination/{id}', [BookDeletionController::class, 'show'])
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('book_termination.show');
+
+Route::post('/book_delete', [BookDeletionController::class, 'destroy'])
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('book_termination');
 
 
 /*
