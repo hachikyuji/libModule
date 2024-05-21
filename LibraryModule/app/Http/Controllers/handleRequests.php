@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Models\PendingRequests;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\InitialRequestNotification;
+use Illuminate\Support\Facades\DB;
 
 class handleRequests extends Controller
 {
@@ -226,6 +227,8 @@ class handleRequests extends Controller
             } elseif ($request->request_type === 'Check Out') {
                 $this->handleCheckOut($request);
                 $bookDeadline = $this->calculateBookDeadline($user->account_type);
+
+                DB::table('books')->where('title', $title)->increment('count');
     
                 AccountHistory::create([
                     'email' => $email,
@@ -349,6 +352,7 @@ class handleRequests extends Controller
     protected function handleCheckOut($request)
     {
     $book = Books::where('title', $request->book_request)->first();
+    
     
     // Redundant Code, Keeping for debugging purposes
     /* 
