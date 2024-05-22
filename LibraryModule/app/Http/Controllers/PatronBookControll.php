@@ -79,11 +79,11 @@ class PatronBookControll extends Controller
         if ($userPreferences) {
             $filteredBooks = Books::where(function($query) use ($userPreferences) {
                 $author = trim($userPreferences->author);
-                $publishLocation = trim($userPreferences->publish_location);
+                $publisher = trim($userPreferences->publisher);
                 $sublocation = trim($userPreferences->sublocation);
         
                 $query->orWhereRaw("author = ?", [$author])
-                    ->orWhereRaw("publish_location = ?", [$publishLocation])
+                    ->orWhereRaw("publisher = ?", [$publisher])
                     ->orWhereRaw("sublocation = ?", [$sublocation]);
             })
             ->orderBy('count', 'desc')

@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('account_type');
+        Schema::table('user_preferences', function (Blueprint $table) {
+            $table->renameColumn('publish_location', 'publisher');
         });
     }
 
