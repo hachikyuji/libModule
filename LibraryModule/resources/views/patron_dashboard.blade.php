@@ -82,7 +82,7 @@
                             Author
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Publish Date
+                            Publisher
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Sublocation

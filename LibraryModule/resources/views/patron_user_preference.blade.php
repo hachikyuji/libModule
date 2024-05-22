@@ -75,6 +75,18 @@
                 User Preference
             </h1>
 
+            @if(session('error'))
+                    <div class="text-red-600 dark:text-red-600 font-medium mb-3">
+                        {{ session('error') }}
+                    </div>
+            @endif
+
+            @if(session('success'))
+                    <div class="text-green-600 dark:text-green-600 font-medium mb-3 alert alert-danger">
+                        {{ session('success') }}
+                    </div>
+            @endif
+
             <!-- Form for User Preference -->
             <form method="POST" action="{{ route('patron_save_user_preference') }}" class="w-full max-w-md">
                 @csrf

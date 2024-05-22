@@ -106,7 +106,7 @@
                             Author
                         </th>
                         <th scope="col" class="px-6 py-3">
-                            Publish Date
+                            Publisher
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Sublocation
@@ -126,7 +126,7 @@
                             </td>
                             <td
                                 class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                {{ $book->publish_date }}
+                                {{ $book->publisher }}
                             </td>
                             <td
                                 class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
