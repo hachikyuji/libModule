@@ -136,6 +136,9 @@
                      <th scope="col" class="px-6 py-3">
                         Deadline
                      </th>
+                     <th scope="col" class="px-6 py-3">
+                        Fine
+                     </th>
                   </thead>
                </tr>
                   <tbody>
@@ -146,6 +149,9 @@
                         </td>
                         <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                                  {{ $history->book_deadline }}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                 {{ $history->fines }}
                         </td>
                      </tr>
                      @empty

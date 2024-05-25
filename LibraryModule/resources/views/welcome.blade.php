@@ -76,8 +76,13 @@
                         <p>Unknown account type</p>
                     @endif
                 @else
-                    <h1 class="header mb-4">PLM LIBRARY</h1>
+                    <h1 class="header mb-4" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">PLM LIBRARY</h1>
                     <a href="{{ route('login') }}" class="login-button">Log In</a>
+                    <div class="mt-4 text-center bg-white bg-opacity-50 rounded">
+                        <p class="mt-4 text-center text-gray-600" >
+                         Or <a href="{{ route('plm_library') }}" class="text-blue-500">browse PLM library</a> without signing in
+                    </p>
+                    </div>
                 @endauth
             </div>
         @endif

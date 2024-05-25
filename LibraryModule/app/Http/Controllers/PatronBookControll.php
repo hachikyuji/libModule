@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Mail\ExpiredRequestNotification;
 use App\Mail\InitialRequestNotification;
 use App\Mail\ReserveRequestNotification;
+use App\Mail\sendDeadlineNotification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
@@ -133,6 +134,21 @@ class PatronBookControll extends Controller
 
             $expiredRequest->update(['request_status' => 'Expired']);
         }
+
+        // Deadline Email
+        $deadline = clone $now;
+        $deadline->addHours(48);
+
+        $deadlineRequests = AccountHistory::where('book_deadline', '>', $now)
+        ->where('deadline_notif', 0)
+        ->where('book_deadline', '<=', $deadline)
+        ->whereNull('returned_date')
+        ->whereNotNull('borrowed_date')
+        ->get();
+
+        foreach ($deadlineRequests as $sendDeadRequests){
+            $this->sendDeadlineNotification($sendDeadRequests);
+        }
     
         return view('patron_dashboard', compact('booksWithHighestCount', 'filteredBooks'));
     }
@@ -173,6 +189,20 @@ class PatronBookControll extends Controller
             Mail::to($sendRequests->email)->send(new ReserveRequestNotification($emailData));
     
             $sendRequests->update(['initial_notification_sent' => true]);
+        }
+    }
+
+    protected function sendDeadlineNotification($sendRequests)
+    {
+        if (!$sendRequests->deadline_notif) {
+            $emailData = [
+                'title' => $sendRequests->books_borrowed,
+                'expiration_time' => $sendRequests->book_deadline,
+            ];
+    
+            Mail::to($sendRequests->email)->send(new sendDeadlineNotification($emailData['title'], $emailData['expiration_time']));
+    
+            $sendRequests->update(['deadline_notif' => true]);
         }
     }
     

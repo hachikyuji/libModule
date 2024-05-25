@@ -112,9 +112,9 @@
                            <th scope="col" class="px-6 py-3">
                               Request Status
                            </th>
-                           <th scope="col" class="px-6 py-3">
+                           <!--<th scope="col" class="px-6 py-3">
                               Expiration Status
-                           </th>
+                           </th> -->
                            <th scope="col" class="px-6 py-3">
                               Link
                            </th>
@@ -144,21 +144,9 @@
                               <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                                  {{ $queue->request_status }}
                               </td>
-                              <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                 @php
-                                    $expirationTime = Carbon\Carbon::parse($queue->expiration_time);
-                                    $currentTime = now();
+                              <!-- <td class="px-10 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
 
-                                    // Check if the request is expired
-                                    $isExpired = $expirationTime->isPast();
-                                 @endphp
-
-                                 @if($isExpired)
-                                    <span class="text-red-500">Expired</span>
-                                 @else
-                                    <span class="text-green-500">Not Expired</span>
-                                 @endif
-                              </td>
+                              </td> -->
                               <td class="px-6 py-4 font-medium text-blue-500 whitespace-nowrap dark:text-blue">
                                  @if($book)
                                     <a href="{{ route('book.show', ['id' => $book->id]) }}">View</a>

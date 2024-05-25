@@ -137,34 +137,33 @@
                                 ID
                             </th>
                         </tr>
-                </thead>
-                        <tbody class="bg-white divide-y divide-blue-200">
+                    </thead>
+                    <tbody class="bg-white divide-y divide-blue-200">
                         @foreach($request as $request)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-blue-900"> {{$request ->email}}</div>
+                                <td class="px-6 py-3 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{ $request->email }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                     {{ \Str::limit($request ->book_request, 30) }}
-                                </div>
+                                <td class="px-6 py-3 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{ \Str::limit($request->book_request, 30) }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">{{$request ->request_date}}</div>
+                                <td class="px-6 py-3 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{ $request->request_date }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">{{$request ->request_type}}</div>
+                                <td class="px-6 py-3 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{ $request->request_type }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">{{$request ->request_status}}</div>
+                                <td class="px-6 py-3 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{ $request->request_status }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">{{$request ->id}}</div>
+                                <td class="px-6 py-3 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{ $request->id }}</div>
                                 </td>
                             </tr>
-                        </tbody>
                         @endforeach
-                    </table>
+                    </tbody>
+                </table>
+
                 </div>
             </div>
         </div>

@@ -141,30 +141,30 @@
                         <tbody class="bg-white divide-y divide-blue-200">
                         @foreach($request as $request)
                             <tr>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-3 whitespace-nowrap">
                                     <div class="text-sm font-medium text-blue-900">
                                     @php
                                         $user = \App\Models\User::where('email', $request->email)->first();
                                     @endphp
                                     @if ($user)
-                                        {{ $user->name }}
+                                        {{\Str::limit($user->name, 30) }}
                                     @endif
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-3 whitespace-nowrap">
                                     <div class="text-sm font-medium text-blue-900"> {{\Str::limit($request ->email, 30) }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{\Str::limit($request ->books_borrowed, 30)  }}</a>
+                                <td class="px-6 py-3 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{\Str::limit($request ->books_borrowed, 30)  }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{$request ->book_deadline}}</div>
+                                <td class="px-6 py-3 whitespace-nowrap">
+                                    <div class="text-sm text-blue-900">{{\Str::limit($request ->book_deadline, 10)  }}</div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-6 py-3 whitespace-nowrap">
                                     <div class="text-sm font-medium text-blue-900">{{$request ->fines}}</div>
                                 </td>
                                 </td>
-                                <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                <td class="px-6 py-3 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                                     <form action="{{ route('set_fines') }}" method="post" class="inline">
                                     @csrf
                                         <input type="hidden" name="email" value="{{ $request->email }}">

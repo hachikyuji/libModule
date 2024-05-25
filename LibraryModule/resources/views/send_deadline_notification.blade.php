@@ -29,6 +29,10 @@
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        .highlight {
+            font-weight: bold;
+            color: #0000FF;
+        }
     </style>
 </head>
 <body>
@@ -38,7 +42,7 @@
     <div class="content">
         <p>The book you have borrowed is due to be returned soon:</p>
         <ul>
-            <li>{{ $title }} - Return Time: {{ $expiration_time }}</li>
+            <li><span class="highlight">{{ $title }}</span> - Return Time: <span class="highlight">{{ $expiration_time }}</span></li>
         </ul>
         <p>Thank you!</p>
     </div>
