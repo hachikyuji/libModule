@@ -26,7 +26,7 @@ class UserPreferenceController extends Controller
         if ($existingPreference) {
             $existingPreference->update([
                 'author' => $request->author,
-                'publish_location' => $request->publish_location,
+                'publisher' => $request->publish_location,
                 'sublocation' => $request->sublocation,
             ]);
     
@@ -34,7 +34,7 @@ class UserPreferenceController extends Controller
         } else {
             $user = UserPreference::create([
                 'author' => $request->author,
-                'publish_location' => $request->publish_location,
+                'publisher' => $request->publish_location,
                 'sublocation' => $request->sublocation,
                 'email' => $userEmail,
             ]);

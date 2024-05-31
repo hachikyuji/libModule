@@ -9,5 +9,5 @@ class UserPreference extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['author', 'title', 'publish_location', 'sublocation', 'email'];
+    protected $fillable = ['author', 'title', 'publish_location', 'sublocation', 'email', 'publisher'];
 }
