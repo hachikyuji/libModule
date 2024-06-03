@@ -165,8 +165,12 @@
                     <input type="checkbox" name="book_management" value="1" {{ $users->book_management ? 'checked' : '' }}>
                 </div>
                 <div class="mb-4">
-                    <label for="role_management" class="block text-sm font-medium text-blue-500">Role Management:</label>
+                    <label for="role_management" class="block text-sm font-medium text-blue-500">Admin Management:</label>
                     <input type="checkbox" name="role_management" value="1" {{ $users->role_management ? 'checked' : '' }}>
+                </div>
+                <div class="mb-4">
+                    <label for="patron_manage" class="block text-sm font-medium text-blue-500">Patron Management:</label>
+                    <input type="checkbox" name="patron_manage" value="1" {{ $users->patron_manage ? 'checked' : '' }}>
                 </div>
 
                 <div class="flex items-center justify-center">

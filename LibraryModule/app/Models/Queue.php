@@ -9,7 +9,7 @@ class Queue extends Model
 {
     use HasFactory;
 
-    protected $table = 'pending_requests';
+    protected $table = 'library_pending_requests';
 
     public $timestamps = true;
 }

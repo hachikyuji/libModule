@@ -141,7 +141,7 @@ Route::get('/admin_restriction', function () {
 
 Route::get('/patron_management', function () {
         return view('patron_management');
-    })->middleware(['auth', 'verified', 'admin'])->name('patron_management');
+    })->middleware(['auth', 'verified', 'admin', 'find_patron'])->name('patron_management');
 
 // Book Management
 Route::get('/book_management', function () {
@@ -282,11 +282,11 @@ Route::get('/patron_user_profile', [UserProfileController::class, 'pindex'])
 // Admin Search
 
 Route::get('/search_user', [SearchController::class, 'userIndex'])
-    ->middleware(['auth', 'verified', 'admin'])
+    ->middleware(['auth', 'verified', 'admin', 'find_patron'])
     ->name('search_user');
 
 Route::get('/search_user/{id}', [UserProfileController::class, 'patron_view'])
-    ->middleware(['auth', 'verified', 'admin'])
+    ->middleware(['auth', 'verified', 'admin', 'find_patron'])
     ->name('patron.show');
 
 // Admin Management

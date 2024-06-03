@@ -115,36 +115,37 @@
         </h2>
     </x-slot>
 
-<div class="sm:ml-64 flex items-center justify-center">
-    <div class="max-w-lg p-20 mx-2 bg-blue-100 dark:bg-blue-800 shadow-md rounded-md">
-        <h2 class="text-3xl font-bold mb-4 text-white dark:text-gray-200">PLM Library - Profile</h2>
-        <ul class="space-y-4">
+<div class="sm:ml-64 flex items-center justify-center pt-20">
+   <a href="#" class="max-w-lg p-20 mx-2 -pt-10 bg-blue-500 dark:bg-blue-800 shadow-md rounded-md flex items-center justify-cente hover:bg-white-100">
+
+      <h2 class="text-3xl font-bold mb-4 text-white dark:text-gray-200">PLM Library Profile</h2>
+         <ul class="space-y-4">
             <li>
-                <span class="block font-bold text-lg text-white dark:text-gray-200">Name:</span>
-                <span class="text-white text-lg">{{ auth()->user()->name }}</span>
+                  <span class="block font-bold text-lg text-white dark:text-gray-200">Name:</span>
+                  <span class="text-white text-lg">{{ auth()->user()->name }}</span>
             </li>
             <li>
-                <span class="block font-bold text-lg text-white dark:text-gray-200">Account Type:</span>
-                <span class="text-white text-lg">{{ auth()->user()->account_type }}</span>
+                  <span class="block font-bold text-lg text-white dark:text-gray-200">Account Type:</span>
+                  <span class="text-white text-lg">{{ auth()->user()->account_type }}</span>
             </li>
             <li>
-                <span class="block font-bold text-lg text-white dark:text-gray-200">Email:</span>
-                <span class="text-white text-lg">{{ auth()->user()->email }}</span>
+                  <span class="block font-bold text-lg text-white dark:text-gray-200">Email:</span>
+                  <span class="text-white text-lg">{{ auth()->user()->email }}</span>
             </li>
             <li>
-                <span class="block font-bold text-lg text-white dark:text-gray-200">User Number:</span>
-                <span class="text-white text-lg">{{ auth()->user()->usernum }}</span>
+                  <span class="block font-bold text-lg text-white dark:text-gray-200">User Number:</span>
+                  <span class="text-white text-lg">{{ auth()->user()->usernum }}</span>
             </li>
             <li>
-                <span class="block font-bold text-lg text-white dark:text-gray-200">College:</span>
-                <span class="text-white text-lg">{{ auth()->user()->college }}</span>
+                  <span class="block font-bold text-lg text-white dark:text-gray-200">College:</span>
+                  <span class="text-white text-lg">{{ auth()->user()->college }}</span>
             </li>
             <li>
-                <span class="block font-bold text-lg text-white dark:text-gray-200">Course:</span>
-                <span class="text-white text-lg">{{ auth()->user()->course }}</span>
+                  <span class="block font-bold text-lg text-white dark:text-gray-200">Course:</span>
+                  <span class="text-white text-lg">{{ auth()->user()->course }}</span>
             </li>
-        </ul>
-    </div>
+         </ul>
+   </a>
     <div class="max-w-lg p-20 mx-2 bg-blue-100 dark:bg-blue-800 shadow-md rounded-md flex items-center justify-center">
       <div class="flex flex-col items-center justify-center h-full">
          <h1 class="text-2xl font-bold text-white dark:text-gray-200 mb-3 ml-1">

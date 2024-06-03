@@ -24,6 +24,7 @@ class ManageRolesController extends Controller
         $users->report = $request->has('report') ? 1 : 0;
         $users->book_management = $request->has('book_management') ? 1 : 0;
         $users->role_management = $request->has('role_management') ? 1 : 0;
+        $users->patron_manage = $request->has('patron_manage') ? 1 : 0;
     
         $users->save();
     

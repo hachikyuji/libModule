@@ -23,7 +23,7 @@ class AccountHistory extends Model
         'college',
         'course',
     ];
-    protected $table = 'account_history';
+    protected $table = 'library_account_history';
 
     public $timestamps = true;
 }

@@ -25,6 +25,7 @@ class Kernel extends HttpKernel
         'book' => \App\Http\Middleware\BookManagementMiddleware::class,
         'role' => \App\Http\Middleware\RoleManageMiddleware::class,
         'report' => \App\Http\Middleware\DueReportMiddleware::class,
+        'find_patron' => \App\Http\Middleware\FindPatronMiddleware::class,
     ];
     
     protected $middleware = [
