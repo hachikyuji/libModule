@@ -63,10 +63,35 @@
                @endif
             </li>
             <li>
+               <a href="{{ route('overdue_books') }}" class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" class="mr-2 -ml-1">
+                        <path d="M17 6h-2V5h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2h-.541A5.965 5.965 0 0 1 14 10v4a1 1 0 1 1-2 0v-4c0-2.206-1.794-4-4-4-.075 0-.148.012-.22.028C7.686 6.022 7.596 6 7.5 6A4.505 4.505 0 0 0 3 10.5V16a1 1 0 0 0 1 1h7v3a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-3h5a1 1 0 0 0 1-1v-6c0-2.206-1.794-4-4-4Zm-9 8.5H7a1 1 0 1 1 0-2h1a1 1 0 1 1 0 2Z"/>
+                  </svg>
+                  <span class="flex-1 whitespace-nowrap text-white">Due Report</span>
+               </a>
+            </li>
+            <li>
                <a href="{{ route('book_management') }}"  class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group">
-               <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512" fill="white">
-                  <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
-                  <span class="flex-1 ms-3 whitespace-nowrap text-white">Book Management</span>
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" class="mr-2 -ml-1">
+                  <path fill-rule="evenodd" d="M6 2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 1 0 0-2h-2v-2h2a1 1 0 0 0 1-1V4a2 2 0 0 0-2-2h-8v16h5v2H7a1 1 0 1 1 0-2h1V2H6Z" clip-rule="evenodd"/>
+               </svg>
+                  <span class="flex-1 whitespace-nowrap text-white">Book Management</span>
+               </a>
+            </li>
+            <li>
+               <a href="{{ route('patron_management') }}"  class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group">
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" class="mr-2 -ml-1">
+                  <path fill-rule="evenodd" d="M8 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H6Zm7.25-2.095c.478-.86.75-1.85.75-2.905a5.973 5.973 0 0 0-.75-2.906 4 4 0 1 1 0 5.811ZM15.466 20c.34-.588.535-1.271.535-2v-1a5.978 5.978 0 0 0-1.528-4H18a4 4 0 0 1 4 4v1a2 2 0 0 1-2 2h-4.535Z" clip-rule="evenodd"/>
+               </svg>
+                  <span class="flex-1 whitespace-nowrap text-white">Patron Management</span>
+               </a>
+            </li>
+            <li>
+               <a href="{{ route('admin_management') }}"  class="flex items-center p-2 text-white rounded-lg dark:text-white hover:bg-blue-100 dark:hover:bg-blue-700 group">
+               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" class="mr-2 -ml-1">
+                  <path fill-rule="evenodd" d="M17 10v1.126c.367.095.714.24 1.032.428l.796-.797 1.415 1.415-.797.796c.188.318.333.665.428 1.032H21v2h-1.126c-.095.367-.24.714-.428 1.032l.797.796-1.415 1.415-.796-.797a3.979 3.979 0 0 1-1.032.428V20h-2v-1.126a3.977 3.977 0 0 1-1.032-.428l-.796.797-1.415-1.415.797-.796A3.975 3.975 0 0 1 12.126 16H11v-2h1.126c.095-.367.24-.714.428-1.032l-.797-.796 1.415-1.415.796.797A3.977 3.977 0 0 1 15 11.126V10h2Zm.406 3.578.016.016c.354.358.574.85.578 1.392v.028a2 2 0 0 1-3.409 1.406l-.01-.012a2 2 0 0 1 2.826-2.83ZM5 8a4 4 0 1 1 7.938.703 7.029 7.029 0 0 0-3.235 3.235A4 4 0 0 1 5 8Zm4.29 5H7a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h6.101A6.979 6.979 0 0 1 9 15c0-.695.101-1.366.29-2Z" clip-rule="evenodd"/>
+               </svg>
+                  <span class="flex-1 whitespace-nowrap text-white">Admin Management</span>
                </a>
             </li>
             <li>
@@ -80,7 +105,6 @@
                </button>
                </form>
             </li>
-            
          </ul>
       </div>
    </aside>
@@ -112,9 +136,21 @@
     </form>
 
     <div class="flex flex-col mb-4">
-        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                <div class="shadow overflow-hidden border-b border-blue-800 sm:rounded-lg">
+         @if (Session::has('success'))
+               <div class="text-green-600 dark:text-green-600 font-medium text-center">
+                  {{ session('success') }}
+               </div>
+         @endif
+
+         @if (Session::has('error'))
+               <div class="text-red-600 dark:text-red-600 font-medium text-center">
+                  {{ session('error') }}
+               </div>
+         @endif
+
+    <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+            <div class="shadow overflow-hidden border-b border-blue-800 sm:rounded-lg">
                 <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
                         <tr>
@@ -137,54 +173,63 @@
                                 Set Fines
                             </th>
                         </tr>
-                </thead>
-                        <tbody class="bg-white divide-y divide-blue-200">
+                    </thead>
+                    <tbody class="bg-white divide-y divide-blue-200">
                         @foreach($request as $request)
-                            <tr>
-                                <td class="px-6 py-3 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-blue-900">
-                                    @php
-                                        $user = \App\Models\User::where('email', $request->email)->first();
-                                    @endphp
-                                    @if ($user)
-                                        {{\Str::limit($user->name, 30) }}
-                                    @endif
-                                    </div>
-                                </td>
-                                <td class="px-6 py-3 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-blue-900"> {{\Str::limit($request ->email, 30) }}</div>
-                                </td>
-                                <td class="px-6 py-3 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{\Str::limit($request ->books_borrowed, 30)  }}</div>
-                                </td>
-                                <td class="px-6 py-3 whitespace-nowrap">
-                                    <div class="text-sm text-blue-900">{{\Str::limit($request ->book_deadline, 10)  }}</div>
-                                </td>
-                                <td class="px-6 py-3 whitespace-nowrap">
-                                    <div class="text-sm font-medium text-blue-900">{{$request ->fines}}</div>
-                                </td>
-                                </td>
-                                <td class="px-6 py-3 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
-                                    <form action="{{ route('set_fines') }}" method="post" class="inline">
-                                    @csrf
-                                        <input type="hidden" name="email" value="{{ $request->email }}">
-                                        
-                                        <!-- Add an input field for fines -->
-                                        <input type="text" name="fines" placeholder="Enter fines" class="border rounded px-0.5 py-1">
-
-                                        <!-- Add a submit button -->
-                                        <button type="submit" class="ml-2 bg-blue-500 text-white px-3 py-1 rounded">Set Fines</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        </tbody>
+                            @php
+                                $deadline = new DateTime($request->book_deadline);
+                                $today = new DateTime();
+                            @endphp
+                            @if ($deadline < $today)
+                                <tr>
+                                    <td class="px-6 py-3 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-blue-900">
+                                            @php
+                                                $user = \App\Models\User::where('email', $request->email)->first();
+                                            @endphp
+                                            @if ($user)
+                                                {{ \Str::limit($user->name, 30) }}
+                                            @endif
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-blue-900">
+                                            {{ \Str::limit($request->email, 30) }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap">
+                                        <div class="text-sm text-blue-900">
+                                            {{ \Str::limit($request->books_borrowed, 30) }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap">
+                                        <div class="text-sm text-blue-900">
+                                            {{ \Str::limit($request->book_deadline, 10) }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-3 whitespace-nowrap">
+                                        <div class="text-sm font-medium text-blue-900">
+                                            {{ $request->fines }}
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-3 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                        <form action="{{ route('set_fines') }}" method="post" class="inline">
+                                            @csrf
+                                            <input type="hidden" name="email" value="{{ $request->email }}">
+                                            <input type="text" name="fines" placeholder="Enter fines" class="border rounded px-0.5 py-1">
+                                            <button type="submit" class="ml-2 bg-blue-500 text-white px-3 py-1 rounded">Set Fines</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endif
                         @endforeach
-                    </table>
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
 
-   </div>
+
 
 </x-app-layout>

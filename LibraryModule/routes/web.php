@@ -135,9 +135,13 @@ Route::get('/admin_requests', function () {
         return view('admin_requests');
     })->middleware(['auth', 'verified', 'admin'])->name('admin_requests');
 
-Route::get('/admin_requests', function () {
-        return view('admin_requests');
-    })->middleware(['auth', 'verified', 'admin'])->name('admin_requests');
+Route::get('/admin_restriction', function () {
+        return view('admin_restriction');
+    })->middleware(['auth', 'verified', 'admin'])->name('admin_restriction');
+
+Route::get('/patron_management', function () {
+        return view('patron_management');
+    })->middleware(['auth', 'verified', 'admin'])->name('patron_management');
 
 // Book Management
 Route::get('/book_management', function () {
@@ -258,10 +262,10 @@ Route::post('/patron_user_preference', [PatronUserPreference::class, 'save'])
 // Overdue Report
 
 Route::get('/overdue-books', [DueReportController::class, 'overdueBooks'])
-    ->middleware(['auth', 'verified', 'admin'])
+    ->middleware(['auth', 'verified', 'admin', 'report'])
     ->name('overdue_books');
 Route::post('/send-report', [DueReportController::class, 'sendReport'])
-    ->middleware(['auth', 'verified', 'admin'])
+    ->middleware(['auth', 'verified', 'admin', 'report'])
     ->name('send.report');
 
 
@@ -288,15 +292,15 @@ Route::get('/search_user/{id}', [UserProfileController::class, 'patron_view'])
 // Admin Management
 
 Route::get('/admin_management', [SearchController::class, 'adminIndex'])
-    ->middleware(['auth', 'verified', 'admin'])
+    ->middleware(['auth', 'verified', 'admin', 'role'])
     ->name('admin_management');
 
 Route::get('/admin_management/{id}', [ManageRolesController::class, 'show'])
-    ->middleware(['auth', 'verified', 'admin'])
+    ->middleware(['auth', 'verified', 'admin', 'role'])
     ->name('admin_management.show');
 
 Route::post('/admin_modify', [ManageRolesController::class, 'updateAdmin'])
-    ->middleware(['auth', 'verified', 'admin'])
+    ->middleware(['auth', 'verified', 'admin', 'role'])
     ->name('admin_modify');
 
 // Temporary Routes

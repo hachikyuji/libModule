@@ -111,6 +111,9 @@
                      <th scope="col" class="px-6 py-3">
                         Deadline
                      </th>
+                     <th scope="col" class="px-6 py-3">
+                        Fine
+                     </th>
                   </thead>
                </tr>
                   <tbody>
@@ -122,17 +125,20 @@
                         <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
                                  {{ $history->book_deadline }}
                         </td>
+                        <td class="px-6 py-4 font-medium text-blue-900 whitespace-nowrap dark:text-blue">
+                                 {{ $history->fines }}
+                        </td>
                      </tr>
                      @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-4 text-center text-white dark:text-gray-200">
+                        <td colspan="3" class="px-6 py-4 text-center text-white dark:text-gray-200">
                             You have no overdue books. You may proceed to borrow books.
                         </td>
                     </tr>
                      @endforelse
                      @if ($accountHistory->isNotEmpty())
                      <tr>
-                        <td colspan="2" class="px-6 py-4 text-center text-white dark:text-gray-200">
+                        <td colspan="3" class="px-6 py-4 text-center text-white dark:text-gray-200">
                               You still have overdue books. You may not proceed to borrow books until they're returned.
                         </td>
                      </tr>

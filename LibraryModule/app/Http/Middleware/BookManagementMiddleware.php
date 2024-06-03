@@ -18,7 +18,7 @@ class BookManagementMiddleware
         if ($request->user() && $request->user()->book_management) {
             return $next($request);
         }
-
-        return response('Forbidden, Contact an admin to access this feature.', 403);
+        
+        return redirect('admin_restriction')->with('error', 'Forbidden, Contact an admin to access this feature.');
     }
 }

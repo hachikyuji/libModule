@@ -19,6 +19,8 @@ class RoleManageMiddleware
             return $next($request);
         }
 
-        return response('Forbidden, Contact an admin to access this feature.', 403);
+        return redirect('admin_restriction')->with('error', 'Forbidden, Contact an admin to access this feature.');
+        
+        // return response('Forbidden, Contact an admin to access this feature.', 403);
     }
 }

@@ -5,8 +5,12 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\RedirectResponse;
 
-class FinesMiddleware
+
+
+
+class DueReportMiddleware
 {
     /**
      * Handle an incoming request.
@@ -15,10 +19,12 @@ class FinesMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user() && $request->user()->fines) {
+        if ($request->user() && $request->user()->report) {
             return $next($request);
         }
 
         return redirect('admin_restriction')->with('error', 'Forbidden, Contact an admin to access this feature.');
+
+        // return response('Forbidden, Contact an admin to access this feature.', 403);
     }
 }

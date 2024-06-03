@@ -21,7 +21,7 @@ class ManageRolesController extends Controller
     
         $users->approval = $request->has('approval') ? 1 : 0;
         $users->fines = $request->has('fines') ? 1 : 0;
-        $users->acc_create = $request->has('acc_create') ? 1 : 0;
+        $users->report = $request->has('report') ? 1 : 0;
         $users->book_management = $request->has('book_management') ? 1 : 0;
         $users->role_management = $request->has('role_management') ? 1 : 0;
     

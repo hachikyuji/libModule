@@ -24,6 +24,7 @@ class Kernel extends HttpKernel
         'acc' => \App\Http\Middleware\AccCreateMiddleware::class,
         'book' => \App\Http\Middleware\BookManagementMiddleware::class,
         'role' => \App\Http\Middleware\RoleManageMiddleware::class,
+        'report' => \App\Http\Middleware\DueReportMiddleware::class,
     ];
     
     protected $middleware = [

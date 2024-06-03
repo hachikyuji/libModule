@@ -33,17 +33,14 @@ class FinesManagementControl extends Controller
         $userEmail = $request->input('email');
         $fines = $request->input('fines');
     
-        // Find the corresponding record in the accounthistory table
         $accountHistory = AccountHistory::where('email', $userEmail)->first();
 
         if ($accountHistory) {
-            // Update the 'fines' column with the new value
             $accountHistory->update(['fines' => $fines]);
 
-            return redirect()->back()->with('success', 'Fines set successfully');
+            return redirect()->back()->with('success', 'Fines set successfully.');
         } else {
-            // Handle the case where the user with the provided email is not found
-            return redirect()->back()->with('error', 'User not found');
+            return redirect()->back()->with('error', 'User not found.');
         }
     }
 }
