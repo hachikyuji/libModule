@@ -25,6 +25,11 @@ class User extends Authenticatable
         'usernum',
         'college',
         'course',
+        'approval',
+        'fines',
+        'acc_create',
+        'book_management',
+        'role_management',
     ];
 
     /**

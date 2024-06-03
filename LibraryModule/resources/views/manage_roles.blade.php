@@ -87,16 +87,16 @@
 
 <div class="sm:ml-64 flex items-center justify-center">
     <div class="flex flex-col items-center justify-center h-full pt-10">
-      <form action="{{ route('book_management') }}" method="GET">
+      <form action="{{ route('admin_management') }}" method="GET">
                      <button type="submit" class="flex items-center justify-center mt-4 p-2 bg-blue-800 hover:bg-blue-100 dark:hover:bg-blue-700 text-white rounded-md">
                      <svg class="w-6 h-6 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path fill-rule="evenodd" d="M13.729 5.575c1.304-1.074 3.27-.146 3.27 1.544v9.762c0 1.69-1.966 2.618-3.27 1.544l-5.927-4.881a2 2 0 0 1 0-3.088l5.927-4.88Z" clip-rule="evenodd"/>
                      </svg>
-                     <span class="whitespace-nowrap">Book Management</span>
+                     <span class="whitespace-nowrap">Admin Management</span>
                      </button>
       </form>
-            <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1">
-                Book Termination
+            <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1 pt-5">
+                Admin Roles Management
             </h1>
 
             @if (Session::has('success'))
@@ -111,35 +111,47 @@
                </div>
             @endif
 
-            <form method="POST" action="{{ route('book_termination') }}" class="w-full max-w-md">
+            <form method="POST" action="{{ route('admin_modify') }}" class="w-full max-w-md">
             @csrf
-               <div class="mb-4 pt-2">
-                  <input type="hidden" name="call_number" value="{{ $books->call_number }}">
-                  <input type="hidden" name="title" value="{{ $books->call_number }}">
-                  <div class="mb-4">
-                        <label for="call_number" class="block text-sm font-medium text-blue-500">Call Number:</label>
-                        {{ $books->call_number }}
-                  </div>
-                  <div class="mb-4">
-                        <label for="title" class="block text-sm font-medium text-blue-500">Title:</label>
-                        {{ $books->title }}
-                  </div>
+            <div class="mb-4 pt-2">
+                <input type="hidden" name="name" value="{{ $users->name }}">
+                <input type="hidden" name="email" value="{{ $users->email }}">
 
-            <!--
-            <div class="mb-4">
-                <label for="call_number" class="block text-sm font-medium text-blue-500">Call Number</label>
-                <input id="call_number" type="text" name="call_number" value="{{ old('call_number') }}" required autofocus autocomplete="call_number" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                @error('call_number')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div> -->
+                <div class="mb-4">
+                            <label for="call_number" class="block text-sm font-medium text-blue-500">Name:</label>
+                            {{ $users->name }}
+                            <label for="call_number" class="block text-sm font-medium text-blue-500">Email:</label>
+                            {{ $users->email }}
 
-            <div class="flex items-center justify-center">
-                <button class="bg-red-500 text-white py-2 px-4 rounded">
-                    {{ __('Delete') }}
-                </button>
-            </div>
+                </div>
+                <div class="mb-4">
+                    <label for="approval" class="block text-sm font-medium text-blue-500">Approval:</label>
+                    <input type="checkbox" name="approval" value="1" {{ $users->approval ? 'checked' : '' }}>
+                </div>
+                <div class="mb-4">
+                    <label for="fines" class="block text-sm font-medium text-blue-500">Fines:</label>
+                    <input type="checkbox" name="fines" value="1" {{ $users->fines ? 'checked' : '' }}>
+                </div>
+                <div class="mb-4">
+                    <label for="acc_create" class="block text-sm font-medium text-blue-500">Account Creation:</label>
+                    <input type="checkbox" name="acc_create" value="1" {{ $users->acc_create ? 'checked' : '' }}>
+                </div>
+                <div class="mb-4">
+                    <label for="book_management" class="block text-sm font-medium text-blue-500">Book Management:</label>
+                    <input type="checkbox" name="book_management" value="1" {{ $users->book_management ? 'checked' : '' }}>
+                </div>
+                <div class="mb-4">
+                    <label for="role_management" class="block text-sm font-medium text-blue-500">Role Management:</label>
+                    <input type="checkbox" name="role_management" value="1" {{ $users->role_management ? 'checked' : '' }}>
+                </div>
 
-   </div>
+                <div class="flex items-center justify-center">
+                    <button class="bg-yellow-500 text-white py-2 px-4 rounded">
+                        {{ __('Update') }}
+                    </button>
+                </div>
 
+                </form>
+    </div>
+</div>
 </x-app-layout>

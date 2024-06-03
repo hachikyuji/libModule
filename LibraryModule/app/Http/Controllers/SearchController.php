@@ -142,4 +142,30 @@ class SearchController extends Controller
 
         return view('deletion_search', compact('books', 'search_param'));
     }
+
+    function adminIndex(Request $request) {
+        $user_query = User::query();
+
+        $search_param = $request->query('q');
+
+        $users = [];
+
+        $user_query->where('account_type', 'admin');
+
+        if ($search_param) {
+            $user_query->where(function ($query) use ($search_param) {
+                $query
+                    ->orWhere('name', 'like', "%$search_param%")
+                    ->orWhere('email', 'like', "%$search_param%")
+                    ->orWhere('account_type', 'like', "%$search_param%")
+                    ->orWhere('usernum', 'like', "%$search_param%")
+                    ->orWhere('college', 'like', "%$search_param%")
+                    ->orWhere('course', 'like', "%$search_param%");
+            });
+        }
+
+        $users = $user_query->paginate(100);
+
+        return view('admin_management', compact('users', 'search_param'));
+    }
 }

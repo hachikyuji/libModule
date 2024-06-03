@@ -85,61 +85,79 @@
       </div>
    </aside>
 
-<div class="sm:ml-64 flex items-center justify-center">
-    <div class="flex flex-col items-center justify-center h-full pt-10">
-      <form action="{{ route('book_management') }}" method="GET">
-                     <button type="submit" class="flex items-center justify-center mt-4 p-2 bg-blue-800 hover:bg-blue-100 dark:hover:bg-blue-700 text-white rounded-md">
-                     <svg class="w-6 h-6 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path fill-rule="evenodd" d="M13.729 5.575c1.304-1.074 3.27-.146 3.27 1.544v9.762c0 1.69-1.966 2.618-3.27 1.544l-5.927-4.881a2 2 0 0 1 0-3.088l5.927-4.88Z" clip-rule="evenodd"/>
-                     </svg>
-                     <span class="whitespace-nowrap">Book Management</span>
-                     </button>
-      </form>
-            <h1 class="text-3xl font-bold text-blue-600 dark:text-blue-600 mb-3 ml-1">
-                Book Termination
+   <div class="sm:ml-64 flex items-center justify-center">
+        <div class="flex flex-col items-center justify-center h-full pt-10">
+            <h1 class="text-3xl font-bold text-blue-800 dark:text-blue-600 mb-3 ml-1 pt-10">
+                Admin Management
             </h1>
 
-            @if (Session::has('success'))
-               <div class="text-green-600 dark:text-green-600 font-medium mb-3">
-                  {{ session('success') }}
-               </div>
-            @endif
+<form action="{{ route('search_user', request()->query()) }}">
+        <div class="flex my-2">
+            <input type="text" name="q" placeholder="Search" class="py-2 px-2 text-md border border-blue-200 rounded-l focus:outline-none" value="{{$search_param}}" />
+            <button type="submit" class="w-10 flex items-center justify-center border-t border-r border-b border-blue-200 rounded-r text-blue-100 bg-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </button>
+        </div>
+    </form>
 
-            @if (Session::has('error'))
-               <div class="text-green-600 dark:text-red-600 font-medium mb-3">
-                  {{ session('error') }}
-               </div>
-            @endif
-
-            <form method="POST" action="{{ route('book_termination') }}" class="w-full max-w-md">
-            @csrf
-               <div class="mb-4 pt-2">
-                  <input type="hidden" name="call_number" value="{{ $books->call_number }}">
-                  <input type="hidden" name="title" value="{{ $books->call_number }}">
-                  <div class="mb-4">
-                        <label for="call_number" class="block text-sm font-medium text-blue-500">Call Number:</label>
-                        {{ $books->call_number }}
-                  </div>
-                  <div class="mb-4">
-                        <label for="title" class="block text-sm font-medium text-blue-500">Title:</label>
-                        {{ $books->title }}
-                  </div>
-
-            <!--
-            <div class="mb-4">
-                <label for="call_number" class="block text-sm font-medium text-blue-500">Call Number</label>
-                <input id="call_number" type="text" name="call_number" value="{{ old('call_number') }}" required autofocus autocomplete="call_number" class="w-full p-2.5 text-sm rounded-lg border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
-                @error('call_number')
-                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div> -->
-
-            <div class="flex items-center justify-center">
-                <button class="bg-red-500 text-white py-2 px-4 rounded">
-                    {{ __('Delete') }}
-                </button>
+    <div class="flex flex-col mb-4">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <div class="shadow overflow-hidden border-b border-blue-800 sm:rounded-lg">
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-white uppercase bg-blue-900 dark:bg-white-700 dark:text-white-400">
+                            <tr>
+                                <th scope="col" class="px-6 py-3" style="width: 20%">
+                                    Name
+                                </th>
+                                <th scope="col" class="px-6 py-3" style="width: 15%">
+                                    Email
+                                </th>
+                                <th scope="col" class="px-6 py-3" style="width: 10%">
+                                    Account Type
+                                </th>
+                                <th scope="col" class="px-6 py-3" style="width: 15%">
+                                    Student/Employee Number
+                                </th>
+                                <th scope="col" class="px-6 py-3" style="width: 15%">
+                                    College
+                                </th>
+                                <th scope="col" class="px-6 py-3" style="width: 15%">
+                                    Course
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-blue-200">
+                            @foreach($users as $user)
+                                <tr>    
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <a href="{{ route('admin_management.show', ['id' => $user->id]) }}" class="text-sm text-blue-500">{{ $user->name }}</a>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-blue-900">{{ $user->email }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-blue-900">{{ $user->account_type }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-blue-900">{{ $user->usernum }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-blue-900">{{ $user->college }}</div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="text-sm text-blue-900">{{ $user->course }}</div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
-
-   </div>
+            {{ $users->links() }}
+        </div>
+    </div>
 
 </x-app-layout>

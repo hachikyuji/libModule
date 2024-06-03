@@ -103,6 +103,9 @@
             <a href="{{ route('search_user') }}">Find Patron</a>
         </button>
         <button type="button" class="px-5 py-2.5 mt-4 ml-0.5 text-md font-medium text-white bg-blue-800 rounded-l-lg rounded-r-lg hover:bg-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-500">
+            <a href="{{ route('admin_management') }}">Admin Management</a>
+        </button>
+        <button type="button" class="px-5 py-2.5 mt-4 ml-0.5 text-md font-medium text-white bg-blue-800 rounded-l-lg rounded-r-lg hover:bg-blue-700 focus:z-10 focus:ring-2 focus:ring-gray-500">
             <a href="{{ route('overdue_books') }}">Due Books Report</a>
         </button>
     </div>

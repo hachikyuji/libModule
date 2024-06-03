@@ -24,6 +24,7 @@ use App\Http\Controllers\RequestHistory;
 use App\Http\Controllers\UserPreferenceController;
 use App\Http\Controllers\DueReportController;
 use App\Http\Controllers\ExistingBookController;
+use App\Http\Controllers\ManageRolesController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\TempRegisteredUserController;
 
@@ -106,7 +107,7 @@ Route::get('/queue', [QueueController::class, 'getUserQueue'])
 
 // Requests Approval
 Route::get('/requests', [handleRequests::class, 'getRequests']) 
-    ->middleware(['auth', 'verified', 'admin'])
+    ->middleware(['auth', 'verified', 'admin', 'approval'])
     ->name('requests');
 
 Route::post('/requests/{email}/{title}/{sublocation}/{id}/{course}/{college}/approve', [handleRequests::class, 'approveRequest'])
@@ -116,7 +117,7 @@ Route::post('/requests/{email}/{title}/{id}/{college}/{course}/deny', [handleReq
     ->name('deny-request');
 
 Route::get('/reservations', [handleRequests::class, 'getReserveRequests']) 
-    ->middleware(['auth', 'verified', 'admin'])
+    ->middleware(['auth', 'verified', 'admin', 'approval'])
     ->name('reservations');
 
 Route::post('/reservations/{email}/{title}/{sublocation}/{id}/{course}/{college}/approve', [handleRequests::class, 'approveReserve'])
@@ -125,14 +126,14 @@ Route::post('/reservations/{email}/{title}/{sublocation}/{id}/{course}/{college}
 Route::post('/reservations/{email}/{title}/{sublocation}/{id}/{course}/{college}/deny', [handleRequests::class, 'denyRequest'])
     ->name('deny-request');
 
+Route::get('/requests_history', [RequestHistory::class, 'index']) 
+    ->middleware(['auth', 'verified', 'admin', 'approval'])
+    ->name('requests_history');
+
 
 Route::get('/admin_requests', function () {
         return view('admin_requests');
     })->middleware(['auth', 'verified', 'admin'])->name('admin_requests');
-
- Route::get('/requests_history', [RequestHistory::class, 'index']) 
-    ->middleware(['auth', 'verified', 'admin'])
-    ->name('requests_history');
 
 Route::get('/admin_requests', function () {
         return view('admin_requests');
@@ -141,19 +142,21 @@ Route::get('/admin_requests', function () {
 // Book Management
 Route::get('/book_management', function () {
         return view('book_management');
-    })->middleware(['auth', 'verified', 'admin'])->name('book_management');
+    })->middleware(['auth', 'verified', 'admin', 'book'])->name('book_management');
 
 Route::get('/book_acquisition', [BookAcquisitionController::class, 'create'])
-    ->middleware(['auth', 'verified', 'admin'])
+    ->middleware(['auth', 'verified', 'admin', 'book'])
     ->name('book_acquisition');
 Route::post('/book_acquisition', [BookAcquisitionController::class, 'store']);
 
+// Fines Management
+
 Route::get('/fines_management', [FinesManagementControl::class, 'index']) 
-->middleware(['auth', 'verified', 'admin'])
+->middleware(['auth', 'verified', 'admin', 'fines'])
 ->name('fines_management');
 
 Route::post('/set_fines', [FinesManagementControl::class, 'setFines']) 
-->middleware(['auth', 'verified', 'admin'])
+->middleware(['auth', 'verified', 'admin', 'fines'])
 ->name('set_fines');
 
 Route::get('/modify_book', function () {
@@ -174,14 +177,15 @@ Route::get('/modify_search/{id}', [ExistingBookController::class, 'show'])
 // Book Deletion
 
 Route::get('/deletion_search', [SearchController::class, 'deleteIndex'])
+    ->middleware(['auth', 'verified', 'admin', 'book'])
     ->name('deletion_search');
 
 Route::get('/book_termination/{id}', [BookDeletionController::class, 'show'])
-    ->middleware(['auth', 'verified', 'admin'])
+    ->middleware(['auth', 'verified', 'admin', 'book'])
     ->name('book_termination.show');
 
 Route::post('/book_delete', [BookDeletionController::class, 'destroy'])
-    ->middleware(['auth', 'verified', 'admin'])
+    ->middleware(['auth', 'verified', 'admin', 'book'])
     ->name('book_termination');
 
 
@@ -280,6 +284,20 @@ Route::get('/search_user', [SearchController::class, 'userIndex'])
 Route::get('/search_user/{id}', [UserProfileController::class, 'patron_view'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('patron.show');
+
+// Admin Management
+
+Route::get('/admin_management', [SearchController::class, 'adminIndex'])
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('admin_management');
+
+Route::get('/admin_management/{id}', [ManageRolesController::class, 'show'])
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('admin_management.show');
+
+Route::post('/admin_modify', [ManageRolesController::class, 'updateAdmin'])
+    ->middleware(['auth', 'verified', 'admin'])
+    ->name('admin_modify');
 
 // Temporary Routes
 

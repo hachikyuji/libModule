@@ -19,6 +19,11 @@ class Kernel extends HttpKernel
     
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'patron' => \App\Http\Middleware\PatronMiddleware::class,
+        'approval' => \App\Http\Middleware\ApprovalMiddleware::class,
+        'fines' => \App\Http\Middleware\FinesMiddleware::class,
+        'acc' => \App\Http\Middleware\AccCreateMiddleware::class,
+        'book' => \App\Http\Middleware\BookManagementMiddleware::class,
+        'role' => \App\Http\Middleware\RoleManageMiddleware::class,
     ];
     
     protected $middleware = [
