@@ -68,9 +68,9 @@
             <div class="lg:p-36 md:p-52 sm:20 p-8 w-full lg:w-1/2 flex flex-col items-center">
                 @auth
                     @if(auth()->user()->account_type == 'admin')
-                        <a href="{{ url('/dashboard') }}" class="header mb-4">Welcome Back!</a>
+                        <a href="{{ url('/dashboard') }}" class="header mb-4" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">Welcome Back!</a>
                     @elseif(auth()->user()->account_type == 'patron')
-                        <a href="{{ url('/patron_dashboard') }}" class="header mb-4">Welcome Back!</a>
+                        <a href="{{ url('/patron_dashboard') }}" class="header mb-4" style="text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);">Welcome Back!</a>
                     @else
                         <!-- Handle other account types or provide a default action -->
                         <p>Unknown account type</p>
@@ -80,7 +80,7 @@
                     <a href="{{ route('login') }}" class="login-button">Log In</a>
                     <div class="mt-4 text-center bg-white bg-opacity-50 rounded">
                         <p class="mt-4 text-center text-gray-600" >
-                         Or <a href="{{ route('plm_library') }}" class="text-blue-500">browse PLM library</a> without signing in
+                         Or <a href="{{ route('plm_library') }}" class="text-blue-500">browse PLM library</a> as a guest.
                     </p>
                     </div>
                 @endauth

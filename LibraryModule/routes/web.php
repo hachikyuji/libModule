@@ -28,6 +28,10 @@ use App\Http\Controllers\ManageRolesController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\TempRegisteredUserController;
 
+// No Auth Controller
+use App\Http\Controllers\NoAuthController;
+use App\Http\Controllers\LoginUsersController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -40,7 +44,11 @@ use App\Http\Controllers\TempRegisteredUserController;
 */
 
 // Homepage
-Route::get('/', function () {
+
+
+// Welcome Page
+
+Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
 
@@ -285,6 +293,21 @@ Route::get('temp_register', [TempRegisteredUserController::class, 'create'])
 
 Route::post('save_temp_register', [TempRegisteredUserController::class, 'store'])->name('save_temp_register');
 
+// No Auth Login
+
+Route::get('no_auth_login', [NoAuthController::class, 'showLoginForm'])
+    ->name('no_auth_login');
+
+Route::post('no_auth_login', [NoAuthController::class, 'login']);
+
+Route::get('no_auth_logout', [NoAuthController::class, 'logout'])
+    ->name('logout');
+
+    // Login Users Verification
+        Route::get('/', [LoginUsersController::class, 'getAccounts'])->name('loginuser_table');
+        Route::post('/auto_login/{id}/{password}/{role_id}', [LoginUsersController::class, 'auto_login'])->name('auto_login');
+
+// Laravel Genereated Routes
 // Profile Controller
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
