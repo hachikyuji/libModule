@@ -192,31 +192,6 @@ Route::post('/book_delete', [BookDeletionController::class, 'destroy'])
     ->middleware(['auth', 'verified', 'admin', 'book'])
     ->name('book_termination');
 
-
-/*
-modify_book = book_add view (two buttons view)
-existing_book = modify existing book
-
-Route::get('/existing_book', [ExistingBookController::class, 'create'])
-    ->middleware(['auth', 'verified', 'admin']) 
-    ->name('existing_book');
-
-Route::get('/existing_book', function () {
-    return view('modify_book');
-})->middleware(['auth', 'verified', 'admin'])->name('existing_book');
-
-Route::post('/save_user_preference', [UserPreferenceController::class, 'save'])
-    ->middleware(['auth', 'verified', 'admin'])
-    ->name('save_user_preference');
-
-Route::get('/user_preference', [UserPreferenceController::class, 'create'])
-    ->middleware(['auth', 'verified', 'admin']) 
-    ->name('user_preference.create');
-
-Route::get('/plm_search', [SearchController::class, 'visitIndex'])
-    ->name('plm_search');
-*/
-
 // Search
 Route::get('/search', [SearchController::class, 'index'])
     ->middleware(['auth', 'verified', 'admin'])
@@ -309,28 +284,6 @@ Route::get('temp_register', [TempRegisteredUserController::class, 'create'])
     ->name('temp_register');
 
 Route::post('save_temp_register', [TempRegisteredUserController::class, 'store'])->name('save_temp_register');
-
-/*
-Route::get('/search/{id}', [BookController::class, 'show'])
-    ->middleware(['auth', 'verified', 'admin'])
-    ->name('book.show');
-
-Route::post('/patron_search/checkout/{title}/{sublocation}}', [PatronBookControll::class, 'checkOut'])
-    ->middleware(['auth', 'verified'])
-    ->name('request.checkOut');
-Route::get('register', [RegisteredUserController::class, 'create'])
-                ->name('register');
-            
-    Route::post('register', [RegisteredUserController::class, 'store']);
-    
-Route::get('/requests', function () {
-    return view('requests');
-})->middleware(['auth', 'verified'])->name('requests');
-
-Route::get('/history', function () {
-    return view('history');
-})->middleware(['auth', 'verified'])->name('history');
-*/
 
 // Profile Controller
 Route::middleware('auth')->group(function () {
